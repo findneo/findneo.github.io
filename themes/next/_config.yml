@@ -827,7 +827,7 @@ mermaid:
 # For more information: http://velocityjs.org
 motion:
   enable: false
-  async: false
+  async: true
   transition:
     # Transition variants:
     # fadeIn | flipXIn | flipYIn | flipBounceXIn | flipBounceYIn
