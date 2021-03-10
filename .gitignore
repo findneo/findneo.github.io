@@ -1,0 +1,8 @@
+.deploy_git/
+node_modules/
+# themes/
+public/
+db.json
+.DS_Store
+package-lock.json
+package.json  
