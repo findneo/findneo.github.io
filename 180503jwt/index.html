@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文首发  Freebuf   。略有更新。   0x01 初识JWTJWT （ JSON Web Token  的缩写）是一串带有声明信息的字符串，由服务端用加密算法对信息签名来保证其完整性和不可伪造。Token里可以包含所有必要信息，这样服务端就无需保存任何关于用户或会话的信息，JWT可用于身份认证、会话状态维持、信息交换等。 JWT 由三部分构成，分别称为 header 、payload 和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JSON Web Token的认识与攻击">
+<meta property="og:url" content="https://findneo.github.io/180503jwt/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="本文首发  Freebuf   。略有更新。   0x01 初识JWTJWT （ JSON Web Token  的缩写）是一串带有声明信息的字符串，由服务端用加密算法对信息签名来保证其完整性和不可伪造。Token里可以包含所有必要信息，这样服务端就无需保存任何关于用户或会话的信息，JWT可用于身份认证、会话状态维持、信息交换等。 JWT 由三部分构成，分别称为 header 、payload 和">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/180503jwt/1525158849660.png">
+<meta property="og:image" content="https://findneo.github.io/180503jwt/1525160523495.png">
+<meta property="og:image" content="https://findneo.github.io/180503jwt/1525359586004.png">
+<meta property="article:published_time" content="2018-05-03T14:22:34.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/180503jwt/1525158849660.png">
+
+<link rel="canonical" href="https://findneo.github.io/180503jwt/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JSON Web Token的认识与攻击 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180503jwt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JSON Web Token的认识与攻击
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-05-03 22:22:34" itemprop="dateCreated datePublished" datetime="2018-05-03T22:22:34+08:00">2018-05-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>本文首发  <a target="_blank" rel="noopener" href="http://www.freebuf.com/column/170359.html">Freebuf</a>   。略有更新。</strong>  </p>
+<h1 id="0x01-初识JWT"><a href="#0x01-初识JWT" class="headerlink" title="0x01 初识JWT"></a>0x01 初识JWT</h1><p>JWT （ <code>JSON Web Token </code> 的缩写）是一串带有声明信息的字符串，由服务端用加密算法对信息签名来保证其完整性和不可伪造。Token里可以包含所有必要信息，这样服务端就无需保存任何关于用户或会话的信息，JWT可用于身份认证、会话状态维持、信息交换等。</p>
+<p>JWT 由三部分构成，分别称为 <code>header</code> 、<code>payload</code> 和 <code>signature</code> ，各部分用<code>.</code> 相连构成一个完整的Token，形如<code>xxxxx.yyyyy.zzzzz</code> 。</p>
+<p>分别看下各个部分：</p>
+<p><strong>header</strong> ：</p>
+<p>使用一个JSON格式字符串声明token的类型和签名用的算法等，形如<code>&#123;&quot;alg&quot;: &quot;HS256&quot;, &quot;typ&quot;: &quot;JWT&quot;&#125;</code> 。该字符串经过Base64Url编码后形成JWT的第一部分<code>xxxxx</code>。</p>
+<p>Base64Url编码可以用这段代码直观理解：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">base64URLen</span>(<span class="params">s</span>):</span></span><br><span class="line">	t0=b64encode(s)</span><br><span class="line">	t1=t0.strip(<span class="string">&#x27;=&#x27;</span>).replace(<span class="string">&#x27;+&#x27;</span>,<span class="string">&#x27;-&#x27;</span>).replace(<span class="string">&#x27;/&#x27;</span>,<span class="string">&#x27;_&#x27;</span>)</span><br><span class="line">	<span class="keyword">return</span> t1</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">base64URLde</span>(<span class="params">s</span>):</span></span><br><span class="line">	t0=s.replace(<span class="string">&#x27;-&#x27;</span>,<span class="string">&#x27;+&#x27;</span>).replace(<span class="string">&#x27;_&#x27;</span>,<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">	t1=t0+<span class="string">&#x27;=&#x27;</span>*(<span class="number">4</span>-<span class="built_in">len</span>(t0)%<span class="number">4</span>)%<span class="number">4</span></span><br><span class="line">	<span class="keyword">return</span> b64decode(t1)</span><br></pre></td></tr></table></figure>
+
+<p><strong>payload</strong> :</p>
+<p>使用一个JSON格式字符串描述所要声明的信息，分为 <code>registered</code> 、<code> public</code> 、 和 <code>private</code> 三类，形如<code>&#123;&quot;name&quot;: &quot;John Doe&quot;, &quot;admin&quot;: true&#125;</code> ，具体信息可参考 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7519#section-4">RFC7519 的 JWT claims</a> 部分。</p>
+<p>同样的，该字符串经过Base64Url编码形成JWT的第二部分<code>yyyyy</code>。</p>
+<p><strong>signature</strong> :</p>
+<p>将 <code>xxxxx.yyyyy</code> 使用<code>alg</code> 指定的算法加密，然后再Base64Url编码得到JWT的第三部分<code>zzzzz</code> 。所支持的算法 类型取决于实现，但<code>HS256</code> 和 <code>none</code> 是强制要求实现的。</p>
+<h1 id="0x02-简单应用"><a href="#0x02-简单应用" class="headerlink" title="0x02 简单应用"></a>0x02 简单应用</h1><p>在本地运行起简单的基于Express的可发放和处理JWT的服务。</p>
+<ol>
+<li><strong>安装Node.js。</strong>Node.js是JavaScript运行时环境，采用轻量高效的事件驱动、无阻塞I/O模型，拥有最大的开源库生态nmp。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Windows平台可在 https:<span class="comment">//nodejs.org/en/download/ 下载安装包 </span></span><br><span class="line">*nix 平台可根据 https:<span class="comment">//nodejs.org/en/download/package-manager/ 提示使用包管理器安装</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>安装Express</strong>，一款基于Node.js的快速、灵活、极简的Web框架。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> http://expressjs.com/en/starter/installing.html</span></span><br><span class="line">mkdir D:\myapp &amp;&amp; cd D:\myapp </span><br><span class="line">	（全部回车，保持默认配置）</span><br><span class="line">npm init </span><br><span class="line">npm install express --save</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>运行本地服务</strong></li>
+</ol>
+<p>新建 <code>index.js</code> ，内容如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app = express()</span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> res.send(<span class="string">&#x27;Hello World!&#x27;</span>))</span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>运行<code>node index.js</code> ，就可从本地访问 <code>http://localhost:3000</code> 。</p>
+<ol>
+<li><strong>安装必要模块：</strong> 适用于Node.js的JWT编解码模块 <code>node-jwt-simple</code> 和 cookie解析模块 <code>cookie-parser</code> </li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> https://github.com/hokaccha/node-jwt-simple</span></span><br><span class="line">npm install jwt-simple</span><br><span class="line">npm install cookie-parser</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>一个简单的本地demo</strong> </li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"><span class="comment">//http://expressjs.com/en/4x/api.html</span></span><br><span class="line"><span class="comment">//https://github.com/hokaccha/node-jwt-simple</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//一些初始化的工作</span></span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">var</span> jwt = <span class="built_in">require</span>(<span class="string">&#x27;jwt-simple&#x27;</span>)</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">&#x27;cookie-parser&#x27;</span>)</span><br><span class="line"><span class="keyword">var</span> jwt_secret = <span class="string">&quot;this is a secret for jwt&quot;</span></span><br><span class="line"><span class="keyword">const</span> app = express()</span><br><span class="line">app.use(cookieParser())</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>res.redirect(<span class="string">&#x27;/help&#x27;</span>))</span><br><span class="line">app.get(<span class="string">&#x27;/help&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> RequstedURL=req.protocol+<span class="string">&#x27;://&#x27;</span>+req.get(<span class="string">&#x27;Host&#x27;</span>)</span><br><span class="line">	res.send([ </span><br><span class="line">		<span class="string">&#x27;GET &#x27;</span>+RequstedURL+<span class="string">&#x27;/login?user=name&amp;pass=passwd to get your JSON Web Token &#x27;</span> , </span><br><span class="line">		<span class="string">&#x27;GET &#x27;</span>+RequstedURL+<span class="string">&#x27;/whoami to identify yourself&#x27;</span></span><br><span class="line">		].join(<span class="string">&#x27;&lt;br&gt;&#x27;</span>))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/login&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> users=&#123;</span><br><span class="line">		<span class="string">&quot;admin&quot;</span>:<span class="string">&quot;admin_password_is_hard_to_guess&quot;</span>,</span><br><span class="line">		<span class="string">&quot;test&quot;</span>:<span class="string">&quot;test123&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> payload = &#123;<span class="string">&quot;name&quot;</span>:req.query.user&#125;</span><br><span class="line">	<span class="keyword">if</span>(users[req.query.user]===req.query.pass)&#123;</span><br><span class="line">		res.cookie(<span class="string">&#x27;jwt&#x27;</span>,jwt.encode(payload,jwt_secret))</span><br><span class="line">		res.send(req.query.user +<span class="string">&#x27; logged in&#x27;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;res.send(<span class="string">&#x27;login failed!&#x27;</span>)&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/whoami&#x27;</span>,<span class="function">(<span class="params">req,res</span>)=&gt;</span>&#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;res.send(<span class="string">&quot;you are logged in as :&lt;br&gt;&quot;</span> +jwt.decode(req.cookies.jwt,jwt_secret)[<span class="string">&#x27;name&#x27;</span>])&#125;</span><br><span class="line">	<span class="keyword">catch</span>(err) &#123;res.send(<span class="string">&quot;your JWT is :&lt;br&gt;&quot;</span>+req.cookies.jwt)&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!&#x27;</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>推荐几个在线工具<ul>
+<li><a target="_blank" rel="noopener" href="https://jwt.io/">https://jwt.io</a> </li>
+<li>by Sjoerd Langkemper<ul>
+<li>支持 <a target="_blank" rel="noopener" href="http://demo.sjoerdlangkemper.nl/jwtdemo/hs256.php">hs256</a> 算法</li>
+<li>支持 <a target="_blank" rel="noopener" href="http://demo.sjoerdlangkemper.nl/jwtdemo/rs256.php">rs256</a> 算法</li>
+</ul>
+</li>
+<li>by Kenji Urushima <ul>
+<li>支持更多算法  <a target="_blank" rel="noopener" href="https://kjur.github.io/jsjws/tool_jwt.html">kjur/jsjws</a>  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="0x03-攻击面"><a href="#0x03-攻击面" class="headerlink" title="0x03 攻击面"></a>0x03 攻击面</h1><h2 id="发现敏感信息"><a href="#发现敏感信息" class="headerlink" title="发现敏感信息"></a>发现敏感信息</h2><p>JWT中的<code>header</code> 和 <code>payload</code> 虽然看起来不可读，但实际上都只经过简单编码，开发者可能误将敏感信息存储在里面。使用上述工具可以方便地解码JWT中前两部分的信息。</p>
+<h2 id="指定算法为none"><a href="#指定算法为none" class="headerlink" title="指定算法为none"></a>指定算法为none</h2><p>上面提到算法 <code>none</code> 是JWT规范中强制要求实现的，但有些实现JWT的库直接将使用<code>none</code> 算法的token视为已经过校验。这样攻击者就可以设置<code>alg</code> 为<code>none</code> ，使<code>signature</code> 部分为空，然后构造包含任意<code>payload</code> 的JWT来欺骗服务端。</p>
+<p><img data-src="1525158849660.png" alt="1525158849660"></p>
+<h2 id="将签名算法从非对称类型改为对称类型"><a href="#将签名算法从非对称类型改为对称类型" class="headerlink" title="将签名算法从非对称类型改为对称类型"></a>将签名算法从非对称类型改为对称类型</h2><p>使用非对称加密算法（主要基于RSA、ECDSA，如S256）分发JWT的过程是使用私钥（private）加密生成JWT，使用公钥（public）解密验证。</p>
+<p>使用对称加密算法（主要基于HMAC，如HS256）分发JWT的过程是使用同一个密钥（secret）生成和验证JWT。</p>
+<p>如果服务端期待收到的算法类型为RS256，然后以RS256和public去验证JWT，而实际上收到的算法类型是HS256，那么服务端就可能尝试把public当作secret，然后用HS256算法解密验证JWT。</p>
+<p>由于RS256的public人人都可获得，攻击者可以预先以public为密钥，用HS256算法伪造包含任意<code>payload</code> 的JWT，从而成功通过服务端的验证。</p>
+<p><img data-src="1525160523495.png" alt="1525160523495"></p>
+<h2 id="爆破密钥"><a href="#爆破密钥" class="headerlink" title="爆破密钥"></a>爆破密钥</h2><p>JWT的安全性依赖于密钥的保密性，任何拥有密钥的人都可以构造任何内容的合法token。</p>
+<p>当一个JSON Web Token 被分发出去，如果密钥不够强壮就存在被爆破的风险，而且整个爆破过程可以离线进行。</p>
+<p>已经有人写了一些工具，推荐如下：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/jmaxxz/jwtbrute">jwtbrute</a> </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Sjord/jwtcrack/blob/master/crackjwt.py">Sjord’ python script</a> </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/magnumripper/JohnTheRipper">John the Ripper</a> </li>
+</ul>
+<h2 id="伪造密钥"><a href="#伪造密钥" class="headerlink" title="伪造密钥"></a>伪造密钥</h2><p>有时JWT采用<code>header</code> 中的<code>kid</code> 字段关联校验算法的密钥，这个密钥可能是对称加密的密钥，也可能是非对称加密的公钥。如果能够猜测<code>kid</code> 和 密钥的关联性，攻击者就可能修改<code>kid</code> 来欺骗服务端，使其校验时使用攻击者可控的密钥，于是攻击者就可以伪造任意内容的可通过校验的JWT。</p>
+<h3 id="2017-HITB-Pasty"><a href="#2017-HITB-Pasty" class="headerlink" title="2017 HITB Pasty"></a>2017 HITB Pasty</h3><p>关联性：kid是密钥URI的一部分。</p>
+<p><img data-src="1525359586004.png" alt="from cnblogs.com/dliv3/p/7450057.html"></p>
+<h3 id="2018强网杯-easyweb"><a href="#2018强网杯-easyweb" class="headerlink" title="2018强网杯 easyweb"></a>2018强网杯 easyweb</h3><p>关联性：kid 带入数据库查询对应密钥，可联合查询或者盲注。</p>
+<p>详见 <a href="http://findneo.github.io/180430ciscn/#easyweb">http://findneo.github.io/180430ciscn/#easyweb</a></p>
+<h1 id="0x04-安全建议"><a href="#0x04-安全建议" class="headerlink" title="0x04 安全建议"></a>0x04 安全建议</h1><ul>
+<li>验证函数应忽略JWT中的<code>algo</code> 字段，预先就明确JWT使用的算法，如果需要使用多种算法，可以在<code>header</code> 中使用表示”key ID” 的<code>kid</code> 字段，查询每个<code>kid</code> 对应的算法。</li>
+<li>JWT/JWS 标准应该移除 <code>header</code> 中的<code>algo</code> 字段。JWT的许多安全缺陷都来自于开发者依赖这一客户端可控的字段。</li>
+<li>开发者应升级相应库到最新版本，因为旧版本可能存在致命缺陷。</li>
+</ul>
+<h1 id="0x05-参考文章"><a href="#0x05-参考文章" class="headerlink" title="0x05 参考文章"></a>0x05 参考文章</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://jwt.io/introduction/">https://jwt.io/introduction/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/anny0404/p/5318692.html">https://www.cnblogs.com/anny0404/p/5318692.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/">https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/</a></li>
+<li><a target="_blank" rel="noopener" href="https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/">https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180430ciscn/" rel="prev" title="第十一届全国大学生信息安全竞赛“创新实践能力赛”">
+      <i class="fa fa-chevron-left"></i> 第十一届全国大学生信息安全竞赛“创新实践能力赛”
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180512KalionDocker/" rel="next" title="在win10家庭版上的Docker中使用Kali">
+      在win10家庭版上的Docker中使用Kali <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-%E5%88%9D%E8%AF%86JWT"><span class="nav-number">1.</span> <span class="nav-text">0x01 初识JWT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">0x02 简单应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="nav-number">3.</span> <span class="nav-text">0x03 攻击面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF"><span class="nav-number">3.1.</span> <span class="nav-text">发现敏感信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E7%AE%97%E6%B3%95%E4%B8%BAnone"><span class="nav-number">3.2.</span> <span class="nav-text">指定算法为none</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E7%AD%BE%E5%90%8D%E7%AE%97%E6%B3%95%E4%BB%8E%E9%9D%9E%E5%AF%B9%E7%A7%B0%E7%B1%BB%E5%9E%8B%E6%94%B9%E4%B8%BA%E5%AF%B9%E7%A7%B0%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.</span> <span class="nav-text">将签名算法从非对称类型改为对称类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E7%A0%B4%E5%AF%86%E9%92%A5"><span class="nav-number">3.4.</span> <span class="nav-text">爆破密钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%AA%E9%80%A0%E5%AF%86%E9%92%A5"><span class="nav-number">3.5.</span> <span class="nav-text">伪造密钥</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2017-HITB-Pasty"><span class="nav-number">3.5.1.</span> <span class="nav-text">2017 HITB Pasty</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2018%E5%BC%BA%E7%BD%91%E6%9D%AF-easyweb"><span class="nav-number">3.5.2.</span> <span class="nav-text">2018强网杯 easyweb</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-%E5%AE%89%E5%85%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">4.</span> <span class="nav-text">0x04 安全建议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x05-%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-number">5.</span> <span class="nav-text">0x05 参考文章</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

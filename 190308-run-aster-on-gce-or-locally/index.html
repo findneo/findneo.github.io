@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="深度学习需要较强的计算能力，在网络上找了一圈，列出一些可用的方案。  极客云 谷歌云 。提供一年免费试用，但需要外币信用卡。 谷歌的Colaboratory  厦大HPC  淘宝西电机房等  百度深度学习平台  AWS DeepBrain Chain 美团云 售罄 滴滴云 华为云 阿里云 参考文章 机器学习深度学习云GPU资源与对比 有没有云端的深度学习计算服务？      基本环境在谷歌云上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用谷歌云进行深度学习训练，以aster为例">
+<meta property="og:url" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="深度学习需要较强的计算能力，在网络上找了一圈，列出一些可用的方案。  极客云 谷歌云 。提供一年免费试用，但需要外币信用卡。 谷歌的Colaboratory  厦大HPC  淘宝西电机房等  百度深度学习平台  AWS DeepBrain Chain 美团云 售罄 滴滴云 华为云 阿里云 参考文章 机器学习深度学习云GPU资源与对比 有没有云端的深度学习计算服务？      基本环境在谷歌云上">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552054146667.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552054275727.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552054400444.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552056076810.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552056065910.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552093922587.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552092594436.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552092638172.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552079776694.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552092702860.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552092743066.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552094702649.png">
+<meta property="og:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552093439964.png">
+<meta property="article:published_time" content="2019-03-08T08:33:07.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/190308-run-aster-on-gce-or-locally/1552054146667.png">
+
+<link rel="canonical" href="https://findneo.github.io/190308-run-aster-on-gce-or-locally/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用谷歌云进行深度学习训练，以aster为例 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/190308-run-aster-on-gce-or-locally/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用谷歌云进行深度学习训练，以aster为例
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-08 16:33:07" itemprop="dateCreated datePublished" datetime="2019-03-08T16:33:07+08:00">2019-03-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- 光阴似箭，我也做起了毕业设计。随波逐流，我也玩起了深度学习。-->
+
+<p>深度学习需要较强的计算能力，在网络上找了一圈，列出一些可用的方案。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jikecloud.net/">极客云</a></li>
+<li><a target="_blank" rel="noopener" href="https://console.cloud.google.com/freetrial/signup/tos">谷歌云</a> 。提供一年免费试用，但需要外币信用卡。</li>
+<li>谷歌的<a target="_blank" rel="noopener" href="https://www.138vps.com/jc/1325.html">Colaboratory</a> </li>
+<li><a target="_blank" rel="noopener" href="https://net.xmu.edu.cn/19/47/c17463a334151/page.htm">厦大HPC</a> </li>
+<li><a target="_blank" rel="noopener" href="https://item.taobao.com/item.htm?id=572068150187">淘宝西电机房等</a> </li>
+<li><a target="_blank" rel="noopener" href="https://cloud.baidu.com/product/bdl.html">百度深度学习平台</a> </li>
+<li><a target="_blank" rel="noopener" href="https://amazonaws-china.com/cn/free/">AWS</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.deepbrainchain.org/">DeepBrain Chain</a></li>
+<li>美团云 售罄</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_36256646/article/details/80745792">滴滴云</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.huaweicloud.com/product/hmi.html">华为云</a></li>
+<li>阿里云</li>
+<li>参考文章<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/cccat6/article/details/79057746">机器学习深度学习云GPU资源与对比</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/51362855">有没有云端的深度学习计算服务？</a>  </li>
+</ul>
+</li>
+</ul>
+<h1 id="基本环境"><a href="#基本环境" class="headerlink" title="基本环境"></a>基本环境</h1><p>在谷歌云上搭建起 <strong>Ubuntu16.04 + Python3.5 + tensorflow-gpu-1.4 + CUDA v8 + cuDNN v6</strong> 的环境。</p>
+<h2 id="申请试用谷歌云"><a href="#申请试用谷歌云" class="headerlink" title="申请试用谷歌云"></a>申请试用谷歌云</h2><p>地址可随意填，记录两个。</p>
+<p><code>台中市大甲区大甲里 邮编：43749</code> </p>
+<p><code>California(加利福尼亚省) Adelanto(阿德兰托市) 邮编[ADELANTO CA 92301]</code> </p>
+<h2 id="新建虚拟机"><a href="#新建虚拟机" class="headerlink" title="新建虚拟机"></a>新建虚拟机</h2><p>进入Google Cloud Platform -&gt; Compute Engine -&gt; VM 实例 ，通过“创建实例”新建一台虚拟机。</p>
+<ul>
+<li>机器类型中选择自定义来添加GPU数量和类型。</li>
+<li>需要先按提示申请升级账户才能进行上述操作。很快会有邮件反馈申请成功。</li>
+<li>自定义磁盘容量，防火墙允许流量。</li>
+<li>点击创建得到一台全新的云端虚拟机。</li>
+</ul>
+<h2 id="远程访问"><a href="#远程访问" class="headerlink" title="远程访问"></a>远程访问</h2><ul>
+<li>添加静态外部IP地址。在VM实例页面，实例右侧的设置处点击查看网络详情即可。</li>
+<li>在Compute Engine -&gt; 元数据 中修改SSH 密钥。使用XHSELL或命令行工具生成密钥对后在云端按指定格式添加公钥，然后可在本地用私钥远程登陆。</li>
+</ul>
+<h2 id="安装Anaconda"><a href="#安装Anaconda" class="headerlink" title="安装Anaconda"></a>安装Anaconda</h2><ul>
+<li><p><code>wget https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh</code></p>
+</li>
+<li><p><code>chmod +x Anaconda3-4.2.0-Linux-x86_64.sh</code></p>
+</li>
+<li><p><code>./Anaconda3-4.2.0-Linux-x86_64.sh</code> 按提示选择，对于是否添加到PATH记得选yes。</p>
+</li>
+<li><p><code>source ~/.bashrc</code> 使conda等命令生效。</p>
+</li>
+<li><p><code>conda create -n tensorflow python=3.5</code>  建立虚拟环境。</p>
+</li>
+<li><p><code>source activate tensorflow</code> 激活环境。</p>
+</li>
+<li><p><code>pip install --ignore-installed --upgrade tensorflow-gpu==1.4.0</code> 安装tensorflow。</p>
+</li>
+<li><p><code>lspci -vnn | grep VGA -A 12</code> 查看显卡类型</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(tensorflow) dfindneo@gaster:~/tf/aster/c_ops$ lspci -vnn | grep VGA -A 12</span><br><span class="line">00:03.0 Non-VGA unclassified device [0000]: Red Hat, Inc. Virtio SCSI [1af4:1004]</span><br><span class="line">        Subsystem: Red Hat, Inc. Virtio SCSI [1af4:0008]</span><br><span class="line">        Physical Slot: 3</span><br><span class="line">        Flags: bus master, fast devsel, latency 0, IRQ 11</span><br><span class="line">        I/O ports at c080 [size=64]</span><br><span class="line">        Memory at fd000000 (32-bit, non-prefetchable) [size=128]</span><br><span class="line">        Capabilities: &lt;access denied&gt;</span><br><span class="line">        Kernel driver <span class="keyword">in</span> use: virtio-pci</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">00:04.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)</span><br><span class="line">        Subsystem: NVIDIA Corporation Device [10de:118f]</span><br><span class="line">        Physical Slot: 4</span><br><span class="line">        Flags: fast devsel, IRQ 11</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h2><ul>
+<li><p>访问<a target="_blank" rel="noopener" href="https://www.nvidia.com/Download/index.aspx?lang=en-us">NVIDIA官网</a> ，选择配置。<br><img data-src="1552054146667.png" alt="1552054146667"></p>
+</li>
+<li><p>点击search，看到对应的版本是384.66<br><img data-src="1552054275727.png" alt="1552054275727"></p>
+</li>
+<li><p>安装驱动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:graphics-drivers/ppa  </span><br><span class="line">sudo apt-get update  </span><br><span class="line">sudo apt-get install nvidia-384 <span class="comment">#此处要根据上面查询到的版本适当更改</span></span><br><span class="line">sudo apt-get install mesa-common-dev  </span><br><span class="line">sudo apt-get install freeglut3-dev</span><br><span class="line">sudo reboot -h now</span><br></pre></td></tr></table></figure></li>
+<li><p>重启后可以使用<code>nvidia-smi</code> 命令查看是否安装成功。<br><img data-src="1552054400444.png" alt="1552054400444"></p>
+</li>
+</ul>
+<h2 id="安装CUDA8-0"><a href="#安装CUDA8-0" class="headerlink" title="安装CUDA8.0"></a>安装CUDA8.0</h2><ul>
+<li><p>我使用<code>sudo apt install nvidia-cuda-toolkit</code> 安装的CUDA是7.?版本的，使用<code>sudo apt remove nvidia-cuda*</code>  卸载掉了。</p>
+</li>
+<li><p>要安装CUDAv8.0，在<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-80-ga2-download-archive">这个页面</a>选择系统、架构、发行版及其版本，安装类型可选择runfile。如果是Ubuntu16.04，可直接 <code>wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run</code> ，然后 <code>sh  cuda_8.0.61_375.26_linux-run</code>  。询问是否安装驱动时应选择否，因为我们已经安装过驱动了。</p>
+</li>
+<li><p>看到提示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Please make sure that</span><br><span class="line">-   PATH includes &#x2F;usr&#x2F;local&#x2F;cuda-8.0&#x2F;bin</span><br><span class="line">-   LD_LIBRARY_PATH includes &#x2F;usr&#x2F;local&#x2F;cuda-8.0&#x2F;lib64, or, add &#x2F;usr&#x2F;local&#x2F;cuda-8.0&#x2F;lib64 to &#x2F;etc&#x2F;ld.so.conf and run ldconfig as root</span><br></pre></td></tr></table></figure>
+
+<p>于是将 <code>export PATH=&quot;/usr/local/cuda-8.0/bin:$PATH&quot;;export LD_LIBRARY_PATH=&quot;/usr/lib/nvidia-384:$LD_LIBRARY_PATH&quot;</code> 添加到<code>~/.bashrc</code> 并source更新。将<code>/usr/local/cuda-8.0/lib64</code> 添加到文件 /etc/ld.so.conf 然后 sudo ldconfig。</p>
+</li>
+<li><p>执行 <code>cd ~/NVIDIA_CUDA-8.0_Samples/1_Utilities/deviceQuery &amp;&amp; make &amp;&amp; ./deviceQuery</code> 。如果输出末尾有PASS字样，表示安装成功。</p>
+</li>
+<li><p>使用 <code>nvcc --version</code> 查看版本信息。<br><img data-src="1552056076810.png" alt="1552056076810"> </p>
+</li>
+</ul>
+<h2 id="安装cuDNN6-0"><a href="#安装cuDNN6-0" class="headerlink" title="安装cuDNN6.0"></a>安装cuDNN6.0</h2><ul>
+<li>登陆账号后访问 <code>https://developer.nvidia.com/compute/machine-learning/cudnn/secure/v6/prod/8.0_20170307/cudnn-8.0-linux-x64-v6.0-tgz </code>  ，点击下载，在chrome浏览器中按CTRL+J查看真实下载链接，暂停下载，然后在shell里wget该链接即可。下载后重命名文件为<code>cudnn-8.0-linux-x64-v6.0.tgz</code> 。</li>
+<li><code>tar xzf cudnn-8.0-linux-x64-v6.0.tgz</code><br><code>sudo cp cuda/include/cudnn.h /usr/local/cuda/include/</code><br><code>sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64/</code><br><code>sudo chmod a+r /usr/local/cuda/include/cudnn.h</code><br><code>sudo chmod a+r /usr/local/cuda/lib64/libcudnn*</code> </li>
+<li>安装完成<br><img data-src="1552056065910.png" alt="1552056065910"></li>
+</ul>
+<p>到此为止深度学习的基本环境已经安装完成。可以在Compute Engine -&gt; 快照 中建立一个快照。</p>
+<p>接下来记录想要复现和改进的模型 <code>aster</code>  的基本环境配置。</p>
+<h1 id="ASTER环境"><a href="#ASTER环境" class="headerlink" title="ASTER环境"></a>ASTER环境</h1><h2 id="激活虚拟环境并安装依赖"><a href="#激活虚拟环境并安装依赖" class="headerlink" title="激活虚拟环境并安装依赖"></a>激活虚拟环境并安装依赖</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> activate tensorflow</span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install git cmake libcupti-dev build-essential protobuf-compiler unzip python-pip3</span><br><span class="line">pip install --user protobuf tqdm numpy editdistance Pillow scipy matplotlib edit_distance</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir tf &amp;&amp; <span class="built_in">cd</span> tf</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/bgshih/aster.git</span><br></pre></td></tr></table></figure>
+
+<h2 id="按照readme依次完成三步配置"><a href="#按照readme依次完成三步配置" class="headerlink" title="按照readme依次完成三步配置"></a>按照readme依次完成三步配置</h2><p>①<code>Go to c_ops/ and run build.sh to build the custom operators</code> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/tf/aster/c_ops</span><br><span class="line">chmod +x build.sh</span><br><span class="line">./build.sh</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1552093922587.png" alt="1552093922587"></p>
+<p><img data-src="1552092594436.png" alt="1552092594436"></p>
+<p>②<code>Execute protoc aster/protos/*.proto --python_out=. to build the protobuf files</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/tf</span><br><span class="line">protoc aster/protos/*.proto --python_out=.</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1552092638172.png" alt="1552092638172"></p>
+<p>③<code>Add /path/to/aster to PYTHONPATH, or set this variable for every run</code> </p>
+<p>在<code>~/.bashrc</code> 末尾加两行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PYTHONPATH&#x3D;&quot;$&#123;PYTHONPATH&#125;:&#x2F;home&#x2F;neo&#x2F;tf&#x2F;aster&quot;</span><br><span class="line">source activate tensorflow</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载作者提供的模型"><a href="#下载作者提供的模型" class="headerlink" title="下载作者提供的模型"></a>下载作者提供的模型</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/tf/aster/experiments/demo/</span><br><span class="line">wget  https://github.com/bgshih/aster/releases/download/v1.0.1/model-demo.zip</span><br><span class="line">unzip model-demo.zip</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行demo"><a href="#运行demo" class="headerlink" title="运行demo"></a>运行demo</h2><p> <code>python aster/demo.py</code> </p>
+<p><img data-src="1552079776694.png" alt="1552079776694"></p>
+<h2 id="数据集下载"><a href="#数据集下载" class="headerlink" title="数据集下载"></a>数据集下载</h2><h3 id="cute80"><a href="#cute80" class="headerlink" title="cute80"></a>cute80</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://cs-chan.com/downloads_CUTE80_dataset.html">主页</a> </li>
+<li>下载：<a target="_blank" rel="noopener" href="http://cs-chan.com/source/CUTE80_Dataset.zip">CUTE80_Dataset.zip</a> (44 MB) </li>
+</ul>
+<h3 id="ic03"><a href="#ic03" class="headerlink" title="ic03"></a>ic03</h3><p><a target="_blank" rel="noopener" href="http://www.iapr-tc11.org/mediawiki/index.php/ICDAR_2003_Robust_Reading_Competitions">下载</a> </p>
+<h3 id="ic13"><a href="#ic13" class="headerlink" title="ic13"></a>ic13</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://dagdata.cvc.uab.es/icdar2013competition/?ch=2&com=downloads">主页</a> </li>
+<li><a target="_blank" rel="noopener" href="http://rrc.cvc.uab.es/?ch=2&com=downloads">下载</a> （注册账号后可见）</li>
+</ul>
+<h3 id="ic15"><a href="#ic15" class="headerlink" title="ic15"></a>ic15</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://rrc.cvc.uab.es/?ch=4">主页</a> </li>
+<li><a target="_blank" rel="noopener" href="http://rrc.cvc.uab.es/?ch=4&com=downloads">下载</a> （注册账号后可见）</li>
+<li>文件说明</li>
+</ul>
+<p><em><strong>Downloads - Incidental Scene Text</strong></em><br>Download below the training dataset and associated ground truth information for each of the Tasks.</p>
+<hr>
+<p><em><strong>Task 4.1: Text Localization (2015 edition)</strong></em><br><strong>Training Set</strong><br>Training Set Images (88.5MB).- 1000 images obtained with wearable cameras</p>
+<p>Training Set Localisation and Transcription Ground Truth (157KB).- 1000 text files with word level localisation and transcription ground truth</p>
+<p><strong>Test Set</strong><br>Test Set Images (43.3MB).- 500 images obtained with wearable cameras. You can submit your results for this Task over the images of the test set through the My Methods section.</p>
+<p>Test Set Ground Truth (244Kb). - 500 text files with text localisation bounding boxes for the images of the test set.</p>
+<hr>
+<p><em><strong>Task 4.2: Text Segmentation (N/A)</strong></em><br>Not available.</p>
+<hr>
+<p><em><strong>Task 4.3: Word Recognition (2015 edition)</strong></em><br><strong>Training Set</strong><br>Training Set Word Images, along with Transcriptions Ground truth (40.5MB).- ~4468 cut out word images corresponding to the axis oriented bounding boxes of the words are provided along with a single text file with the relative coordinates of the bounding shape within each word image. Transcription ground truth is provided in a single txt file.</p>
+<p><strong>Test Set</strong><br>Test Set Word Images (21.5MB).- 2077 cut out word images corresponding to the axis oriented bounding boxes of the words are provided along with a single text file with the relative coordinates of the bounding shape within each word image. You can submit your results for this Task over the images of the test set through the My Methods section.</p>
+<p>Test Set Ground Truth (49Kb). - A single text file with the transcriptions of the 2077 images of the test set. Each line corresponds to an image of the test set.</p>
+<hr>
+<p><em><strong>Task 4.4: End to End (2015 edition)</strong></em><br><strong>Training Set</strong><br>Training Set Images (88.5MB).- 1000 images obtained with wearable cameras</p>
+<p>Training Set Vocabulary (16KB).- Vocabulary of all words (words of 3 characters or longer comprising only letters) appearing in the training set</p>
+<p>Training Set Per-image Vocabularies (504KB).- Vocabularies of 100 words per image, comprising the words appearing in the image plus distractors</p>
+<p>Training Set Localisation and Transcription Ground Truth (157KB).- 1000 text files with word level localisation and transcription ground truth</p>
+<p><strong>Test Set</strong><br>Test Set Images (43.3MB).- 500 images obtained with wearable cameras. You can submit your results for this Task over the images of the test set through the My Methods section.</p>
+<p>Test Set Vocabulary (8KB).- Vocabulary of all words (words of 3 characters or longer comprising only letters) appearing in the test set</p>
+<p>Test Set Per-image Vocabularies (248KB).- Vocabularies of 100 words per image, comprising the words appearing in the image plus distractors</p>
+<p>Test Set Ground Truth (244 Kb). - 500 text files with text localisation bounding boxes for the images of the test set.</p>
+<hr>
+<p><em><strong>Other</strong></em><br> Generic Vocabulary (796 KB).- A vocabulary of about 90 k words derived from the dataset publicly available here. Please consult [1,2] for further information as well as the disclaimer in the vocabulary file itself.</p>
+<h3 id="iiit5k"><a href="#iiit5k" class="headerlink" title="iiit5k"></a>iiit5k</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://cvit.iiit.ac.in/projects/SceneTextUnderstanding/IIIT5K.html">主页</a> </li>
+<li>下载：<a target="_blank" rel="noopener" href="http://cvit.iiit.ac.in/projects/SceneTextUnderstanding/IIIT5K-Word_V3.0.tar.gz">IIIT5K-Word_V3.0.tar.gz</a> (106 MB) </li>
+</ul>
+<h3 id="svt"><a href="#svt" class="headerlink" title="svt"></a>svt</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://vision.ucsd.edu/~kai/svt/">主页</a></li>
+<li>下载：<a target="_blank" rel="noopener" href="http://vision.ucsd.edu/~kai/svt/svt.zip">Street View Text </a>(118MB)</li>
+</ul>
+<h3 id="synth90k"><a href="#synth90k" class="headerlink" title="synth90k"></a>synth90k</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.robots.ox.ac.uk/~vgg/data/text/">主页</a></li>
+<li>下载：<a target="_blank" rel="noopener" href="http://www.robots.ox.ac.uk/~vgg/data/text/mjsynth.tar.gz">mjsynth.tar.gz</a> ( 10 GB )，解压后约34 G，生成的 tfrecord 约16 G。</li>
+</ul>
+<p><img data-src="1552092702860.png" alt="1552092702860"></p>
+<h3 id="synthtext"><a href="#synthtext" class="headerlink" title="synthtext"></a>synthtext</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.robots.ox.ac.uk/~vgg/data/scenetext/">主页</a></li>
+<li>下载：<a target="_blank" rel="noopener" href="http://www.robots.ox.ac.uk/~vgg/data/scenetext/SynthText.zip">SynthText.zip</a> 约40G</li>
+</ul>
+<h2 id="数据集处理"><a href="#数据集处理" class="headerlink" title="数据集处理"></a>数据集处理</h2><p>在 <code>~/tf/data</code> 目录下存放数据集文件夹，配置 <code>~/tf/aster/tools/creat_*.py</code> 中的输入输出目录，运行脚本可在数据集同目录下得到tfrecord文件。</p>
+<p><img data-src="1552092743066.png" alt="1552092743066"></p>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><p>在<code>~/tf/data/</code>目录下存放<code>tfrecord</code>文件；</p>
+<p> 在<code>~/tf/aster/experiments/</code> 新建<code>train1</code> 文件夹，再在其中新建<code>config</code> 和 <code>log</code> 文件夹；</p>
+<p>在<code>config</code> 文件夹内新建<code>trainval.prototxt</code> ，内容参照<code>~/tf/aster/experiments/demo/config/trainval.prototxt</code> 。</p>
+<p>执行训练命令后在<code>~/tf/aster/experiments/train1/log</code> 目录下生成checkpoint文件等。</p>
+<p>train :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/tf/</span><br><span class="line">python aster/train.py --exp_dir=aster/experiments/train1/ --num_clones=2 </span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1552094702649.png" alt="1552094702649"></p>
+<p>eval :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/tf/</span><br><span class="line">python aster/eval.py  --exp_dir=aster/experiments/train1/</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="1552093439964.png" alt="1552093439964"></p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="提高访问速度"><a href="#提高访问速度" class="headerlink" title="提高访问速度"></a>提高访问速度</h2><p>如果是位于国内的服务器，可更改部分操作以提高访问速度。</p>
+<h3 id="修改Ubuntu更新源"><a href="#修改Ubuntu更新源" class="headerlink" title="修改Ubuntu更新源"></a>修改Ubuntu更新源</h3><p>编辑Ubuntu16.04的 <code>/etc/apt/source.list</code> 为以下内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse</span><br><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse</span><br><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse</span><br><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用ssh"><a href="#使用ssh" class="headerlink" title="使用ssh"></a>使用ssh</h3><p><code>sudo apt update &amp;&amp; sudo apt install openssh-server &amp;&amp; sudo service ssh start</code> </p>
+<p><code>sudo apt install lrzsz</code> 安装 lrzsz 后用<code>sz</code> / <code>rz</code> 命令进行小文件传输，大文件用sftp。</p>
+<h3 id="下载Anaconda"><a href="#下载Anaconda" class="headerlink" title="下载Anaconda"></a>下载Anaconda</h3><p><code>wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-4.2.0-Linux-x86_64.sh </code> </p>
+<h3 id="修改Anaconda软件源"><a href="#修改Anaconda软件源" class="headerlink" title="修改Anaconda软件源"></a>修改Anaconda软件源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ </span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</span><br><span class="line">conda config --<span class="built_in">set</span> show_channel_urls yes</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改pip源"><a href="#修改pip源" class="headerlink" title="修改pip源"></a>修改pip源</h3><ul>
+<li><p><code>mkdir -p ~/.pip &amp;&amp; touch ~/.pip/pip.conf</code> </p>
+</li>
+<li><p>修改 <code>~/.pip/pip.conf</code> 内容为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line">[install]</span><br><span class="line">trusted-host=mirrors.aliyun.com</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>（Windows下为 <code>C:\Users\USERNAME\AppData\Roaming\pip\pip.ini</code> ） </p>
+<h2 id="克隆GitHub公开repo到私有"><a href="#克隆GitHub公开repo到私有" class="headerlink" title="克隆GitHub公开repo到私有"></a>克隆GitHub公开repo到私有</h2><p>GitHub前段时间已经支持免费使用私有仓库，可以将代码仓库镜像自己的私有仓库，更方便地记录代码更改。</p>
+<ul>
+<li><p>sudo apt install git</p>
+</li>
+<li><p>设置git配置和远程访问</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name findneo</span><br><span class="line">git config --global user.email username@gmail.com</span><br><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;usernameo@gmail.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>将~/.ssh/id_rsa.pub添加到GitHub的SSH keys。</p>
+</li>
+<li><p><code>ssh -T git@github.com</code> 测试是否成功</p>
+</li>
+<li><p>mirror 公开仓库 bgshih/aster 到 私有仓库 findneo/myaster</p>
+<ul>
+<li><p>在GitHub新建名为myaster的私有仓库</p>
+</li>
+<li><pre><code class="bash">git clone --bare https://github.com/bgshih/aster.git
+cd aster.git
+git push -mirror https://github.com/findneo/myaster.git
+cd ..
+rm -rf aster.git
+git clone git@github.com:findneo/myaster.git
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="protocol-buffers"><a href="#protocol-buffers" class="headerlink" title="protocol buffers"></a>protocol buffers</h2><p>和XML/JSON/Thrift类似，优点在于简单，快，小，后向兼容，语言平台应用无关；缺点在于自解释性不够，不能表示很复杂的结构。</p>
+<p>只要描述proto文件，就可以使用编译器protoc(支持c++/Java/Python)自动生成用于序列化、反序列化、读写对象的操作的代码。</p>
+<h1 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h1><p>最后，感谢慷慨借用信用卡的朋友。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xuezishi.net/">学姿势 - 校园金融第一站</a> ——学习信用卡相关的姿势 </li>
+<li><a target="_blank" rel="noopener" href="http://www.haoweichi.com/">美国人信息生成，美国身份生成-世界各国身份信息、地址、信用卡生成</a> </li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">CUDA 下载</a> </li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/cudnn">cuDNN下载</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.nvidia.com/Download/index.aspx?lang=en-us">NVIDIA显卡驱动下载</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zpcdbky/p/9757821.html">保姆级教程——Ubuntu16.04 Server下深度学习环境搭建：安装CUDA8.0，cuDNN6.0，Bazel0.5.4，源码编译安装TensorFlow1.4.0(GPU版)</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pprp/p/9463974.html">深度学习环境搭建：Tensorflow1.4.0+Ubuntu16.04+Python3.5+Cuda8.0+Cudnn6.0</a> </li>
+<li>论文下载：<a target="_blank" rel="noopener" href="http://www.vlrlab.net/admin/uploads/avatars/ASTER_An_Attentional_Scene_Text_Recognizer_with_Flexible_Rectification.pdf">【PAMI2018】ASTER_An Attentional Scene Text Recognizer with Flexible Rectification.pdf</a> </li>
+<li>代码仓库：<a target="_blank" rel="noopener" href="https://github.com/bgshih/aster">https://github.com/bgshih/aster</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/">清华大学开源软件镜像站</a> <ul>
+<li><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/">国内Anaconda下载</a> </li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://repo.continuum.io/archive/">国际Anaconda下载</a> </li>
+<li><a target="_blank" rel="noopener" href="https://help.github.com/en/articles/duplicating-a-repository">Duplicating a repository</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/linux/l-cn-gpb/index.html">Google Protocol Buffer 的使用和原理</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/190223-tamuctf/" rel="prev" title="TAMUctf writeup">
+      <i class="fa fa-chevron-left"></i> TAMUctf writeup
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/190326-clock-manage-problem/" rel="next" title="拨钟问题">
+      拨钟问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">基本环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7%E8%AF%95%E7%94%A8%E8%B0%B7%E6%AD%8C%E4%BA%91"><span class="nav-number">1.1.</span> <span class="nav-text">申请试用谷歌云</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">新建虚拟机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE"><span class="nav-number">1.3.</span> <span class="nav-text">远程访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Anaconda"><span class="nav-number">1.4.</span> <span class="nav-text">安装Anaconda</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.5.</span> <span class="nav-text">安装显卡驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85CUDA8-0"><span class="nav-number">1.6.</span> <span class="nav-text">安装CUDA8.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cuDNN6-0"><span class="nav-number">1.7.</span> <span class="nav-text">安装cuDNN6.0</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ASTER%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">ASTER环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%B9%B6%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.</span> <span class="nav-text">激活虚拟环境并安装依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">下载源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%89%E7%85%A7readme%E4%BE%9D%E6%AC%A1%E5%AE%8C%E6%88%90%E4%B8%89%E6%AD%A5%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">按照readme依次完成三步配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E4%BD%9C%E8%80%85%E6%8F%90%E4%BE%9B%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.4.</span> <span class="nav-text">下载作者提供的模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Cdemo"><span class="nav-number">2.5.</span> <span class="nav-text">运行demo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E4%B8%8B%E8%BD%BD"><span class="nav-number">2.6.</span> <span class="nav-text">数据集下载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cute80"><span class="nav-number">2.6.1.</span> <span class="nav-text">cute80</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ic03"><span class="nav-number">2.6.2.</span> <span class="nav-text">ic03</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ic13"><span class="nav-number">2.6.3.</span> <span class="nav-text">ic13</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ic15"><span class="nav-number">2.6.4.</span> <span class="nav-text">ic15</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iiit5k"><span class="nav-number">2.6.5.</span> <span class="nav-text">iiit5k</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svt"><span class="nav-number">2.6.6.</span> <span class="nav-text">svt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synth90k"><span class="nav-number">2.6.7.</span> <span class="nav-text">synth90k</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synthtext"><span class="nav-number">2.6.8.</span> <span class="nav-text">synthtext</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%A4%84%E7%90%86"><span class="nav-number">2.7.</span> <span class="nav-text">数据集处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">2.8.</span> <span class="nav-text">训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">3.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E9%AB%98%E8%AE%BF%E9%97%AE%E9%80%9F%E5%BA%A6"><span class="nav-number">3.1.</span> <span class="nav-text">提高访问速度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9Ubuntu%E6%9B%B4%E6%96%B0%E6%BA%90"><span class="nav-number">3.1.1.</span> <span class="nav-text">修改Ubuntu更新源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ssh"><span class="nav-number">3.1.2.</span> <span class="nav-text">使用ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDAnaconda"><span class="nav-number">3.1.3.</span> <span class="nav-text">下载Anaconda</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9Anaconda%E8%BD%AF%E4%BB%B6%E6%BA%90"><span class="nav-number">3.1.4.</span> <span class="nav-text">修改Anaconda软件源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9pip%E6%BA%90"><span class="nav-number">3.1.5.</span> <span class="nav-text">修改pip源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%8B%E9%9A%86GitHub%E5%85%AC%E5%BC%80repo%E5%88%B0%E7%A7%81%E6%9C%89"><span class="nav-number">3.2.</span> <span class="nav-text">克隆GitHub公开repo到私有</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#protocol-buffers"><span class="nav-number">3.3.</span> <span class="nav-text">protocol buffers</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%84%9F%E8%B0%A2"><span class="nav-number">4.</span> <span class="nav-text">感谢</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

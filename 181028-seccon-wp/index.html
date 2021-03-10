@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="ForensicsUnzip压缩命令为 12echo &amp;#x27;SECCON&amp;#123;&amp;#x27;&#96;cat key&#96;&amp;#x27;&amp;#125;&amp;#x27; &gt; flag.txtzip -e --password&#x3D;&#96;perl -e &quot;print time()&quot;&#96; flag.zip flag.txt  update: 比较棒的思路是flag.zip生成时刻的时间戳就是他的密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SECCON 2018">
+<meta property="og:url" content="https://findneo.github.io/181028-seccon-wp/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="ForensicsUnzip压缩命令为 12echo &amp;#x27;SECCON&amp;#123;&amp;#x27;&#96;cat key&#96;&amp;#x27;&amp;#125;&amp;#x27; &gt; flag.txtzip -e --password&#x3D;&#96;perl -e &quot;print time()&quot;&#96; flag.zip flag.txt  update: 比较棒的思路是flag.zip生成时刻的时间戳就是他的密">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://findneo.github.io/181028-seccon-wp/1540714389474.png">
+<meta property="og:image" content="https://findneo.github.io/181028-seccon-wp/1540714399554.png">
+<meta property="og:image" content="https://findneo.github.io/181028-seccon-wp/1540714953343.png">
+<meta property="og:image" content="https://findneo.github.io/181028-seccon-wp/1540715588584.png">
+<meta property="og:image" content="https://findneo.github.io/181028-seccon-wp/1540716372243.png">
+<meta property="og:image" content="https://findneo.github.io/181028-seccon-wp/1540778376203.png">
+<meta property="article:published_time" content="2018-10-28T08:05:30.000Z">
+<meta property="article:modified_time" content="2021-03-09T13:32:32.000Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://findneo.github.io/181028-seccon-wp/1540714389474.png">
+
+<link rel="canonical" href="https://findneo.github.io/181028-seccon-wp/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SECCON 2018 | 闲言语</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">闲言语</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/181028-seccon-wp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SECCON 2018
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-28 16:05:30" itemprop="dateCreated datePublished" datetime="2018-10-28T16:05:30+08:00">2018-10-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Forensics"><a href="#Forensics" class="headerlink" title="Forensics"></a>Forensics</h1><h2 id="Unzip"><a href="#Unzip" class="headerlink" title="Unzip"></a>Unzip</h2><p>压缩命令为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;SECCON&#123;&#x27;</span>`cat key`<span class="string">&#x27;&#125;&#x27;</span> &gt; flag.txt</span><br><span class="line">zip -e --password=`perl -e <span class="string">&quot;print time()&quot;</span>` flag.zip flag.txt</span><br></pre></td></tr></table></figure>
+
+<p>update:</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>比较棒的思路是flag.zip生成时刻的时间戳就是他的密码。那么</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$stat</span> -c %Y flag.zip</span><br><span class="line">1540566641</span><br></pre></td></tr></table></figure>
+
+<h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><p>爆破密码：</p>
+<p><img data-src="1540714389474.png" alt="1540714389474"></p>
+<p><img data-src="1540714399554.png" alt="1540714399554"></p>
+<p><img data-src="1540714953343.png" alt="1540714953343"></p>
+<h2 id="History"><a href="#History" class="headerlink" title="History"></a>History</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">$ binwalk J</span><br><span class="line"></span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line">3912330       0x3BB28A        ARJ archive data, header size: 22472, version 1, minimum version to extract: 1, compression method: stored, file <span class="built_in">type</span>: binary, original name: <span class="string">&quot;1&quot;</span>, original file date: 1970-01-01 00:00:00, compressed file size: 538968064, uncompressed file size: 1441792, os: MS-DOS</span><br><span class="line"><span class="comment"># MS-DOS 以小端序存储数据</span></span><br><span class="line"></span><br><span class="line">$ strings -el J | grep SEC</span><br><span class="line">...foo...</span><br><span class="line">&lt;SEC&#123;.txt</span><br><span class="line">...bar...</span><br><span class="line"></span><br><span class="line">$ strings -el J | grep CON</span><br><span class="line">...foo...</span><br><span class="line">&lt;CON&#123;.txt</span><br><span class="line">...bar...</span><br><span class="line"></span><br><span class="line">$ strings -el J | grep .txt | uniq</span><br><span class="line">...foo...</span><br><span class="line">&lt;SEC.txt</span><br><span class="line">&lt;CON&#123;.txt</span><br><span class="line">&lt;F0r.txt</span><br><span class="line">&lt;tktksec.txt</span><br><span class="line">&lt;F0r.txt</span><br><span class="line">&lt;ensic.txt</span><br><span class="line">&lt;s.txt</span><br><span class="line">&lt;_usnjrnl.txt</span><br><span class="line">&lt;2018&#125;.txt</span><br><span class="line">&lt;logfile.txt.0</span><br><span class="line"></span><br><span class="line">$ strings -el J | grep .txt | uniq | tail -n 10 | sed -E <span class="string">&#x27;s/&lt;(.*).txt.*/\1/g&#x27;</span> | tr  -d <span class="string">&#x27;\n&#x27;</span> | grep -o <span class="string">&#x27;SECCON&#123;.*&#125;&#x27;</span></span><br><span class="line">SECCON&#123;F0rtktksecF0rensics_usnjrnl2018&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Reversing"><a href="#Reversing" class="headerlink" title="Reversing"></a>Reversing</h1><h2 id="Runme"><a href="#Runme" class="headerlink" title="Runme"></a>Runme</h2><p>misc式的水题。就是不断跟进函数，每个函数传入一个参数，拼凑起来就可以了。会得到 <code>&quot;C:\Temp\SECCON2018Online.exe&quot; SECCON&#123;Runn1n6_P47h&#125; </code> 。</p>
+<p>update:</p>
+<h3 id="-2"><a href="#-2" class="headerlink" title=""></a></h3><p>比较骚的做法是直接strings</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ strings runme</span><br><span class="line">!This program cannot be run <span class="keyword">in</span> DOS mode.</span><br><span class="line">...foo...</span><br><span class="line">BRjS</span><br><span class="line">BRjE</span><br><span class="line">BRjC</span><br><span class="line">BRjC</span><br><span class="line">BRjO</span><br><span class="line">BRjN</span><br><span class="line">BRj&#123;</span><br><span class="line">BRjR</span><br><span class="line">BRju</span><br><span class="line">...bar...</span><br><span class="line">$ strings runme | sed -E <span class="string">&#x27;s/BRj(.)/\1/g&#x27;</span> | tr -d <span class="string">&#x27;\n&#x27;</span> | grep -o <span class="string">&#x27;SECCON&#123;.*&#125;&#x27;</span></span><br><span class="line">SECCON&#123;Runn1n6_P47h&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="-3"><a href="#-3" class="headerlink" title=""></a></h3><h1 id="Media"><a href="#Media" class="headerlink" title="Media"></a>Media</h1><h2 id="Needle-in-a-haystack"><a href="#Needle-in-a-haystack" class="headerlink" title="Needle in a haystack"></a>Needle in a haystack</h2><p>提供一个YouTube的视频链接（<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=sTKP2btHSBQ">https://www.youtube.com/watch?v=sTKP2btHSBQ</a> ），长达九个多小时。</p>
+<p>从 <a target="_blank" rel="noopener" href="https://y2mate.com/youtube/sTKP2btHSBQ">https://y2mate.com/youtube/sTKP2btHSBQ</a> 下载360p的，差不多1.9G。快进查看会发现右下角有一个房间的灯亮灭很有规律，基本每分钟都会有变化。</p>
+<p><img data-src="1540715588584.png" alt="1540715588584"></p>
+<p>我们把亮记为1，暗记为0的话，整个视频时长545分钟，可以得到约545比特的信息。大概是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">010101000100011101011101000111010111010001110111011100011101000111010111011101000101010001110111011100011101110001000111000101000111011100010001010100011101010101011100010111000111010101010111000101010001000111010111010001011101000100011100011101010101011100011101110001000101010001010100010111000111011101000100011101010101011100011101010100010111010001110111011100010111000111010100011101011101000101110001010100011100001010111000101010101000111000101010111000100010001110100010101110001010111010001010111000101000100011100010100010001010001111</span><br></pre></td></tr></table></figure>
+
+<p>其中有四种数据，<code>0</code>，<code>1</code> ，<code>000</code> ，<code>111</code> ，分别对应亮、暗、长亮、长暗四种状态，对应到摩斯电码则是<code>.</code> ，<code>短间隔</code>，<code>-</code> ，<code>长间隔</code> 。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># __author__ = findneo</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do</span>(<span class="params">s</span>):</span></span><br><span class="line">    res=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    i=<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i&lt;<span class="built_in">len</span>(s):</span><br><span class="line">        <span class="keyword">if</span> s[i:i+<span class="number">3</span>] == <span class="string">&#x27;000&#x27;</span>:</span><br><span class="line">            res+=<span class="string">&#x27; &#x27;</span></span><br><span class="line">            i+=<span class="number">3</span></span><br><span class="line">        <span class="keyword">elif</span> s[i:i+<span class="number">3</span>] == <span class="string">&#x27;111&#x27;</span>:</span><br><span class="line">            res+=<span class="string">&#x27;-&#x27;</span></span><br><span class="line">            i+=<span class="number">3</span></span><br><span class="line">        <span class="keyword">elif</span> s[i] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">            res+=<span class="string">&#x27;.&#x27;</span></span><br><span class="line">            i+=<span class="number">1</span></span><br><span class="line">        <span class="keyword">elif</span> s[i] == <span class="string">&#x27;0&#x27;</span>:</span><br><span class="line">            i+=<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line">raw=<span class="string">&#x27;01010100010001110101110100011101011101000111011101110001110100011101011101110100010101000111011101110001110111000100011100010100011101110001000101010001110101010101110001011100011101010101011100010101000100011101011101000101110100010001110001110101010101110001110111000100010101000101010001011100011101110100010001110101010101110001110101010001011101000111011101110001011100011101010001110101110100010111000101010001110??01010111000101010101000111000101010111000100010001110100010101110001010111010001010111000101000100011100010100010001010001111&#x27;</span></span><br><span class="line">may=<span class="string">&#x27;010101000100011101011101000111010111010001110111011100011101000111010111011101000101010001110111011100011101110001000111000101000111011100010001010100011101010101011100010111000111010101010111000101010001000111010111010001011101000100011100011101010101011100011101110001000101010001010100010111000111011101000100011101010101011100011101010100010111010001110111011100010111000111010100011101011101000101110001010100011100001010111000101010101000111000101010111000100010001110100010101110001010111010001010111000101000100011100010100010001010001111&#x27;</span></span><br><span class="line">print(do(may))</span><br><span class="line"><span class="comment"># ... . -.-. -.-. --- -. -.--. ... --- -- . - .. -- . ... -....- .- -....- ... . -.-. .-. . - -....- -- . ... ... .- --. . -....- -... .-. --- .- -.. -.-. .- ... - ..- ..... - ...- . . -. ..- ..-. ..- .. . - .. . .. -.</span></span><br><span class="line"><span class="comment"># http://rumkin.com/tools/cipher/morse.php</span></span><br><span class="line"><span class="comment"># SECCON(SOMETIMES-A-SECRET-MESSAGE-BROADCASTU5TVEENUFUIETIEIN</span></span><br></pre></td></tr></table></figure>
+
+<p>天亮后看得很不清晰了，而且貌似 6h58min 之后窗户都会间歇性地被关上，所以flag的后半段有点问题。</p>
+<p><img data-src="1540716372243.png" alt="1540716372243"></p>
+<p>update:</p>
+<h3 id="-4"><a href="#-4" class="headerlink" title=""></a></h3><p>实际上天亮以后用窗户的开关来表示，窗户打开为1，窗户关闭为0（正好和原来的处理方式01相反，所以得不到flag），思维太僵硬啊😂</p>
+<p>那么就得到如下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">010101000100011101011101000111010111010001110111011100011101000111010111011101000101010001110111011100011101110001000111000101000111011100010001010100011101010101011100010111000111010101010111000101010001000111010111010001011101000100011100011101010101011100011101110001000101010001010100010111000111011101000100011101010101011100011101010100010111010001110111011100010111000111010100011101011101000101110001010100011100010101000111010101010111000111010101000111011101110001011101010001110101000101110101000111010111011100011101011101110101110000</span><br><span class="line">... . -.-. -.-. --- -. -.--. ... --- -- . - .. -- . ... -....- .- -....- ... . -.-. .-. . - -....- -- . ... ... .- --. . -....- -... .-. --- .- -.. -.-. .- ... - ... -....- -... --- .-.. -.. .-.. -.-- -.--.-</span><br><span class="line">SECCON(SOMETIMES-A-SECRET-MESSAGE-BROADCASTS-BOLDLY)</span><br></pre></td></tr></table></figure>
+
+<p>这个图片解释得很到位了，不过我觉得徒手开关两个多小时的窗户太不黑客了吧，他们一定用了某种方式自动化。</p>
+<p><img data-src="1540778376203.png" alt="1540778376203"></p>
+<h3 id="-5"><a href="#-5" class="headerlink" title=""></a></h3><p>update2:</p>
+<h3 id="-6"><a href="#-6" class="headerlink" title=""></a></h3><p>有大佬做了自动化，效果蛮好的。</p>
+<p>（<a target="_blank" rel="noopener" href="https://ctf-writeups.ru/2k18/seccon-2018-online-ctf/needle_in_a_haystack/">https://ctf-writeups.ru/2k18/seccon-2018-online-ctf/needle_in_a_haystack/</a> ）</p>
+<h3 id="-7"><a href="#-7" class="headerlink" title=""></a></h3>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="findneo 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/181022-hackluctf-web/" rel="prev" title="Hack.lu CTF 2018 Baby PHP">
+      <i class="fa fa-chevron-left"></i> Hack.lu CTF 2018 Baby PHP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/181123-one-line-php-challenge/" rel="next" title="one-line-php-challenge 复现">
+      one-line-php-challenge 复现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Forensics"><span class="nav-number">1.</span> <span class="nav-text">Forensics</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Unzip"><span class="nav-number">1.1.</span> <span class="nav-text">Unzip</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-1"><span class="nav-number">1.1.2.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#History"><span class="nav-number">1.2.</span> <span class="nav-text">History</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reversing"><span class="nav-number">2.</span> <span class="nav-text">Reversing</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Runme"><span class="nav-number">2.1.</span> <span class="nav-text">Runme</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#-2"><span class="nav-number">2.1.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-3"><span class="nav-number">2.1.2.</span> <span class="nav-text"></span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Media"><span class="nav-number">3.</span> <span class="nav-text">Media</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Needle-in-a-haystack"><span class="nav-number">3.1.</span> <span class="nav-text">Needle in a haystack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#-4"><span class="nav-number">3.1.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-5"><span class="nav-number">3.1.2.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-6"><span class="nav-number">3.1.3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-7"><span class="nav-number">3.1.4.</span> <span class="nav-text"></span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
