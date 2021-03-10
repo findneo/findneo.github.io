@@ -302,6 +302,7 @@ git push origin master
 一键更新博客
 
 ```bash
+// sh update.sh
 hexo clean
 hexo d -g
 hexo clean
@@ -313,6 +314,12 @@ else
 git commit -m "$1"
 fi
 git push origin bakeup
+
+
+使用git remote show origin 若发现是HTTP的可以通过
+git remote remove origin
+git remote add origin git@github.com:findneo/findneo.github.io.git
+改为SSH的，SSH的不会反复要求输密码
 ```
 
 .gitignore
