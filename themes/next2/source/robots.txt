@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /tags/
+Allow: /about/
+Allow: /archives/
+Allow: /mind
+Allow: /atom.xml
+Allow: /baidusitemap.xml
+Allow: /sitemap.xml
+Allow: /search.xml
+Allow: /robots.txt
+Sitemap: https://findneo.github.io/sitemap.xml
+Sitemap: https://findneo.github.io/baidusitemap.xml
+
+
