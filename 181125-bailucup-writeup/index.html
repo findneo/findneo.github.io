@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,15 +15,15 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
-<script id="hexo-configurations">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+<script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-
-  <meta name="description" content="CTFCryptoCrypto1problem123456789101112131415161718from flag import flagfrom Crypto.Util.number import *import randomdef next_prime(n):    num &#x3D; n + 1    while True:        if isPrime(num):">
+<meta name="description" content="CTFCryptoCrypto1problem123456789101112131415161718from flag import flagfrom Crypto.Util.number import *import randomdef next_prime(n):    num &#x3D; n + 1    while True:        if isPrime(num):">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2018 柏鹭杯 writeup">
 <meta property="og:url" content="https://findneo.github.io/181125-bailucup-writeup/index.html">
@@ -36,10 +38,11 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://findneo.github.io/181125-bailucup-writeup/1543149985751.png">
 
+
 <link rel="canonical" href="https://findneo.github.io/181125-bailucup-writeup/">
 
 
-<script id="page-configurations">
+<script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
@@ -48,10 +51,8 @@
     lang   : 'zh-CN'
   };
 </script>
-
-  <title>2018 柏鹭杯 writeup | 闲言语</title>
+<title>2018 柏鹭杯 writeup | 闲言语</title>
   
-
 
   <script>
     var _hmt = _hmt || [];
@@ -65,27 +66,38 @@
 
 
 
-
   <noscript>
   <style>
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
 </noscript>
 
@@ -93,25 +105,25 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
-    <div class="headband"></div>
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
+      <i class="logo-line"></i>
       <h1 class="site-title">闲言语</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
     </a>
   </div>
 
@@ -124,14 +136,9 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
-
-  </li>
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -142,23 +149,22 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
@@ -166,23 +172,92 @@
   </div>
 
 </div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CTF"><span class="nav-number">1.</span> <span class="nav-text">CTF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Crypto"><span class="nav-number">1.1.</span> <span class="nav-text">Crypto</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto1"><span class="nav-number">1.1.1.</span> <span class="nav-text">Crypto1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#problem"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">problem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#solve"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">solve</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto2"><span class="nav-number">1.1.2.</span> <span class="nav-text">Crypto2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto3"><span class="nav-number">1.1.3.</span> <span class="nav-text">Crypto3</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#problem-1"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">problem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#solve-1"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">solve</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MISC"><span class="nav-number">1.2.</span> <span class="nav-text">MISC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC1"><span class="nav-number">1.2.1.</span> <span class="nav-text">MISC1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC2"><span class="nav-number">1.2.2.</span> <span class="nav-text">MISC2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#problem-2"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">problem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#solve-2"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">solve</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC3"><span class="nav-number">1.2.3.</span> <span class="nav-text">MISC3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web"><span class="nav-number">1.3.</span> <span class="nav-text">Web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web1"><span class="nav-number">1.3.1.</span> <span class="nav-text">Web1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web2"><span class="nav-number">1.3.2.</span> <span class="nav-text">Web2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AWD"><span class="nav-number">2.</span> <span class="nav-text">AWD</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-1"><span class="nav-number">2.1.</span> <span class="nav-text">Web</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PWN"><span class="nav-number">2.2.</span> <span class="nav-text">PWN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%A8%E6%89%93%E8%A6%81%E7%AB%8B%E6%AD%A3"><span class="nav-number">3.</span> <span class="nav-text">挨打要立正</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content post posts-expand">
-            
+    <div class="main-inner post posts-expand">
 
-    
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://findneo.github.io/181125-bailucup-writeup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -199,24 +274,26 @@
           2018 柏鹭杯 writeup
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-11-25 20:25:37" itemprop="dateCreated datePublished" datetime="2018-11-25T20:25:37+08:00">2018-11-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
-              </span>
+      <time title="创建时间：2018-11-25 20:25:37" itemprop="dateCreated datePublished" datetime="2018-11-25T20:25:37+08:00">2018-11-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+      </span>
 
-          
+  
+</div>
 
         </div>
       </header>
@@ -225,8 +302,6 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
         <h1 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h1><h2 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h2><h3 id="Crypto1"><a href="#Crypto1" class="headerlink" title="Crypto1"></a>Crypto1</h3><h4 id="problem"><a href="#problem" class="headerlink" title="problem"></a>problem</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flag <span class="keyword">import</span> flag</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">next_prime</span>(<span class="params">n</span>):</span></span><br><span class="line">    num = n + <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> isPrime(num):</span><br><span class="line">            <span class="keyword">return</span> num</span><br><span class="line">        num += <span class="number">1</span></span><br><span class="line">p = random.randint(<span class="number">1</span>&lt;&lt;<span class="number">3071</span>,<span class="number">1</span>&lt;&lt;<span class="number">3072</span>)</span><br><span class="line">p = next_prime(p)</span><br><span class="line">q = next_prime(p*<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">N = p*q</span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line">c = <span class="built_in">pow</span>(bytes_to_long(flag),e,N)</span><br><span class="line"><span class="built_in">print</span> N<span class="comment">#247157208312655169175097941364280738161257111976460225724719907081110265510517450181419502794457206227461600647913804553439171851865273449559295717229024951735351965745325255241561391509015823198303928588939850683031392486366218841593013566932215141428061199015117025898704736991786081007198271335363347647516874679013119543722851148642512142186199102168074461255284546705588056994149297326331376082141145137980534967406372164077378650248545875219877244489040506317293082270408705203779841533080244655519849164084793887915122847280359452339072498784918027724621588636245527176960457003310429876627882173282069366037431766179722648353575718417895929519296072344510519198593252963273537190447967056699273665756186541135880261688073100218736960343554003491651502334045257343825793705434779809139021362473746587814528428007114308414633338220797896397738142172067161950968365434368211510967904096253326804711795198906393597153228365711080786247894858858419136771806150038968465644512536135428099037524022644906606239281576512245480765249280626544900781649017542649977530381598608436485399917576052247750573936190833224008929770080605906041913084656134359260509037195783858871830359437278131656343708211575987756873026171223324073191307367943843353573378426157170935012284820053625264544030714057464690450568057598110227083895395913850243271935830358181622027323185508807486853971929523201869477689585619024238113916052252320578711256593537267591407960305853736136636628575478996733430026632486500743561965770413140633948002705696925426367918545515713035754606128166993229587155817506068035187995926746472892280477401942441831391756895131543049750847590716935278314226902082626392655666615086297442052602217416486188297831289978272258543231414975069191549588547253936829655332588805672513945883351937495650167502066292697223592894483418517613405613285519159</span></span><br><span class="line"><span class="built_in">print</span> c<span class="comment">#152721025887735064764471379084548069204525956728140596238274397757947415316727016281416993518884790524343567541799262176820909148208728616947040227306302164641933331109468512979068186962047716308015535717796123080303496277784765187481185086876434873226524784636408104495312136956587251145463229424950634548624036265557622592089071331292811066840281494102799063634204855779210798330603868025111521826209601342683209160845433746624786171189961029265101816540639855230011618388675527443511618729301028631422873421421991470450059414988968787693753741941765791793672069240992955177930884210118700416564364129283739917229225845073750451244070534919112957275948312337882004219145847493047815403283126471638320784008475284616178697542301935170768573588093196019976675846311280356987370969400610196847990069257614148181804915868273001764028563852238142447411811579695265293746037324400494199877368049162903819737962946786971556872009326814914717430484711885484790156341127433550909206551293806568904858726942820132521566970376839336895645431303013575622422180179687172859250687080526393904583834607514619581478966664406178290247731116920836372943133394640322159512633671870473674514938423231596849301615200001553851411828993918474534316510609878376462094608058640335426907349648369552864820322464995077358198844334320833893207364879282292959161203675080110629771237503657412087961891443054530286088807186134851425688726147108076040204500951624929585070273336203814962656253259257806100191430918121713005141607192112560560371475173081441671613602480052062955279287813475764285469835557663176529059039540417149792518941598550609678298901186032272305421028365295602810159191055078633881059737011784127699357480578433240110432805495328517379885306237631225477566136721077348329866885731002878563684349453668924250445128775992616650275173644658245397235667490402628</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="solve"><a href="#solve" class="headerlink" title="solve"></a>solve</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">n=<span class="number">247157208312655169175097941364280738161257111976460225724719907081110265510517450181419502794457206227461600647913804553439171851865273449559295717229024951735351965745325255241561391509015823198303928588939850683031392486366218841593013566932215141428061199015117025898704736991786081007198271335363347647516874679013119543722851148642512142186199102168074461255284546705588056994149297326331376082141145137980534967406372164077378650248545875219877244489040506317293082270408705203779841533080244655519849164084793887915122847280359452339072498784918027724621588636245527176960457003310429876627882173282069366037431766179722648353575718417895929519296072344510519198593252963273537190447967056699273665756186541135880261688073100218736960343554003491651502334045257343825793705434779809139021362473746587814528428007114308414633338220797896397738142172067161950968365434368211510967904096253326804711795198906393597153228365711080786247894858858419136771806150038968465644512536135428099037524022644906606239281576512245480765249280626544900781649017542649977530381598608436485399917576052247750573936190833224008929770080605906041913084656134359260509037195783858871830359437278131656343708211575987756873026171223324073191307367943843353573378426157170935012284820053625264544030714057464690450568057598110227083895395913850243271935830358181622027323185508807486853971929523201869477689585619024238113916052252320578711256593537267591407960305853736136636628575478996733430026632486500743561965770413140633948002705696925426367918545515713035754606128166993229587155817506068035187995926746472892280477401942441831391756895131543049750847590716935278314226902082626392655666615086297442052602217416486188297831289978272258543231414975069191549588547253936829655332588805672513945883351937495650167502066292697223592894483418517613405613285519159</span></span><br><span class="line">c=<span class="number">152721025887735064764471379084548069204525956728140596238274397757947415316727016281416993518884790524343567541799262176820909148208728616947040227306302164641933331109468512979068186962047716308015535717796123080303496277784765187481185086876434873226524784636408104495312136956587251145463229424950634548624036265557622592089071331292811066840281494102799063634204855779210798330603868025111521826209601342683209160845433746624786171189961029265101816540639855230011618388675527443511618729301028631422873421421991470450059414988968787693753741941765791793672069240992955177930884210118700416564364129283739917229225845073750451244070534919112957275948312337882004219145847493047815403283126471638320784008475284616178697542301935170768573588093196019976675846311280356987370969400610196847990069257614148181804915868273001764028563852238142447411811579695265293746037324400494199877368049162903819737962946786971556872009326814914717430484711885484790156341127433550909206551293806568904858726942820132521566970376839336895645431303013575622422180179687172859250687080526393904583834607514619581478966664406178290247731116920836372943133394640322159512633671870473674514938423231596849301615200001553851411828993918474534316510609878376462094608058640335426907349648369552864820322464995077358198844334320833893207364879282292959161203675080110629771237503657412087961891443054530286088807186134851425688726147108076040204500951624929585070273336203814962656253259257806100191430918121713005141607192112560560371475173081441671613602480052062955279287813475764285469835557663176529059039540417149792518941598550609678298901186032272305421028365295602810159191055078633881059737011784127699357480578433240110432805495328517379885306237631225477566136721077348329866885731002878563684349453668924250445128775992616650275173644658245397235667490402628</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line">k=gmpy2.iroot(n//<span class="number">10</span>+<span class="number">1</span>,<span class="number">2</span>)[<span class="number">0</span>]+<span class="number">1</span></span><br><span class="line">print(k)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0xfffffff</span>):</span><br><span class="line">    f=k-i</span><br><span class="line">    <span class="keyword">if</span> i%<span class="number">10000</span>==<span class="number">0</span>:</span><br><span class="line">        print(i,end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> n%f==<span class="number">0</span>:</span><br><span class="line">        print(i,n)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">p=f</span><br><span class="line">q=n//f</span><br><span class="line"><span class="keyword">assert</span>(p*q==n)</span><br><span class="line">phi=(p-<span class="number">1</span>)*(q-<span class="number">1</span>)</span><br><span class="line">e= <span class="number">65537</span></span><br><span class="line">d=gmpy2.invert(e,phi)</span><br><span class="line">m=<span class="built_in">pow</span>(c,d,n)</span><br><span class="line">print(long_to_bytes(m))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4971490805710648894784063900603982138103528416416093113682856149525895474391965093292856360186270533203485404384261736770807923420477678768335595268260058770929420214670794184479653642688593773001265441972139034999789321709099375988424776953616924996952770970955016095518058970453801153351600603001621188113472370286189729979231943525793160692844078376540082324198649179890017101800683049489232021392715915700831833371902425005874555370189042455321691195416425399507551235346773377429357933240695935997956969841660473107352934178051894901298644110556291216221039424250078546978571086275993790666829060240691673857284132895978717935677825502362997789971900863003499701755174512295162461514926135376073693593713246781021035797102243028802222257489266812730745381990847604727619717567202686948267842932198278066304365500430012440700948799107940169074390644763691400614036677335457180241108468029814414775113509028739480597728378</span></span><br><span class="line"><span class="comment"># 0 59 247157208312655169175097941364280738161257111976460225724719907081110265510517450181419502794457206227461600647913804553439171851865273449559295717229024951735351965745325255241561391509015823198303928588939850683031392486366218841593013566932215141428061199015117025898704736991786081007198271335363347647516874679013119543722851148642512142186199102168074461255284546705588056994149297326331376082141145137980534967406372164077378650248545875219877244489040506317293082270408705203779841533080244655519849164084793887915122847280359452339072498784918027724621588636245527176960457003310429876627882173282069366037431766179722648353575718417895929519296072344510519198593252963273537190447967056699273665756186541135880261688073100218736960343554003491651502334045257343825793705434779809139021362473746587814528428007114308414633338220797896397738142172067161950968365434368211510967904096253326804711795198906393597153228365711080786247894858858419136771806150038968465644512536135428099037524022644906606239281576512245480765249280626544900781649017542649977530381598608436485399917576052247750573936190833224008929770080605906041913084656134359260509037195783858871830359437278131656343708211575987756873026171223324073191307367943843353573378426157170935012284820053625264544030714057464690450568057598110227083895395913850243271935830358181622027323185508807486853971929523201869477689585619024238113916052252320578711256593537267591407960305853736136636628575478996733430026632486500743561965770413140633948002705696925426367918545515713035754606128166993229587155817506068035187995926746472892280477401942441831391756895131543049750847590716935278314226902082626392655666615086297442052602217416486188297831289978272258543231414975069191549588547253936829655332588805672513945883351937495650167502066292697223592894483418517613405613285519159</span></span><br><span class="line"><span class="comment"># b&#x27;ISEC&#123;simp13_crypt0&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
@@ -320,49 +395,46 @@
     
     
     
-        <div class="reward-container">
+
+    <footer class="post-footer">
+          <div class="reward-container">
   <div></div>
-  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    打赏
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
   </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.png" alt="findneo 微信支付">
-        <p>微信支付</p>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="findneo 微信">
+        <span>微信</span>
       </div>
 
   </div>
 </div>
 
 
-      <footer class="post-footer">
-
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/181124-what-if-e-phi-not-coprime/" rel="prev" title="如果RSA加密中的e和phi不互质">
-      <i class="fa fa-chevron-left"></i> 如果RSA加密中的e和phi不互质
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/190223-tamuctf/" rel="next" title="TAMUctf writeup">
-      TAMUctf writeup <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/181124-what-if-e-phi-not-coprime/" rel="prev" title="如果RSA加密中的e和phi不互质">
+                  <i class="fa fa-chevron-left"></i> 如果RSA加密中的e和phi不互质
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/190223-tamuctf/" rel="next" title="TAMUctf writeup">
+                  TAMUctf writeup <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-          
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -371,7 +443,7 @@
       activeClass = localStorage.getItem('comments_active') || activeClass;
     }
     if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
       if (activeTab) {
         activeTab.click();
       }
@@ -380,133 +452,38 @@
   if (CONFIG.comments.storage) {
     window.addEventListener('tabs:click', event => {
       if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
+      const commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
   }
 </script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CTF"><span class="nav-number">1.</span> <span class="nav-text">CTF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Crypto"><span class="nav-number">1.1.</span> <span class="nav-text">Crypto</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto1"><span class="nav-number">1.1.1.</span> <span class="nav-text">Crypto1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#problem"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">problem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#solve"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">solve</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto2"><span class="nav-number">1.1.2.</span> <span class="nav-text">Crypto2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto3"><span class="nav-number">1.1.3.</span> <span class="nav-text">Crypto3</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#problem-1"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">problem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#solve-1"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">solve</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MISC"><span class="nav-number">1.2.</span> <span class="nav-text">MISC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC1"><span class="nav-number">1.2.1.</span> <span class="nav-text">MISC1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC2"><span class="nav-number">1.2.2.</span> <span class="nav-text">MISC2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#problem-2"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">problem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#solve-2"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">solve</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC3"><span class="nav-number">1.2.3.</span> <span class="nav-text">MISC3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web"><span class="nav-number">1.3.</span> <span class="nav-text">Web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web1"><span class="nav-number">1.3.1.</span> <span class="nav-text">Web1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web2"><span class="nav-number">1.3.2.</span> <span class="nav-text">Web2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AWD"><span class="nav-number">2.</span> <span class="nav-text">AWD</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-1"><span class="nav-number">2.1.</span> <span class="nav-text">Web</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PWN"><span class="nav-number">2.2.</span> <span class="nav-text">PWN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%A8%E6%89%93%E8%A6%81%E7%AB%8B%E6%AD%A3"><span class="nav-number">3.</span> <span class="nav-text">挨打要立正</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="findneo"
-      src="/images/findneo.png">
-  <p class="site-author-name" itemprop="name">findneo</p>
-  <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">79</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-      </div>
-        <div class="back-to-top motion-element">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
-  &copy; 2017 – 
+  &copy; 
   <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">findneo</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
 
   
 <script src="/js/local-search.js"></script>
@@ -516,16 +493,11 @@
 
 
 
-
-
-
-
-
-
-
   
 
-  
+
+
+
 
 </body>
 </html>

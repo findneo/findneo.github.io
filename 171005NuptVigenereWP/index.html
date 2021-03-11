@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,15 +15,15 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
-<script id="hexo-configurations">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+<script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-
-  <meta name="description" content="题目挺不错的，实打实，没脑洞，也锻炼了使用python的能力。">
+<meta name="description" content="题目挺不错的，实打实，没脑洞，也锻炼了使用python的能力。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="南邮CTF平台 Vigenere writeup">
 <meta property="og:url" content="https://findneo.github.io/171005NuptVigenereWP/index.html">
@@ -35,10 +37,11 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://wikimedia.org/api/rest_v1/media/math/render/svg/1b77b0ca8571bb219a9ad2ddf00b982d983d17d3">
 
+
 <link rel="canonical" href="https://findneo.github.io/171005NuptVigenereWP/">
 
 
-<script id="page-configurations">
+<script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
@@ -47,10 +50,8 @@
     lang   : 'zh-CN'
   };
 </script>
-
-  <title>南邮CTF平台 Vigenere writeup | 闲言语</title>
+<title>南邮CTF平台 Vigenere writeup | 闲言语</title>
   
-
 
   <script>
     var _hmt = _hmt || [];
@@ -64,27 +65,38 @@
 
 
 
-
   <noscript>
   <style>
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
 </noscript>
 
@@ -92,25 +104,25 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
-    <div class="headband"></div>
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
+      <i class="logo-line"></i>
       <h1 class="site-title">闲言语</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
     </a>
   </div>
 
@@ -123,14 +135,9 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
-
-  </li>
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -141,23 +148,22 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
@@ -165,23 +171,92 @@
   </div>
 
 </div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BC%82%E6%88%96"><span class="nav-number">2.</span> <span class="nav-text">什么是异或</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">解题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%8A%A0%E5%AF%86"><span class="nav-number">4.1.</span> <span class="nav-text">理解加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%E4%BB%A3%E7%A0%81%E4%B8%BB%E7%A8%8B%E5%BA%8F"><span class="nav-number">4.2.</span> <span class="nav-text">解密代码主程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%AF%86%E9%92%A5%E7%9A%84%E9%95%BF%E5%BA%A6%E5%92%8C%E5%80%99%E9%80%89%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">4.3.</span> <span class="nav-text">确定密钥的长度和候选字符集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%80%99%E9%80%89%E5%AD%97%E7%AC%A6%E9%9B%86%EF%BC%8C%E6%B1%82%E5%87%BA%E5%AF%B9%E5%BA%94%E7%9A%84%E5%AD%97%E9%A2%91"><span class="nav-number">4.4.</span> <span class="nav-text">遍历候选字符集，求出对应的字频</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%AD%97%E9%A2%91%E6%B1%82%E5%BE%97%E5%AF%86%E9%92%A5"><span class="nav-number">4.5.</span> <span class="nav-text">根据字频求得密钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%AF%86%E9%92%A5%E8%A7%A3%E5%AF%86"><span class="nav-number">4.6.</span> <span class="nav-text">根据密钥解密</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">一些数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E7%9A%84%E5%AF%86%E9%92%A5%E9%95%BF%E5%BA%A6%E5%92%8C%E5%AF%B9%E5%BA%94%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">5.1.</span> <span class="nav-text">可能的密钥长度和对应字符集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E7%BB%93%E6%9E%9C"><span class="nav-number">5.2.</span> <span class="nav-text">最后结果</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%E4%BB%A3%E7%A0%81%E5%85%A8%E6%96%87"><span class="nav-number">6.</span> <span class="nav-text">解密代码全文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">7.</span> <span class="nav-text">题目备份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content post posts-expand">
-            
+    <div class="main-inner post posts-expand">
 
-    
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://findneo.github.io/171005NuptVigenereWP/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -198,26 +273,28 @@
           南邮CTF平台 Vigenere writeup
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2017-10-05 19:40:09" itemprop="dateCreated datePublished" datetime="2017-10-05T19:40:09+08:00">2017-10-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
-              </span>
+      <time title="创建时间：2017-10-05 19:40:09" itemprop="dateCreated datePublished" datetime="2017-10-05T19:40:09+08:00">2017-10-05</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+      </span>
 
-          
+  
+</div>
+
             <div class="post-description">题目挺不错的，实打实，没脑洞，也锻炼了使用python的能力。</div>
-
         </div>
       </header>
 
@@ -225,8 +302,6 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
         <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><blockquote>
 <p> It is said that Vigenere cipher does not achieve the perfect secrecy actually :-)</p>
 <p> Tips:<br> 1.The encode pragram is given;<br> 2.Do u no <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Index_of_coincidence">index of coincidence </a>？<br> 3.The key is last 6 words of the plain text(with “nctf{}” when submitted, also without any interpunction)</p>
@@ -303,49 +378,46 @@
     
     
     
-        <div class="reward-container">
+
+    <footer class="post-footer">
+          <div class="reward-container">
   <div></div>
-  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    打赏
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
   </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.png" alt="findneo 微信支付">
-        <p>微信支付</p>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="findneo 微信">
+        <span>微信</span>
       </div>
 
   </div>
 </div>
 
 
-      <footer class="post-footer">
-
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/171004NuptZonghe2WP/" rel="prev" title="南邮CTF平台综合题2writeup">
-      <i class="fa fa-chevron-left"></i> 南邮CTF平台综合题2writeup
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/171015MiacWP/" rel="next" title="2017 MIAC移动安全赛">
-      2017 MIAC移动安全赛 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/171004NuptZonghe2WP/" rel="prev" title="南邮CTF平台综合题2writeup">
+                  <i class="fa fa-chevron-left"></i> 南邮CTF平台综合题2writeup
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/171015MiacWP/" rel="next" title="2017 MIAC移动安全赛">
+                  2017 MIAC移动安全赛 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-          
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -354,7 +426,7 @@
       activeClass = localStorage.getItem('comments_active') || activeClass;
     }
     if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
       if (activeTab) {
         activeTab.click();
       }
@@ -363,133 +435,38 @@
   if (CONFIG.comments.storage) {
     window.addEventListener('tabs:click', event => {
       if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
+      const commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
   }
 </script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BC%82%E6%88%96"><span class="nav-number">2.</span> <span class="nav-text">什么是异或</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">解题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%8A%A0%E5%AF%86"><span class="nav-number">4.1.</span> <span class="nav-text">理解加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%E4%BB%A3%E7%A0%81%E4%B8%BB%E7%A8%8B%E5%BA%8F"><span class="nav-number">4.2.</span> <span class="nav-text">解密代码主程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%AF%86%E9%92%A5%E7%9A%84%E9%95%BF%E5%BA%A6%E5%92%8C%E5%80%99%E9%80%89%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">4.3.</span> <span class="nav-text">确定密钥的长度和候选字符集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%80%99%E9%80%89%E5%AD%97%E7%AC%A6%E9%9B%86%EF%BC%8C%E6%B1%82%E5%87%BA%E5%AF%B9%E5%BA%94%E7%9A%84%E5%AD%97%E9%A2%91"><span class="nav-number">4.4.</span> <span class="nav-text">遍历候选字符集，求出对应的字频</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%AD%97%E9%A2%91%E6%B1%82%E5%BE%97%E5%AF%86%E9%92%A5"><span class="nav-number">4.5.</span> <span class="nav-text">根据字频求得密钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%AF%86%E9%92%A5%E8%A7%A3%E5%AF%86"><span class="nav-number">4.6.</span> <span class="nav-text">根据密钥解密</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">一些数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E7%9A%84%E5%AF%86%E9%92%A5%E9%95%BF%E5%BA%A6%E5%92%8C%E5%AF%B9%E5%BA%94%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">5.1.</span> <span class="nav-text">可能的密钥长度和对应字符集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E7%BB%93%E6%9E%9C"><span class="nav-number">5.2.</span> <span class="nav-text">最后结果</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%E4%BB%A3%E7%A0%81%E5%85%A8%E6%96%87"><span class="nav-number">6.</span> <span class="nav-text">解密代码全文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">7.</span> <span class="nav-text">题目备份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="findneo"
-      src="/images/findneo.png">
-  <p class="site-author-name" itemprop="name">findneo</p>
-  <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">79</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-      </div>
-        <div class="back-to-top motion-element">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
-  &copy; 2017 – 
+  &copy; 
   <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">findneo</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
 
   
 <script src="/js/local-search.js"></script>
@@ -499,16 +476,11 @@
 
 
 
-
-
-
-
-
-
-
   
 
-  
+
+
+
 
 </body>
 </html>

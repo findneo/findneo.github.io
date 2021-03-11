@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,15 +15,15 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
-<script id="hexo-configurations">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+<script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-
-  <meta name="description" content="WEBWEB2 听说聪明的人都能找到答案http:&#x2F;&#x2F;120.24.86.145:8002&#x2F;web2&#x2F;  源码中有注释。  KEY&amp;#123;Web-2-bugKssNNikls9100&amp;#125;  文件上传测试 http:&#x2F;&#x2F;103.238.227.13:10085&#x2F; Flag格式：Flag:xxxxxxxxxxxxx  Flag:42e97d465f962c53df9549377b513c7">
+<meta name="description" content="WEBWEB2 听说聪明的人都能找到答案http:&#x2F;&#x2F;120.24.86.145:8002&#x2F;web2&#x2F;  源码中有注释。  KEY&amp;#123;Web-2-bugKssNNikls9100&amp;#125;  文件上传测试 http:&#x2F;&#x2F;103.238.227.13:10085&#x2F; Flag格式：Flag:xxxxxxxxxxxxx  Flag:42e97d465f962c53df9549377b513c7">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bugku Writeup">
 <meta property="og:url" content="https://findneo.github.io/180406BugkuWriteup/index.html">
@@ -33,10 +35,11 @@
 <meta property="article:author" content="findneo">
 <meta name="twitter:card" content="summary">
 
+
 <link rel="canonical" href="https://findneo.github.io/180406BugkuWriteup/">
 
 
-<script id="page-configurations">
+<script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
@@ -45,10 +48,8 @@
     lang   : 'zh-CN'
   };
 </script>
-
-  <title>Bugku Writeup | 闲言语</title>
+<title>Bugku Writeup | 闲言语</title>
   
-
 
   <script>
     var _hmt = _hmt || [];
@@ -62,27 +63,38 @@
 
 
 
-
   <noscript>
   <style>
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
 </noscript>
 
@@ -90,25 +102,25 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
-    <div class="headband"></div>
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
+      <i class="logo-line"></i>
       <h1 class="site-title">闲言语</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
     </a>
   </div>
 
@@ -121,14 +133,9 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
-
-  </li>
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -139,23 +146,22 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
@@ -163,23 +169,92 @@
   </div>
 
 </div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#WEB"><span class="nav-number">1.</span> <span class="nav-text">WEB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB2"><span class="nav-number">1.1.</span> <span class="nav-text">WEB2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95"><span class="nav-number">1.2.</span> <span class="nav-text">文件上传测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">计算题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#web%E5%9F%BA%E7%A1%80-GET"><span class="nav-number">1.4.</span> <span class="nav-text">web基础$_GET</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#web%E5%9F%BA%E7%A1%80-POST"><span class="nav-number">1.5.</span> <span class="nav-text">web基础$_POST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%A0%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5"><span class="nav-number">1.6.</span> <span class="nav-text">你从哪里来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%B4%E7%AD%89%E8%88%B1"><span class="nav-number">1.7.</span> <span class="nav-text">头等舱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#md5-collision-NUPT-CTF"><span class="nav-number">1.8.</span> <span class="nav-text">md5 collision(NUPT_CTF)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%9B%E7%9B%BE"><span class="nav-number">1.9.</span> <span class="nav-text">矛盾</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB3"><span class="nav-number">1.10.</span> <span class="nav-text">WEB3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="nav-number">1.11.</span> <span class="nav-text">SQL注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="nav-number">1.12.</span> <span class="nav-text">域名解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A51"><span class="nav-number">1.13.</span> <span class="nav-text">SQL注入1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%A0%E5%BF%85%E9%A1%BB%E8%AE%A9%E4%BB%96%E5%81%9C%E4%B8%8B"><span class="nav-number">1.14.</span> <span class="nav-text">你必须让他停下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%85%E5%90%AB"><span class="nav-number">1.15.</span> <span class="nav-text">本地包含</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E9%87%8F1"><span class="nav-number">1.16.</span> <span class="nav-text">变量1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB5"><span class="nav-number">1.17.</span> <span class="nav-text">WEB5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB4"><span class="nav-number">1.18.</span> <span class="nav-text">WEB4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#flag%E5%9C%A8index%E9%87%8C"><span class="nav-number">1.19.</span> <span class="nav-text">flag在index里</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#phpcmsV9"><span class="nav-number">1.20.</span> <span class="nav-text">phpcmsV9</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%B7%E6%B4%8BCMS"><span class="nav-number">1.21.</span> <span class="nav-text">海洋CMS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E6%9F%A5%E7%9C%8Bflag"><span class="nav-number">1.22.</span> <span class="nav-text">输入密码查看flag</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%A5%B3%E5%8F%8B"><span class="nav-number">1.23.</span> <span class="nav-text">前女友</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E5%87%BB%E4%B8%80%E7%99%BE%E4%B8%87%E6%AC%A1"><span class="nav-number">1.24.</span> <span class="nav-text">点击一百万次</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E6%98%AF%E4%B8%AA%E5%A5%BD%E4%B9%A0%E6%83%AF"><span class="nav-number">1.25.</span> <span class="nav-text">备份是个好习惯</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%88%90%E7%BB%A9%E5%8D%95"><span class="nav-number">1.26.</span> <span class="nav-text">成绩单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%8B%E5%90%8D%E5%B1%B1%E8%80%81%E5%8F%B8%E6%9C%BA"><span class="nav-number">1.27.</span> <span class="nav-text">秋名山老司机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9F%E5%BA%A6%E8%A6%81%E5%BF%AB"><span class="nav-number">1.28.</span> <span class="nav-text">速度要快</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cookie%E6%AC%BA%E9%AA%97"><span class="nav-number">1.29.</span> <span class="nav-text">cookie欺骗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS"><span class="nav-number">1.30.</span> <span class="nav-text">XSS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#never-give-up"><span class="nav-number">1.31.</span> <span class="nav-text">never give up</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#welcome-to-bugkuctf"><span class="nav-number">1.32.</span> <span class="nav-text">welcome to bugkuctf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login"><span class="nav-number">1.33.</span> <span class="nav-text">login</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%87%E7%8B%97%E4%B8%80%E5%8F%A5%E8%AF%9D"><span class="nav-number">1.34.</span> <span class="nav-text">过狗一句话</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#maccms-%E8%8B%B9%E6%9E%9Ccms"><span class="nav-number">1.35.</span> <span class="nav-text">maccms - 苹果cms</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#appcms"><span class="nav-number">1.36.</span> <span class="nav-text">appcms</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E6%98%8E%E7%9A%84%E5%8D%9A%E5%AE%A2"><span class="nav-number">1.37.</span> <span class="nav-text">小明的博客</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%84%E7%A7%8D%E7%BB%95%E8%BF%87%E5%93%9F"><span class="nav-number">1.38.</span> <span class="nav-text">各种绕过哟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB8"><span class="nav-number">1.39.</span> <span class="nav-text">WEB8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%EF%BC%9F%E6%AD%A3%E5%88%99%EF%BC%9F"><span class="nav-number">1.40.</span> <span class="nav-text">字符？正则？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%80%83%E7%BB%86%E5%BF%83"><span class="nav-number">1.41.</span> <span class="nav-text">考细心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="nav-number">1.42.</span> <span class="nav-text">代码审计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B1%82getshell"><span class="nav-number">1.43.</span> <span class="nav-text">求getshell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#flag-php"><span class="nav-number">1.44.</span> <span class="nav-text">flag.php</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#INSERT-INTO%E6%B3%A8%E5%85%A5"><span class="nav-number">1.45.</span> <span class="nav-text">INSERT INTO注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB2"><span class="nav-number">1.46.</span> <span class="nav-text">文件包含2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%88%982-%E6%B3%A8%E5%85%A5"><span class="nav-number">1.47.</span> <span class="nav-text">实战2-注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E7%A5%9E%E5%A5%87%E7%9A%84%E7%99%BB%E9%99%86%E6%A1%86"><span class="nav-number">1.48.</span> <span class="nav-text">这是一个神奇的登陆框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E6%AC%A1"><span class="nav-number">1.49.</span> <span class="nav-text">多次</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A52"><span class="nav-number">1.50.</span> <span class="nav-text">SQL注入2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wordpress"><span class="nav-number">1.51.</span> <span class="nav-text">wordpress</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login2"><span class="nav-number">1.52.</span> <span class="nav-text">login2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login3"><span class="nav-number">1.53.</span> <span class="nav-text">login3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="nav-number">1.54.</span> <span class="nav-text">报错注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%88%981-%E6%B3%A8%E5%85%A5"><span class="nav-number">1.55.</span> <span class="nav-text">实战1-注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Trim%E7%9A%84%E6%97%A5%E8%AE%B0%E6%9C%AC"><span class="nav-number">1.56.</span> <span class="nav-text">Trim的日记本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login4"><span class="nav-number">1.57.</span> <span class="nav-text">login4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Social"><span class="nav-number">2.</span> <span class="nav-text">Social</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%EF%BC%9F%EF%BC%9F%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">密码？？？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E6%9F%A5%E6%89%BE%EF%BC%9F%EF%BC%9F%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">信息查找？？？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A5%E9%97%A8%E9%A2%98%E7%9B%AE%EF%BC%8C%E7%A4%BE%E5%B7%A5%E5%B8%9D%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">入门题目，社工帝？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E7%A4%BE%E5%B7%A5%E5%B0%9D%E8%AF%95"><span class="nav-number">2.4.</span> <span class="nav-text">简单的社工尝试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto"><span class="nav-number">3.</span> <span class="nav-text">Crypto</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%B4%E7%AD%94-%E6%BB%B4"><span class="nav-number">3.1.</span> <span class="nav-text">滴答~滴</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%AA%E6%98%8E%E7%9A%84%E5%B0%8F%E7%BE%8A"><span class="nav-number">3.2.</span> <span class="nav-text">聪明的小羊</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ok"><span class="nav-number">3.3.</span> <span class="nav-text">ok</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E4%B8%8D%E6%98%AF%E6%91%A9%E6%96%AF%E5%AF%86%E7%A0%81"><span class="nav-number">3.4.</span> <span class="nav-text">这不是摩斯密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">3.5.</span> <span class="nav-text">+[]-</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zip%E4%BC%AA%E5%8A%A0%E5%AF%86"><span class="nav-number">3.6.</span> <span class="nav-text">zip伪加密</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-1"><span class="nav-number">4.</span> <span class="nav-text">代码审计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#md5-%E5%87%BD%E6%95%B0"><span class="nav-number">4.1.</span> <span class="nav-text">md5()函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#extract%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="nav-number">4.2.</span> <span class="nav-text">extract变量覆盖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#strcmp%E6%AF%94%E8%BE%83%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">4.3.</span> <span class="nav-text">strcmp比较字符串</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#urldecode%E4%BA%8C%E6%AC%A1%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="nav-number">4.4.</span> <span class="nav-text">urldecode二次编码绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E8%BF%94%E5%9B%9ENULL%E7%BB%95%E8%BF%87"><span class="nav-number">4.5.</span> <span class="nav-text">数组返回NULL绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%95%B4%E6%95%B0%E5%A4%A7%E5%B0%8F%E6%AF%94%E8%BE%83%E7%BB%95%E8%BF%87"><span class="nav-number">4.6.</span> <span class="nav-text">弱类型整数大小比较绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sha-%E5%87%BD%E6%95%B0%E6%AF%94%E8%BE%83%E7%BB%95%E8%BF%87"><span class="nav-number">4.7.</span> <span class="nav-text">sha()函数比较绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#md5%E5%8A%A0%E5%AF%86%E7%9B%B8%E7%AD%89%E7%BB%95%E8%BF%87"><span class="nav-number">4.8.</span> <span class="nav-text">md5加密相等绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E6%AF%94%E8%BE%83"><span class="nav-number">4.9.</span> <span class="nav-text">十六进制与数字比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ereg%E6%AD%A3%E5%88%99-00%E6%88%AA%E6%96%AD"><span class="nav-number">4.10.</span> <span class="nav-text">ereg正则%00截断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#strpos%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87"><span class="nav-number">4.11.</span> <span class="nav-text">strpos数组绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E6%AD%A3%E5%88%99%E7%BB%95%E8%BF%87"><span class="nav-number">4.12.</span> <span class="nav-text">数字验证正则绕过</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content post posts-expand">
-            
+    <div class="main-inner post posts-expand">
 
-    
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://findneo.github.io/180406BugkuWriteup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -196,24 +271,26 @@
           Bugku Writeup
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-04-06 00:12:06" itemprop="dateCreated datePublished" datetime="2018-04-06T00:12:06+08:00">2018-04-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
-              </span>
+      <time title="创建时间：2018-04-06 00:12:06" itemprop="dateCreated datePublished" datetime="2018-04-06T00:12:06+08:00">2018-04-06</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+      </span>
 
-          
+  
+</div>
 
         </div>
       </header>
@@ -222,8 +299,6 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
         <h3 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h3><h4 id="WEB2"><a href="#WEB2" class="headerlink" title="WEB2"></a>WEB2</h4><blockquote>
 <p>听说聪明的人都能找到答案<br><a target="_blank" rel="noopener" href="http://120.24.86.145:8002/web2/">http://120.24.86.145:8002/web2/</a></p>
 </blockquote>
@@ -677,49 +752,46 @@
     
     
     
-        <div class="reward-container">
+
+    <footer class="post-footer">
+          <div class="reward-container">
   <div></div>
-  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    打赏
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
   </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.png" alt="findneo 微信支付">
-        <p>微信支付</p>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="findneo 微信">
+        <span>微信</span>
       </div>
 
   </div>
 </div>
 
 
-      <footer class="post-footer">
-
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/180405XSSTVChallenge/" rel="prev" title="xss.tv挑战赛">
-      <i class="fa fa-chevron-left"></i> xss.tv挑战赛
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/180419GithubNiceID/" rel="next" title="GitHub 可用短ID">
-      GitHub 可用短ID <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/180405XSSTVChallenge/" rel="prev" title="xss.tv挑战赛">
+                  <i class="fa fa-chevron-left"></i> xss.tv挑战赛
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/180419GithubNiceID/" rel="next" title="GitHub 可用短ID">
+                  GitHub 可用短ID <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-          
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -728,7 +800,7 @@
       activeClass = localStorage.getItem('comments_active') || activeClass;
     }
     if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
       if (activeTab) {
         activeTab.click();
       }
@@ -737,133 +809,38 @@
   if (CONFIG.comments.storage) {
     window.addEventListener('tabs:click', event => {
       if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
+      const commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
   }
 </script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#WEB"><span class="nav-number">1.</span> <span class="nav-text">WEB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB2"><span class="nav-number">1.1.</span> <span class="nav-text">WEB2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95"><span class="nav-number">1.2.</span> <span class="nav-text">文件上传测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">计算题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#web%E5%9F%BA%E7%A1%80-GET"><span class="nav-number">1.4.</span> <span class="nav-text">web基础$_GET</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#web%E5%9F%BA%E7%A1%80-POST"><span class="nav-number">1.5.</span> <span class="nav-text">web基础$_POST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%A0%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5"><span class="nav-number">1.6.</span> <span class="nav-text">你从哪里来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%B4%E7%AD%89%E8%88%B1"><span class="nav-number">1.7.</span> <span class="nav-text">头等舱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#md5-collision-NUPT-CTF"><span class="nav-number">1.8.</span> <span class="nav-text">md5 collision(NUPT_CTF)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%9B%E7%9B%BE"><span class="nav-number">1.9.</span> <span class="nav-text">矛盾</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB3"><span class="nav-number">1.10.</span> <span class="nav-text">WEB3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="nav-number">1.11.</span> <span class="nav-text">SQL注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="nav-number">1.12.</span> <span class="nav-text">域名解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A51"><span class="nav-number">1.13.</span> <span class="nav-text">SQL注入1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%A0%E5%BF%85%E9%A1%BB%E8%AE%A9%E4%BB%96%E5%81%9C%E4%B8%8B"><span class="nav-number">1.14.</span> <span class="nav-text">你必须让他停下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%85%E5%90%AB"><span class="nav-number">1.15.</span> <span class="nav-text">本地包含</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E9%87%8F1"><span class="nav-number">1.16.</span> <span class="nav-text">变量1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB5"><span class="nav-number">1.17.</span> <span class="nav-text">WEB5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB4"><span class="nav-number">1.18.</span> <span class="nav-text">WEB4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#flag%E5%9C%A8index%E9%87%8C"><span class="nav-number">1.19.</span> <span class="nav-text">flag在index里</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#phpcmsV9"><span class="nav-number">1.20.</span> <span class="nav-text">phpcmsV9</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%B7%E6%B4%8BCMS"><span class="nav-number">1.21.</span> <span class="nav-text">海洋CMS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E6%9F%A5%E7%9C%8Bflag"><span class="nav-number">1.22.</span> <span class="nav-text">输入密码查看flag</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%A5%B3%E5%8F%8B"><span class="nav-number">1.23.</span> <span class="nav-text">前女友</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E5%87%BB%E4%B8%80%E7%99%BE%E4%B8%87%E6%AC%A1"><span class="nav-number">1.24.</span> <span class="nav-text">点击一百万次</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E6%98%AF%E4%B8%AA%E5%A5%BD%E4%B9%A0%E6%83%AF"><span class="nav-number">1.25.</span> <span class="nav-text">备份是个好习惯</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%88%90%E7%BB%A9%E5%8D%95"><span class="nav-number">1.26.</span> <span class="nav-text">成绩单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%8B%E5%90%8D%E5%B1%B1%E8%80%81%E5%8F%B8%E6%9C%BA"><span class="nav-number">1.27.</span> <span class="nav-text">秋名山老司机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9F%E5%BA%A6%E8%A6%81%E5%BF%AB"><span class="nav-number">1.28.</span> <span class="nav-text">速度要快</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cookie%E6%AC%BA%E9%AA%97"><span class="nav-number">1.29.</span> <span class="nav-text">cookie欺骗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS"><span class="nav-number">1.30.</span> <span class="nav-text">XSS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#never-give-up"><span class="nav-number">1.31.</span> <span class="nav-text">never give up</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#welcome-to-bugkuctf"><span class="nav-number">1.32.</span> <span class="nav-text">welcome to bugkuctf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login"><span class="nav-number">1.33.</span> <span class="nav-text">login</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%87%E7%8B%97%E4%B8%80%E5%8F%A5%E8%AF%9D"><span class="nav-number">1.34.</span> <span class="nav-text">过狗一句话</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#maccms-%E8%8B%B9%E6%9E%9Ccms"><span class="nav-number">1.35.</span> <span class="nav-text">maccms - 苹果cms</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#appcms"><span class="nav-number">1.36.</span> <span class="nav-text">appcms</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E6%98%8E%E7%9A%84%E5%8D%9A%E5%AE%A2"><span class="nav-number">1.37.</span> <span class="nav-text">小明的博客</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%84%E7%A7%8D%E7%BB%95%E8%BF%87%E5%93%9F"><span class="nav-number">1.38.</span> <span class="nav-text">各种绕过哟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WEB8"><span class="nav-number">1.39.</span> <span class="nav-text">WEB8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%EF%BC%9F%E6%AD%A3%E5%88%99%EF%BC%9F"><span class="nav-number">1.40.</span> <span class="nav-text">字符？正则？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%80%83%E7%BB%86%E5%BF%83"><span class="nav-number">1.41.</span> <span class="nav-text">考细心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="nav-number">1.42.</span> <span class="nav-text">代码审计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B1%82getshell"><span class="nav-number">1.43.</span> <span class="nav-text">求getshell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#flag-php"><span class="nav-number">1.44.</span> <span class="nav-text">flag.php</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#INSERT-INTO%E6%B3%A8%E5%85%A5"><span class="nav-number">1.45.</span> <span class="nav-text">INSERT INTO注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB2"><span class="nav-number">1.46.</span> <span class="nav-text">文件包含2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%88%982-%E6%B3%A8%E5%85%A5"><span class="nav-number">1.47.</span> <span class="nav-text">实战2-注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E7%A5%9E%E5%A5%87%E7%9A%84%E7%99%BB%E9%99%86%E6%A1%86"><span class="nav-number">1.48.</span> <span class="nav-text">这是一个神奇的登陆框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E6%AC%A1"><span class="nav-number">1.49.</span> <span class="nav-text">多次</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A52"><span class="nav-number">1.50.</span> <span class="nav-text">SQL注入2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wordpress"><span class="nav-number">1.51.</span> <span class="nav-text">wordpress</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login2"><span class="nav-number">1.52.</span> <span class="nav-text">login2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login3"><span class="nav-number">1.53.</span> <span class="nav-text">login3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="nav-number">1.54.</span> <span class="nav-text">报错注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%88%981-%E6%B3%A8%E5%85%A5"><span class="nav-number">1.55.</span> <span class="nav-text">实战1-注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Trim%E7%9A%84%E6%97%A5%E8%AE%B0%E6%9C%AC"><span class="nav-number">1.56.</span> <span class="nav-text">Trim的日记本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#login4"><span class="nav-number">1.57.</span> <span class="nav-text">login4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Social"><span class="nav-number">2.</span> <span class="nav-text">Social</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%EF%BC%9F%EF%BC%9F%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">密码？？？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E6%9F%A5%E6%89%BE%EF%BC%9F%EF%BC%9F%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">信息查找？？？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A5%E9%97%A8%E9%A2%98%E7%9B%AE%EF%BC%8C%E7%A4%BE%E5%B7%A5%E5%B8%9D%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">入门题目，社工帝？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E7%A4%BE%E5%B7%A5%E5%B0%9D%E8%AF%95"><span class="nav-number">2.4.</span> <span class="nav-text">简单的社工尝试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crypto"><span class="nav-number">3.</span> <span class="nav-text">Crypto</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%B4%E7%AD%94-%E6%BB%B4"><span class="nav-number">3.1.</span> <span class="nav-text">滴答~滴</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%AA%E6%98%8E%E7%9A%84%E5%B0%8F%E7%BE%8A"><span class="nav-number">3.2.</span> <span class="nav-text">聪明的小羊</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ok"><span class="nav-number">3.3.</span> <span class="nav-text">ok</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E4%B8%8D%E6%98%AF%E6%91%A9%E6%96%AF%E5%AF%86%E7%A0%81"><span class="nav-number">3.4.</span> <span class="nav-text">这不是摩斯密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">3.5.</span> <span class="nav-text">+[]-</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zip%E4%BC%AA%E5%8A%A0%E5%AF%86"><span class="nav-number">3.6.</span> <span class="nav-text">zip伪加密</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-1"><span class="nav-number">4.</span> <span class="nav-text">代码审计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#md5-%E5%87%BD%E6%95%B0"><span class="nav-number">4.1.</span> <span class="nav-text">md5()函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#extract%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="nav-number">4.2.</span> <span class="nav-text">extract变量覆盖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#strcmp%E6%AF%94%E8%BE%83%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">4.3.</span> <span class="nav-text">strcmp比较字符串</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#urldecode%E4%BA%8C%E6%AC%A1%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="nav-number">4.4.</span> <span class="nav-text">urldecode二次编码绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E8%BF%94%E5%9B%9ENULL%E7%BB%95%E8%BF%87"><span class="nav-number">4.5.</span> <span class="nav-text">数组返回NULL绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%95%B4%E6%95%B0%E5%A4%A7%E5%B0%8F%E6%AF%94%E8%BE%83%E7%BB%95%E8%BF%87"><span class="nav-number">4.6.</span> <span class="nav-text">弱类型整数大小比较绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sha-%E5%87%BD%E6%95%B0%E6%AF%94%E8%BE%83%E7%BB%95%E8%BF%87"><span class="nav-number">4.7.</span> <span class="nav-text">sha()函数比较绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#md5%E5%8A%A0%E5%AF%86%E7%9B%B8%E7%AD%89%E7%BB%95%E8%BF%87"><span class="nav-number">4.8.</span> <span class="nav-text">md5加密相等绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E6%AF%94%E8%BE%83"><span class="nav-number">4.9.</span> <span class="nav-text">十六进制与数字比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ereg%E6%AD%A3%E5%88%99-00%E6%88%AA%E6%96%AD"><span class="nav-number">4.10.</span> <span class="nav-text">ereg正则%00截断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#strpos%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87"><span class="nav-number">4.11.</span> <span class="nav-text">strpos数组绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E6%AD%A3%E5%88%99%E7%BB%95%E8%BF%87"><span class="nav-number">4.12.</span> <span class="nav-text">数字验证正则绕过</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="findneo"
-      src="/images/findneo.png">
-  <p class="site-author-name" itemprop="name">findneo</p>
-  <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">79</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-      </div>
-        <div class="back-to-top motion-element">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
-  &copy; 2017 – 
+  &copy; 
   <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">findneo</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
 
   
 <script src="/js/local-search.js"></script>
@@ -873,16 +850,11 @@
 
 
 
-
-
-
-
-
-
-
   
 
-  
+
+
+
 
 </body>
 </html>

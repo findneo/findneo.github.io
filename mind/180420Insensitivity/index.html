@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,15 +15,15 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
-<script id="hexo-configurations">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+<script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"findneo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-
-  <meta name="description" content="by 渡边淳一 读后感迟钝的益处 抗压能力更强 专注创造价值 充分发挥潜力 能够坚持不懈 &#x3D;&gt; 更大的成功概率（事业，爱情）   适应能力更强 适应物理环境 乐观开朗，积极进取    怎样变迟钝能做些什么眼耳鼻舌身意的敏感程度很大一部分是天生的，难以改变，但是并非完全没有可能。  磨练。 再锋利的刀以合适的角度持续磨砺也会钝化。强光刺目，三秒就瞎，轰鸣入耳，不久渐聋，傻子不起妄念，呆子心如止">
+<meta name="description" content="by 渡边淳一 读后感迟钝的益处 抗压能力更强 专注创造价值 充分发挥潜力 能够坚持不懈 &#x3D;&gt; 更大的成功概率（事业，爱情）   适应能力更强 适应物理环境 乐观开朗，积极进取    怎样变迟钝能做些什么眼耳鼻舌身意的敏感程度很大一部分是天生的，难以改变，但是并非完全没有可能。  磨练。 再锋利的刀以合适的角度持续磨砺也会钝化。强光刺目，三秒就瞎，轰鸣入耳，不久渐聋，傻子不起妄念，呆子心如止">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《钝感力》">
 <meta property="og:url" content="https://findneo.github.io/mind/180420Insensitivity/index.html">
@@ -33,10 +35,11 @@
 <meta property="article:author" content="findneo">
 <meta name="twitter:card" content="summary">
 
+
 <link rel="canonical" href="https://findneo.github.io/mind/180420Insensitivity/">
 
 
-<script id="page-configurations">
+<script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
@@ -45,10 +48,8 @@
     lang   : 'zh-CN'
   };
 </script>
-
-  <title>《钝感力》 | 闲言语</title>
+<title>《钝感力》 | 闲言语</title>
   
-
 
   <script>
     var _hmt = _hmt || [];
@@ -62,27 +63,38 @@
 
 
 
-
   <noscript>
   <style>
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
 </noscript>
 
@@ -90,25 +102,25 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
-    <div class="headband"></div>
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
+      <i class="logo-line"></i>
       <h1 class="site-title">闲言语</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
     </a>
   </div>
 
@@ -121,14 +133,9 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
-
-  </li>
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -139,23 +146,22 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
@@ -163,23 +169,92 @@
   </div>
 
 </div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%90%8E%E6%84%9F"><span class="nav-number">1.</span> <span class="nav-text">读后感</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9F%E9%92%9D%E7%9A%84%E7%9B%8A%E5%A4%84"><span class="nav-number">1.1.</span> <span class="nav-text">迟钝的益处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E6%A0%B7%E5%8F%98%E8%BF%9F%E9%92%9D"><span class="nav-number">1.2.</span> <span class="nav-text">怎样变迟钝</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E5%81%9A%E4%BA%9B%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.1.</span> <span class="nav-text">能做些什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E6%95%8F%E6%84%9F%E4%B8%8E%E8%BF%9F%E9%92%9D"><span class="nav-number">1.2.2.</span> <span class="nav-text">平衡敏感与迟钝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%81%E4%B9%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">要义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E6%80%9D"><span class="nav-number">1.3.</span> <span class="nav-text">反思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BB%B7"><span class="nav-number">1.4.</span> <span class="nav-text">评价</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%84%E7%AB%A0%E8%A6%81%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">各章要点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E4%B8%A7%E5%A4%B1%E4%BA%86%E6%9F%90%E7%A7%8D%E6%89%8D%E8%83%BD"><span class="nav-number">2.1.</span> <span class="nav-text">我们丧失了某种才能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%96%A5%E8%B4%A3%E5%A3%B0%E4%B8%AD%E6%88%90%E9%95%BF%E7%9A%84%E5%90%8D%E5%8C%BB"><span class="nav-number">2.2.</span> <span class="nav-text">在斥责声中成长的名医</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%80%E6%B6%B2%E5%9B%A0%E6%AD%A4%E7%95%85%E6%B5%81"><span class="nav-number">2.3.</span> <span class="nav-text">血液因此畅流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9F%E9%92%9D%E7%9A%84%E4%BA%94%E5%AE%98"><span class="nav-number">2.4.</span> <span class="nav-text">迟钝的五官</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9D%A1%E7%9C%A0%E8%89%AF%E5%A5%BD%E7%9A%84%E8%83%BD%E4%BA%BA"><span class="nav-number">2.5.</span> <span class="nav-text">睡眠良好的能人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%97%E5%AF%B8%E8%BF%9B%E5%B0%BA%E7%9A%84%E6%89%8D%E8%83%BD"><span class="nav-number">2.6.</span> <span class="nav-text">得寸进尺的才能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%82%A0%E8%83%83%E9%92%9D%E6%84%9F%E7%9A%84%E7%94%B7%E4%BA%BA"><span class="nav-number">2.7.</span> <span class="nav-text">肠胃钝感的男人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A2%AB%E7%88%B1%E7%9A%84%E5%A5%B3%E7%A5%9E%E5%B0%84%E4%B8%AD"><span class="nav-number">2.8.</span> <span class="nav-text">被爱的女神射中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E7%BB%B4%E7%B3%BB%E5%A9%9A%E5%A7%BB%E7%94%9F%E6%B4%BB"><span class="nav-number">2.9.</span> <span class="nav-text">为了维系婚姻生活</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E6%88%98%E8%83%9C%E7%99%8C%E7%97%87"><span class="nav-number">2.10.</span> <span class="nav-text">为了战胜癌症</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%B3%E6%80%A7%E7%9A%84%E5%BC%BA%E5%A4%A7%E4%B9%8B%E4%B8%80"><span class="nav-number">2.11.</span> <span class="nav-text">女性的强大之一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%B3%E6%80%A7%E7%9A%84%E5%BC%BA%E5%A4%A7%E4%B9%8B%E4%BA%8C"><span class="nav-number">2.12.</span> <span class="nav-text">女性的强大之二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%84%9F%E8%B0%A2%E5%AB%89%E5%A6%92%E5%92%8C%E8%AE%BD%E5%88%BA"><span class="nav-number">2.13.</span> <span class="nav-text">感谢嫉妒和讽刺</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%81%8B%E7%88%B1%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="nav-number">2.14.</span> <span class="nav-text">恋爱的能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E6%9B%B4%E5%A5%BD%E5%9C%B0%E7%94%9F%E5%AD%98"><span class="nav-number">2.15.</span> <span class="nav-text">为了更好地生存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E5%BA%94%E7%8E%AF%E5%A2%83%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="nav-number">2.16.</span> <span class="nav-text">适应环境的能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9F%E5%A4%A7%E7%9A%84%E6%AF%8D%E7%88%B1"><span class="nav-number">2.17.</span> <span class="nav-text">伟大的母爱</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%AD%E5%BD%95"><span class="nav-number">3.</span> <span class="nav-text">语录</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content post posts-expand">
-            
+    <div class="main-inner post posts-expand">
 
-    
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://findneo.github.io/mind/180420Insensitivity/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -196,24 +271,26 @@
           《钝感力》
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：1018-04-20 01:00:34" itemprop="dateCreated datePublished" datetime="1018-04-20T01:00:34+08:00">1018-04-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
-              </span>
+      <time title="创建时间：1018-04-20 01:00:34" itemprop="dateCreated datePublished" datetime="1018-04-20T01:00:34+08:00">1018-04-20</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-03-09 21:32:32" itemprop="dateModified" datetime="2021-03-09T21:32:32+08:00">2021-03-09</time>
+      </span>
 
-          
+  
+</div>
 
         </div>
       </header>
@@ -222,8 +299,6 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
         <p>by 渡边淳一</p>
 <h1 id="读后感"><a href="#读后感" class="headerlink" title="读后感"></a>读后感</h1><h2 id="迟钝的益处"><a href="#迟钝的益处" class="headerlink" title="迟钝的益处"></a>迟钝的益处</h2><ul>
 <li>抗压能力更强<ul>
@@ -476,49 +551,46 @@
     
     
     
-        <div class="reward-container">
+
+    <footer class="post-footer">
+          <div class="reward-container">
   <div></div>
-  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    打赏
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
   </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.png" alt="findneo 微信支付">
-        <p>微信支付</p>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="findneo 微信">
+        <span>微信</span>
       </div>
 
   </div>
 </div>
 
 
-      <footer class="post-footer">
-
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/mind/180410Awesome/" rel="prev" title="奇文共赏">
-      <i class="fa fa-chevron-left"></i> 奇文共赏
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/mind/180731-philosophical-suicide/" rel="next" title="回头是岸">
-      回头是岸 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/mind/180410Awesome/" rel="prev" title="奇文共赏">
+                  <i class="fa fa-chevron-left"></i> 奇文共赏
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/mind/180731-philosophical-suicide/" rel="next" title="回头是岸">
+                  回头是岸 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-          
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -527,7 +599,7 @@
       activeClass = localStorage.getItem('comments_active') || activeClass;
     }
     if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
       if (activeTab) {
         activeTab.click();
       }
@@ -536,133 +608,38 @@
   if (CONFIG.comments.storage) {
     window.addEventListener('tabs:click', event => {
       if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
+      const commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
   }
 </script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%90%8E%E6%84%9F"><span class="nav-number">1.</span> <span class="nav-text">读后感</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9F%E9%92%9D%E7%9A%84%E7%9B%8A%E5%A4%84"><span class="nav-number">1.1.</span> <span class="nav-text">迟钝的益处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E6%A0%B7%E5%8F%98%E8%BF%9F%E9%92%9D"><span class="nav-number">1.2.</span> <span class="nav-text">怎样变迟钝</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E5%81%9A%E4%BA%9B%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.1.</span> <span class="nav-text">能做些什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E6%95%8F%E6%84%9F%E4%B8%8E%E8%BF%9F%E9%92%9D"><span class="nav-number">1.2.2.</span> <span class="nav-text">平衡敏感与迟钝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%81%E4%B9%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">要义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E6%80%9D"><span class="nav-number">1.3.</span> <span class="nav-text">反思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BB%B7"><span class="nav-number">1.4.</span> <span class="nav-text">评价</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%84%E7%AB%A0%E8%A6%81%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">各章要点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E4%B8%A7%E5%A4%B1%E4%BA%86%E6%9F%90%E7%A7%8D%E6%89%8D%E8%83%BD"><span class="nav-number">2.1.</span> <span class="nav-text">我们丧失了某种才能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%96%A5%E8%B4%A3%E5%A3%B0%E4%B8%AD%E6%88%90%E9%95%BF%E7%9A%84%E5%90%8D%E5%8C%BB"><span class="nav-number">2.2.</span> <span class="nav-text">在斥责声中成长的名医</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%80%E6%B6%B2%E5%9B%A0%E6%AD%A4%E7%95%85%E6%B5%81"><span class="nav-number">2.3.</span> <span class="nav-text">血液因此畅流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9F%E9%92%9D%E7%9A%84%E4%BA%94%E5%AE%98"><span class="nav-number">2.4.</span> <span class="nav-text">迟钝的五官</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9D%A1%E7%9C%A0%E8%89%AF%E5%A5%BD%E7%9A%84%E8%83%BD%E4%BA%BA"><span class="nav-number">2.5.</span> <span class="nav-text">睡眠良好的能人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%97%E5%AF%B8%E8%BF%9B%E5%B0%BA%E7%9A%84%E6%89%8D%E8%83%BD"><span class="nav-number">2.6.</span> <span class="nav-text">得寸进尺的才能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%82%A0%E8%83%83%E9%92%9D%E6%84%9F%E7%9A%84%E7%94%B7%E4%BA%BA"><span class="nav-number">2.7.</span> <span class="nav-text">肠胃钝感的男人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A2%AB%E7%88%B1%E7%9A%84%E5%A5%B3%E7%A5%9E%E5%B0%84%E4%B8%AD"><span class="nav-number">2.8.</span> <span class="nav-text">被爱的女神射中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E7%BB%B4%E7%B3%BB%E5%A9%9A%E5%A7%BB%E7%94%9F%E6%B4%BB"><span class="nav-number">2.9.</span> <span class="nav-text">为了维系婚姻生活</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E6%88%98%E8%83%9C%E7%99%8C%E7%97%87"><span class="nav-number">2.10.</span> <span class="nav-text">为了战胜癌症</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%B3%E6%80%A7%E7%9A%84%E5%BC%BA%E5%A4%A7%E4%B9%8B%E4%B8%80"><span class="nav-number">2.11.</span> <span class="nav-text">女性的强大之一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%B3%E6%80%A7%E7%9A%84%E5%BC%BA%E5%A4%A7%E4%B9%8B%E4%BA%8C"><span class="nav-number">2.12.</span> <span class="nav-text">女性的强大之二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%84%9F%E8%B0%A2%E5%AB%89%E5%A6%92%E5%92%8C%E8%AE%BD%E5%88%BA"><span class="nav-number">2.13.</span> <span class="nav-text">感谢嫉妒和讽刺</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%81%8B%E7%88%B1%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="nav-number">2.14.</span> <span class="nav-text">恋爱的能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E6%9B%B4%E5%A5%BD%E5%9C%B0%E7%94%9F%E5%AD%98"><span class="nav-number">2.15.</span> <span class="nav-text">为了更好地生存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E5%BA%94%E7%8E%AF%E5%A2%83%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="nav-number">2.16.</span> <span class="nav-text">适应环境的能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9F%E5%A4%A7%E7%9A%84%E6%AF%8D%E7%88%B1"><span class="nav-number">2.17.</span> <span class="nav-text">伟大的母爱</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%AD%E5%BD%95"><span class="nav-number">3.</span> <span class="nav-text">语录</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="findneo"
-      src="/images/findneo.png">
-  <p class="site-author-name" itemprop="name">findneo</p>
-  <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">79</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-      </div>
-        <div class="back-to-top motion-element">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
-  &copy; 2017 – 
+  &copy; 
   <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">findneo</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
 
   
 <script src="/js/local-search.js"></script>
@@ -672,16 +649,11 @@
 
 
 
-
-
-
-
-
-
-
   
 
-  
+
+
+
 
 </body>
 </html>
