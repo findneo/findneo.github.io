@@ -1,4 +1,4 @@
-cp themes/next/_config.yml ./_config.next.yml.bak
+cp themes/next2/_config.yml ./_config.next2.yml.bak
 hexo clean
 hexo d -g
 hexo clean

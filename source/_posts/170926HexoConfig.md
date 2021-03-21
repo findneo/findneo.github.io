@@ -353,7 +353,7 @@ db.json
 在 themes\next\layout\_macro\post-collapse.swig中删除<div class="collection-year">相关，修改<div class="post-meta">相关
 
 6. 使主页更紧凑
-在 themes\next\source\css\_common\components\post\post-collapse.styl jiangpost_header的样式的border-bottom和margin都改为0
+在 themes\next\source\css\_common\components\post\post-collapse.styl 将post_header的样式的border-bottom和margin都改为0
   .post-header {
     border-bottom: 0px dashed $grey-light;
     margin: 0px 0;
@@ -393,5 +393,13 @@ https://github.com/theme-next/hexo-theme-next/issues/1543#issuecomment-668549582
 /*here*/return document.getElementById(decodeURI(link.getAttribute('href').replace('#', ''))); // to fix toc bug
     });
 
+```
+
+### 20210312 代码块溢出
+
+```
+用nvm（https://github.com/coreybutler/nvm-windows）安装了低版本的node还是没能解决。
+大约是next的bug，把 next 从 https://github.com/theme-next/hexo-theme-next （最后更新在半年前）换成 https://github.com/next-theme/hexo-theme-next （十几天前还在更新）就好了。
+next最早的版本是这个：https://github.com/iissnan/hexo-theme-next （三年前就不维护了），不禁感慨，开源不易，弃坑常有啊。
 ```
 
