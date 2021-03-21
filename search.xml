@@ -58,9 +58,11 @@
 <p>.gitignore</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.deploy_git/</span><br><span class="line">node_modules/</span><br><span class="line">themes/</span><br><span class="line">public/</span><br><span class="line">db.json</span><br><span class="line">.DS_Store</span><br></pre></td></tr></table></figure>
 
-<h3 id="20210310-定制主页"><a href="#20210310-定制主页" class="headerlink" title="20210310 定制主页"></a>20210310 定制主页</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1. 使用 https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next的Gemini主题</span><br><span class="line"></span><br><span class="line">2. cp themes\next\layout\archive.swig themes\next\layout\index.swig</span><br><span class="line"></span><br><span class="line">3. 修改主页title</span><br><span class="line">将新index.swig中的</span><br><span class="line">&#123;% block title %&#125;&#123;&#123; __(&#39;title.archive&#39;) &#125;&#125; | &#123;&#123; title &#125;&#125;&#123;% endblock %&#125; </span><br><span class="line">修改为原始index.swig中的</span><br><span class="line">&#123;% block title %&#125;&#123;&#123; title &#125;&#125;&#123;%- if theme.index_with_subtitle and subtitle %&#125; - &#123;&#123; subtitle &#125;&#125;&#123;%- endif %&#125;&#123;% endblock %&#125;</span><br><span class="line"></span><br><span class="line">4. 删除鼓励语</span><br><span class="line">注释新index.swig中的&lt;div class&#x3D;&quot;collection-title&quot;&gt;...&lt;&#x2F;div&gt;</span><br><span class="line"></span><br><span class="line">5. 删除主页年份，修改博客日期格式</span><br><span class="line">在 themes\next\layout\_macro\post-collapse.swig中删除&lt;div class&#x3D;&quot;collection-year&quot;&gt;相关，修改&lt;div class&#x3D;&quot;post-meta&quot;&gt;相关</span><br><span class="line"></span><br><span class="line">6. 使主页更紧凑</span><br><span class="line">在 themes\next\source\css\_common\components\post\post-collapse.styl jiangpost_header的样式的border-bottom和margin都改为0</span><br><span class="line">  .post-header &#123;</span><br><span class="line">    border-bottom: 0px dashed $grey-light;</span><br><span class="line">    margin: 0px 0;</span><br></pre></td></tr></table></figure>
+<h3 id="20210310-定制主页"><a href="#20210310-定制主页" class="headerlink" title="20210310 定制主页"></a>20210310 定制主页</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1. 使用 https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next的Gemini主题</span><br><span class="line"></span><br><span class="line">2. cp themes\next\layout\archive.swig themes\next\layout\index.swig</span><br><span class="line"></span><br><span class="line">3. 修改主页title</span><br><span class="line">将新index.swig中的</span><br><span class="line">&#123;% block title %&#125;&#123;&#123; __(&#39;title.archive&#39;) &#125;&#125; | &#123;&#123; title &#125;&#125;&#123;% endblock %&#125; </span><br><span class="line">修改为原始index.swig中的</span><br><span class="line">&#123;% block title %&#125;&#123;&#123; title &#125;&#125;&#123;%- if theme.index_with_subtitle and subtitle %&#125; - &#123;&#123; subtitle &#125;&#125;&#123;%- endif %&#125;&#123;% endblock %&#125;</span><br><span class="line"></span><br><span class="line">4. 删除鼓励语</span><br><span class="line">注释新index.swig中的&lt;div class&#x3D;&quot;collection-title&quot;&gt;...&lt;&#x2F;div&gt;</span><br><span class="line"></span><br><span class="line">5. 删除主页年份，修改博客日期格式</span><br><span class="line">在 themes\next\layout\_macro\post-collapse.swig中删除&lt;div class&#x3D;&quot;collection-year&quot;&gt;相关，修改&lt;div class&#x3D;&quot;post-meta&quot;&gt;相关</span><br><span class="line"></span><br><span class="line">6. 使主页更紧凑</span><br><span class="line">在 themes\next\source\css\_common\components\post\post-collapse.styl 将post_header的样式的border-bottom和margin都改为0</span><br><span class="line">  .post-header &#123;</span><br><span class="line">    border-bottom: 0px dashed $grey-light;</span><br><span class="line">    margin: 0px 0;</span><br></pre></td></tr></table></figure>
 
 <h3 id="20210310-解决TOC跳转失败"><a href="#20210310-解决TOC跳转失败" class="headerlink" title="20210310 解决TOC跳转失败"></a>20210310 解决TOC跳转失败</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">TOC无法正常跳转，一个以前没遇到过的bug，可能是中文目录引起的</span><br><span class="line"></span><br><span class="line">现象：</span><br><span class="line">点击TOC上的目录时console报错 </span><br><span class="line">Uncaught TypeError: Cannot read property &#39;getBoundingClientRect&#39; of null</span><br><span class="line">    at HTMLAnchorElement.&lt;anonymous&gt; (utils.js:241)</span><br><span class="line">(anonymous) @ utils.js:241</span><br><span class="line"></span><br><span class="line">解决办法</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next&#x2F;issues&#x2F;1543#issuecomment-668549582</span><br><span class="line">修改 themes\next\source\js\utils.js 中的registerSidebarTOC函数部分代码</span><br><span class="line"></span><br><span class="line">    const sections &#x3D; [...navItems].map(element &#x3D;&gt; &#123;</span><br><span class="line">      var link &#x3D; element.querySelector(&#39;a.nav-link&#39;);</span><br><span class="line">      &#x2F;&#x2F; TOC item animation navigate.</span><br><span class="line">      link.addEventListener(&#39;click&#39;, event &#x3D;&gt; &#123;</span><br><span class="line">        event.preventDefault();</span><br><span class="line">        &#x2F;&#x2F; var target &#x3D; document.getElementById(event.currentTarget.getAttribute(&#39;href&#39;).replace(&#39;#&#39;, &#39;&#39;));</span><br><span class="line">&#x2F;*here*&#x2F;var target &#x3D; document.getElementById(decodeURI(event.currentTarget.getAttribute(&#39;href&#39;).replace(&#39;#&#39;, &#39;&#39;)));  &#x2F;&#x2F; to fix toc bug</span><br><span class="line">        var offset &#x3D; target.getBoundingClientRect().top + window.scrollY;</span><br><span class="line">        window.anime(&#123;</span><br><span class="line">          targets  : document.scrollingElement,</span><br><span class="line">          duration : 500,</span><br><span class="line">          easing   : &#39;linear&#39;,</span><br><span class="line">          scrollTop: offset + 10</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">      &#x2F;&#x2F; return document.getElementById(link.getAttribute(&#39;href&#39;).replace(&#39;#&#39;, &#39;&#39;));</span><br><span class="line">&#x2F;*here*&#x2F;return document.getElementById(decodeURI(link.getAttribute(&#39;href&#39;).replace(&#39;#&#39;, &#39;&#39;))); &#x2F;&#x2F; to fix toc bug</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="20210312-代码块溢出"><a href="#20210312-代码块溢出" class="headerlink" title="20210312 代码块溢出"></a>20210312 代码块溢出</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">用nvm（https:&#x2F;&#x2F;github.com&#x2F;coreybutler&#x2F;nvm-windows）安装了低版本的node还是没能解决。</span><br><span class="line">大约是next的bug，把 next 从 https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next （最后更新在半年前）换成 https:&#x2F;&#x2F;github.com&#x2F;next-theme&#x2F;hexo-theme-next （十几天前还在更新）就好了。</span><br><span class="line">next最早的版本是这个：https:&#x2F;&#x2F;github.com&#x2F;iissnan&#x2F;hexo-theme-next （三年前就不维护了），不禁感慨，开源不易，弃坑常有啊。</span><br></pre></td></tr></table></figure>
 
 ]]></content>
   </entry>
@@ -2359,6 +2361,36 @@
 ]]></content>
   </entry>
   <entry>
+    <title>人生价值与自我实现</title>
+    <url>/mind/170614MeaningAndAction/</url>
+    <content><![CDATA[<h3 id="人生价值与自我实现"><a href="#人生价值与自我实现" class="headerlink" title="人生价值与自我实现"></a>人生价值与自我实现</h3><blockquote>
+<p> 人用生命的价值和意义来说服自己：人的存在不是荒诞。    ——阿贝尔·加缪  </p>
+</blockquote>
+<p>作为人，在生命中或迟或早的某些时刻，我们会忍不住疑惑或是开始追问这样一些问题。</p>
+<p>•    生命的意义是什么？  </p>
+<p>•    生命究竟是怎样的？  </p>
+<p>•    我们是什么？</p>
+<p>•    我们为了什么而存在？</p>
+<p>•    生命的起源是什么？</p>
+<p>•    生命的本质什么？</p>
+<p>•    现实的本质是什么？</p>
+<p>•    生命的存在是否有目的以及它是什么？</p>
+<p>•    在生命中究竟什么是有价值的？</p>
+<p>•    存在下去的理由是什么？</p>
+<p>这些问题在不同人身上的萌发时间和所引起的反应是大不相同的，不同的人在这个问题上的在意程度和追究深度也不尽相同，并且不同人得到的答案也未必一致。有些人在生命的早期便热衷于探求这类问题的答案，有些人人到中年才开始思考存在的意义，有些人则兴致缺缺，终其一生没有真正开始严肃地对待这些问题。有些人孜孜不倦，全力以赴，放眼宇内，观今溯古，只为求得一个满意的答案，在没有寻到之前他们食也无味，寝也难安，踽踽独行，郁郁寡欢，鲜有发自内心的快乐与对这个世界的归属感；有些人知天达命，且歌且行，格物致知，用功世事，只在某些深夜里偶忆初心，平添感怀；有些人五根浸尘，受苦贪欢，苶然疲役，不问所归，自始自终只是在追随欲望与满足欲望之间循环往复，如同命运的木偶。</p>
+<p>尽管不同的人在这个问题上表现各异，但相同的是人们都赤条条来到人世，经历生老病死，然后赤条条离开，这就使得不同的人具有某种作为存在的平等性。那么是什么使得一个存在与另一个存在不同，这种不同又是基于什么的讨论，或者这种不同是否被需要，以及为什么，最后是如何去实现这种不同。这便是我们考虑人生价值与自我实现这个命题时所要面对的主要问题。</p>
+<p>致力于实现人生价值与自我期许并不是什么难事，即便最后没能实现或没能彻底实现也无关紧要，因为如果一个人确实找到了其所坚信不移的价值，那么他为实现价值而存在的每一个时刻都必将无比快乐。真正困难的问题在于真正认识人这种存在，真正认识自我，弄清楚什么是价值，什么是有价值，一种价值又何以不同于另一种价值。思考价值，确信价值，最后才是实现价值。</p>
+<p>在一切真正的思考开始之前，我们必须定义何为坚信价值。如果我们说一个人坚信一种价值，那么这种价值对于他应当是根本性的，是源头而不是途经，是目标而不是手段，是衡量一切的根本出发。</p>
+<p>对于一部分人，确信价值是再简单不过的，甚至不需要经过思考。一个简单的思路而普遍的思路就像这样——因为财富与权力可以满足眼耳鼻舌身五根之欲，所以金钱是有价值的，所以我的价值是拥有大的权力和多的财富。这条逻辑链是如此清晰简洁，如此雄辩有力，以至于我险些甚至骗过了自己。实际上，如果一个经过上述我们勉强称之为思考的一番大脑活动后将拥有更多的财富定做自己的人生价值并且打算终生致力于实现它，那么可以预见地，几乎不可避免地，这个人将在人生的某一些时刻感受到这种价值带给他的痛苦。为什么会这样呢？难道追求一种确信的价值无法让人感到始终的愉悦？事情是这样的，如果财富可以粗暴地具象为金钱，那么金钱于这个人并没有价值，拥有金钱也没有，这个人的价值是各种欲望的满足。这个人因为没有认清自己的价值所在而感到痛苦，因为错把手段当目标而痛苦。其实，绝大多数人也是如此。</p>
+<p>如果一个人的价值是满足他的各种欲望，如果这些欲望与其满足欲望的能力存在差距，那么他至少有两条途径，一是增强能力来满足欲望，二是降低欲望来让欲望自己得到满足。这两条途径看上去本身都不会自带痛苦。当然，当一件东西和欲望扯上关系，事情总会变得复杂，无奈很少有东西与欲望毫无干系。此外，这本身是否能作为一种真正的价值来被对待，也是值得怀疑的。</p>
+<p>在我们执着于怀疑时，就会发现没有什么是理所当然的，没有什么是不能怀疑的。我承认这是认识论的一大难题，我不认为这个问题已经得到很好的解决。维特根斯坦前半生致力于考虑用语言描述价值的可能性，这就是在怀疑语言，同时也怀疑价值，实际上至今仍值得怀疑。不知为何其后来同笛卡尔之流一样认为我们必须承认存在一些无可争议的事实作为一切讨论的基础。尽管人们说他同其他学说是不同的，但在我看来这只是不同形式的妥协罢了。因为什么都没有，所以应当要有些什么才好，这是可笑的逻辑，就不能什么都没有吗？当然，什么都没有是痛苦的，面对无尽的深渊，没有语言可以信任，没有价值可以皈依，没有逻辑可以依靠，没有认识能被接受，说实话，那真是暗无天日，我们的整个文明都在怀疑中分崩离析，所有曾经建立起的光辉与荣耀全在一个质问的眼神中缓缓坍塌。</p>
+<p>所以人们决定不怀疑，并将一切怀疑笼统地扔到虚无主义中任其遭受作为异类所难以逃避的攻讦和叱呵。</p>
+<p>在怀疑的世界里，价值是谈不上的，语言是可笑的，追求是愚蠢的，自我是一场谎言，所有的一切都建立在一种不诚实之上，一种自我欺骗之上。我们或许可以称之为实事求是，脚踏实地或是其他的什么，但在怀疑者的严重，只有一个代名词，那就是不诚实。诚实是宝贵的品质，如果一个人，一个种族，不能够诚实地对待自己和自然，那么所有的一切都将建立在欺骗之上，所有的成就与辉煌都将在谎言被揭穿的那一天露出它美丽芬香的面纱下丑陋不堪的真实面目，所有曾被这虚假的美好蒙蔽的年轻人将会深深有感于这一场阴谋的庞大与精心，都将重新认识到所谓价值并不存在，所谓语言都是虚假，所谓梦想全是泡沫，所谓自我，不过是在初升的朝阳面前自顾自赞叹未知光芒的耀眼，而浑然不觉毁灭已迎面到来。而那些曾被背叛，被惩罚的所谓虚无主义者，才会真正的由衷的露出他们具备智慧以来的第一次微笑，他们看到虚无终于是虚无，狂妄终于是狂妄，世间万物各归其序，尽管这是一场失败，但实际上它比胜利更值得开心，如果说在此之前，怀疑依然存在，那么从此以后，怀疑将归于历史，一切现实只余虚无，而这虚无，便是无上的荣耀。</p>
+<p>那么我们会带人生的价值与自我的实现。不论是‘42’的预言，还是“一切都将逝去，唯有死神永生”，又或者是“三世因果，六道轮回”的体系，我们作为人，脆弱的，短见的，狭隘的，被欲望支配的人，我们需要在这十丈软红里寻一处着落，认一个价值。对，我指的不是思考价值，确认价值，然后契而不舍，忠心不渝，不折手段，视死如归地去追逐这个价值，而是认一个价值，单纯草率地，人云亦云地，随波逐流地，得过且过地认一个价值。我们认到了自己的价值之后，不论这个价值是伟大光荣正确的，还是猥琐下流可鄙的，我们需要去实现它。我们如何实现它，我们将除了饮食睡眠，排遗解乏外的一切时间献给他，用一切我们认为正确的方法和手段去靠近他，瓦解他，最后占领他。如果在实现的过程中我们因为实现价值的遥不可及而感到痛苦，那么不要怀疑价值，尽管去痛苦，因为价值存在，而且价值正确，如果为实现阶段性胜利而欣喜若狂，也更不用回头看是否走在正确的道路上，尽管去喜悦，因为价值存在，而且价值正确。</p>
+<p>每个人都应该有一个价值，每个人都注定拥有一个价值。你可以看不清他，可以有所顾虑，可以有所怀疑，但你必须相信他，因为这是你拥有的价值，这是你的价值，这是你将奋尽全力去追逐的价值，也是你得以忘却生命虚无，得以在无尽的人生荒野中义无反顾地前行的唯一动力，至关重要的，并且你无法否认的是，除此之外，你一无所有。所以，在这么多的逻辑凌乱的语句之后，总之请你记住，如果你不想面对那身后空无一物，眼前万丈深渊的绝境，如果你不想体会我曾体会过的那般绝境，请相信我，请相信世上有一种价值值得相信，有一种价值属于你，且只属于你，你应当接受他，像士兵接过令牌，你应当带着他，踏上你仅此一次的征程。士兵，祝你，祝我，顺利。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>读道德经第十八章</title>
     <url>/mind/170614MoralBook18Chapter/</url>
     <content><![CDATA[<h1 id="道德经与人际沟通概论结课论文"><a href="#道德经与人际沟通概论结课论文" class="headerlink" title="道德经与人际沟通概论结课论文"></a><strong>道德经与人际沟通概论结课论文</strong></h1><h2 id="表里相成，实虚相济"><a href="#表里相成，实虚相济" class="headerlink" title="表里相成，实虚相济"></a>表里相成，实虚相济</h2><h2 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h2><p>大道废，有仁义。智慧出，有大伪。六亲不和，有孝慈。国家昏乱，有忠臣。                   –《道德经》第十八章</p>
@@ -2390,36 +2422,6 @@
 <li>夏征农：《辞海》1999年版 缩印本（音序，一卷本），上海辞书出版社2002年1月版<br>.    《汉语大词典》（在线词典，链接：<a href="http://www.guoxuedashi.com/hydcd/%EF%BC%89">http://www.guoxuedashi.com/hydcd/）</a><br>.    管锡华：《尔雅》，2014年中华书局版<br>.    东汉·许慎：《说文解字》，湖北美术出版社2013年版<br>.    战国末期·赵国·荀况：《荀子》，上海古籍出版社2014年版<br>.    三国·魏·王弼：《王弼老子注》，中华书局2011年版<br>.    战国中期·宋国·庄周：《南华经》，三秦出版社1995年版<br>.    徐志远，蕾蕾：《听南怀瑾讲人生感悟》，长江文艺出版社2010年版<br>.    美国·Abraham Harold Maslow：《动机与人格》，中国人民大学出版社2008年版</li>
 <li>   元末明初·山东·罗贯中：《三国演义》，时代文艺出版社2000年版                    </li>
 </ol>
-]]></content>
-  </entry>
-  <entry>
-    <title>人生价值与自我实现</title>
-    <url>/mind/170614MeaningAndAction/</url>
-    <content><![CDATA[<h3 id="人生价值与自我实现"><a href="#人生价值与自我实现" class="headerlink" title="人生价值与自我实现"></a>人生价值与自我实现</h3><blockquote>
-<p> 人用生命的价值和意义来说服自己：人的存在不是荒诞。    ——阿贝尔·加缪  </p>
-</blockquote>
-<p>作为人，在生命中或迟或早的某些时刻，我们会忍不住疑惑或是开始追问这样一些问题。</p>
-<p>•    生命的意义是什么？  </p>
-<p>•    生命究竟是怎样的？  </p>
-<p>•    我们是什么？</p>
-<p>•    我们为了什么而存在？</p>
-<p>•    生命的起源是什么？</p>
-<p>•    生命的本质什么？</p>
-<p>•    现实的本质是什么？</p>
-<p>•    生命的存在是否有目的以及它是什么？</p>
-<p>•    在生命中究竟什么是有价值的？</p>
-<p>•    存在下去的理由是什么？</p>
-<p>这些问题在不同人身上的萌发时间和所引起的反应是大不相同的，不同的人在这个问题上的在意程度和追究深度也不尽相同，并且不同人得到的答案也未必一致。有些人在生命的早期便热衷于探求这类问题的答案，有些人人到中年才开始思考存在的意义，有些人则兴致缺缺，终其一生没有真正开始严肃地对待这些问题。有些人孜孜不倦，全力以赴，放眼宇内，观今溯古，只为求得一个满意的答案，在没有寻到之前他们食也无味，寝也难安，踽踽独行，郁郁寡欢，鲜有发自内心的快乐与对这个世界的归属感；有些人知天达命，且歌且行，格物致知，用功世事，只在某些深夜里偶忆初心，平添感怀；有些人五根浸尘，受苦贪欢，苶然疲役，不问所归，自始自终只是在追随欲望与满足欲望之间循环往复，如同命运的木偶。</p>
-<p>尽管不同的人在这个问题上表现各异，但相同的是人们都赤条条来到人世，经历生老病死，然后赤条条离开，这就使得不同的人具有某种作为存在的平等性。那么是什么使得一个存在与另一个存在不同，这种不同又是基于什么的讨论，或者这种不同是否被需要，以及为什么，最后是如何去实现这种不同。这便是我们考虑人生价值与自我实现这个命题时所要面对的主要问题。</p>
-<p>致力于实现人生价值与自我期许并不是什么难事，即便最后没能实现或没能彻底实现也无关紧要，因为如果一个人确实找到了其所坚信不移的价值，那么他为实现价值而存在的每一个时刻都必将无比快乐。真正困难的问题在于真正认识人这种存在，真正认识自我，弄清楚什么是价值，什么是有价值，一种价值又何以不同于另一种价值。思考价值，确信价值，最后才是实现价值。</p>
-<p>在一切真正的思考开始之前，我们必须定义何为坚信价值。如果我们说一个人坚信一种价值，那么这种价值对于他应当是根本性的，是源头而不是途经，是目标而不是手段，是衡量一切的根本出发。</p>
-<p>对于一部分人，确信价值是再简单不过的，甚至不需要经过思考。一个简单的思路而普遍的思路就像这样——因为财富与权力可以满足眼耳鼻舌身五根之欲，所以金钱是有价值的，所以我的价值是拥有大的权力和多的财富。这条逻辑链是如此清晰简洁，如此雄辩有力，以至于我险些甚至骗过了自己。实际上，如果一个经过上述我们勉强称之为思考的一番大脑活动后将拥有更多的财富定做自己的人生价值并且打算终生致力于实现它，那么可以预见地，几乎不可避免地，这个人将在人生的某一些时刻感受到这种价值带给他的痛苦。为什么会这样呢？难道追求一种确信的价值无法让人感到始终的愉悦？事情是这样的，如果财富可以粗暴地具象为金钱，那么金钱于这个人并没有价值，拥有金钱也没有，这个人的价值是各种欲望的满足。这个人因为没有认清自己的价值所在而感到痛苦，因为错把手段当目标而痛苦。其实，绝大多数人也是如此。</p>
-<p>如果一个人的价值是满足他的各种欲望，如果这些欲望与其满足欲望的能力存在差距，那么他至少有两条途径，一是增强能力来满足欲望，二是降低欲望来让欲望自己得到满足。这两条途径看上去本身都不会自带痛苦。当然，当一件东西和欲望扯上关系，事情总会变得复杂，无奈很少有东西与欲望毫无干系。此外，这本身是否能作为一种真正的价值来被对待，也是值得怀疑的。</p>
-<p>在我们执着于怀疑时，就会发现没有什么是理所当然的，没有什么是不能怀疑的。我承认这是认识论的一大难题，我不认为这个问题已经得到很好的解决。维特根斯坦前半生致力于考虑用语言描述价值的可能性，这就是在怀疑语言，同时也怀疑价值，实际上至今仍值得怀疑。不知为何其后来同笛卡尔之流一样认为我们必须承认存在一些无可争议的事实作为一切讨论的基础。尽管人们说他同其他学说是不同的，但在我看来这只是不同形式的妥协罢了。因为什么都没有，所以应当要有些什么才好，这是可笑的逻辑，就不能什么都没有吗？当然，什么都没有是痛苦的，面对无尽的深渊，没有语言可以信任，没有价值可以皈依，没有逻辑可以依靠，没有认识能被接受，说实话，那真是暗无天日，我们的整个文明都在怀疑中分崩离析，所有曾经建立起的光辉与荣耀全在一个质问的眼神中缓缓坍塌。</p>
-<p>所以人们决定不怀疑，并将一切怀疑笼统地扔到虚无主义中任其遭受作为异类所难以逃避的攻讦和叱呵。</p>
-<p>在怀疑的世界里，价值是谈不上的，语言是可笑的，追求是愚蠢的，自我是一场谎言，所有的一切都建立在一种不诚实之上，一种自我欺骗之上。我们或许可以称之为实事求是，脚踏实地或是其他的什么，但在怀疑者的严重，只有一个代名词，那就是不诚实。诚实是宝贵的品质，如果一个人，一个种族，不能够诚实地对待自己和自然，那么所有的一切都将建立在欺骗之上，所有的成就与辉煌都将在谎言被揭穿的那一天露出它美丽芬香的面纱下丑陋不堪的真实面目，所有曾被这虚假的美好蒙蔽的年轻人将会深深有感于这一场阴谋的庞大与精心，都将重新认识到所谓价值并不存在，所谓语言都是虚假，所谓梦想全是泡沫，所谓自我，不过是在初升的朝阳面前自顾自赞叹未知光芒的耀眼，而浑然不觉毁灭已迎面到来。而那些曾被背叛，被惩罚的所谓虚无主义者，才会真正的由衷的露出他们具备智慧以来的第一次微笑，他们看到虚无终于是虚无，狂妄终于是狂妄，世间万物各归其序，尽管这是一场失败，但实际上它比胜利更值得开心，如果说在此之前，怀疑依然存在，那么从此以后，怀疑将归于历史，一切现实只余虚无，而这虚无，便是无上的荣耀。</p>
-<p>那么我们会带人生的价值与自我的实现。不论是‘42’的预言，还是“一切都将逝去，唯有死神永生”，又或者是“三世因果，六道轮回”的体系，我们作为人，脆弱的，短见的，狭隘的，被欲望支配的人，我们需要在这十丈软红里寻一处着落，认一个价值。对，我指的不是思考价值，确认价值，然后契而不舍，忠心不渝，不折手段，视死如归地去追逐这个价值，而是认一个价值，单纯草率地，人云亦云地，随波逐流地，得过且过地认一个价值。我们认到了自己的价值之后，不论这个价值是伟大光荣正确的，还是猥琐下流可鄙的，我们需要去实现它。我们如何实现它，我们将除了饮食睡眠，排遗解乏外的一切时间献给他，用一切我们认为正确的方法和手段去靠近他，瓦解他，最后占领他。如果在实现的过程中我们因为实现价值的遥不可及而感到痛苦，那么不要怀疑价值，尽管去痛苦，因为价值存在，而且价值正确，如果为实现阶段性胜利而欣喜若狂，也更不用回头看是否走在正确的道路上，尽管去喜悦，因为价值存在，而且价值正确。</p>
-<p>每个人都应该有一个价值，每个人都注定拥有一个价值。你可以看不清他，可以有所顾虑，可以有所怀疑，但你必须相信他，因为这是你拥有的价值，这是你的价值，这是你将奋尽全力去追逐的价值，也是你得以忘却生命虚无，得以在无尽的人生荒野中义无反顾地前行的唯一动力，至关重要的，并且你无法否认的是，除此之外，你一无所有。所以，在这么多的逻辑凌乱的语句之后，总之请你记住，如果你不想面对那身后空无一物，眼前万丈深渊的绝境，如果你不想体会我曾体会过的那般绝境，请相信我，请相信世上有一种价值值得相信，有一种价值属于你，且只属于你，你应当接受他，像士兵接过令牌，你应当带着他，踏上你仅此一次的征程。士兵，祝你，祝我，顺利。</p>
 ]]></content>
   </entry>
   <entry>
@@ -6683,7 +6685,7 @@ git clone git@github.com:findneo/myaster.git
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python sqlmap.py -u <span class="string">&quot;http://web6.tamuctf.com/message?id=2&quot;</span> -p id --threads 10 --dump-all --random-agent --hex</span><br></pre></td></tr></table></figure>
 
 <p><img data-src="1552782785371.png" alt="1552782785371"></p>
-<p>得到admin用户邮箱为 <a href="mailto:&#x31;&#x33;&#x33;&#x37;&#45;&#x61;&#100;&#x6d;&#105;&#110;&#64;&#108;&#x33;&#51;&#55;&#x73;&#x65;&#x63;&#x75;&#114;&#49;&#x74;&#x79;&#x2e;&#104;&#x61;&#107;">&#x31;&#x33;&#x33;&#x37;&#45;&#x61;&#100;&#x6d;&#105;&#110;&#64;&#108;&#x33;&#51;&#55;&#x73;&#x65;&#x63;&#x75;&#114;&#49;&#x74;&#x79;&#x2e;&#104;&#x61;&#107;</a> ，Secret值为<code>WIFHXDZ3BOHJMJSC</code>，id为1，密码哈希为<code>02ca0b0603222a090fe2fbf3ba97d90c</code> ，在somd5查询对应明文为<code>secretpasscode</code> 。</p>
+<p>得到admin用户邮箱为 <a href="mailto:&#x31;&#51;&#x33;&#x37;&#45;&#x61;&#100;&#109;&#105;&#x6e;&#64;&#108;&#51;&#x33;&#55;&#115;&#101;&#99;&#117;&#x72;&#x31;&#116;&#121;&#46;&#x68;&#x61;&#x6b;">&#x31;&#51;&#x33;&#x37;&#45;&#x61;&#100;&#109;&#105;&#x6e;&#64;&#108;&#51;&#x33;&#55;&#115;&#101;&#99;&#117;&#x72;&#x31;&#116;&#121;&#46;&#x68;&#x61;&#x6b;</a> ，Secret值为<code>WIFHXDZ3BOHJMJSC</code>，id为1，密码哈希为<code>02ca0b0603222a090fe2fbf3ba97d90c</code> ，在somd5查询对应明文为<code>secretpasscode</code> 。</p>
 <p>使用burp修改cookie后转发可见flag为<code>gigem&#123;th3_T0tp_1s_we4k_w1tH_yoU&#125;</code>。</p>
 <p><img data-src="1552783404288.png" alt="1552783404288"></p>
 <h1 id="Reversing"><a href="#Reversing" class="headerlink" title="Reversing"></a>Reversing</h1><h2 id="Cheesy"><a href="#Cheesy" class="headerlink" title="Cheesy"></a>Cheesy</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> Z2lnZW17M2E1eV9SM3YzcjUxTjYhfQ== | base64 -d</span><br><span class="line">gigem&#123;3a5y_R3v3r51N6!&#125;</span><br></pre></td></tr></table></figure>
@@ -6722,9 +6724,9 @@ git clone git@github.com:findneo/myaster.git
 <p><img data-src="1552784704688.png" alt="1552784704688"></p>
 <p>flag is <code>gigem&#123;0h_my_wh4t_sp4c1ng_y0u_h4v3&#125;</code> 。</p>
 <h2 id="Onboarding-Checklist"><a href="#Onboarding-Checklist" class="headerlink" title="Onboarding Checklist"></a>Onboarding Checklist</h2><blockquote>
-<p>From: <a href="mailto:&#105;&#x6d;&#x70;&#111;&#114;&#x74;&#97;&#110;&#x74;&#112;&#101;&#x72;&#x73;&#x6f;&#110;&#64;&#x73;&#x6f;&#109;&#x65;&#98;&#x69;&#103;&#x63;&#x6f;&#114;&#112;&#x2e;&#99;&#111;&#x6d;">&#105;&#x6d;&#x70;&#111;&#114;&#x74;&#97;&#110;&#x74;&#112;&#101;&#x72;&#x73;&#x6f;&#110;&#64;&#x73;&#x6f;&#109;&#x65;&#98;&#x69;&#103;&#x63;&#x6f;&#114;&#112;&#x2e;&#99;&#111;&#x6d;</a><br>Date: Feb 22, 2019 9:00 AM<br>To: <a href="mailto:&#115;&#x6f;&#x6d;&#x65;&#x67;&#x75;&#121;&#64;&#x73;&#111;&#109;&#101;&#x62;&#x69;&#103;&#x63;&#111;&#x72;&#x70;&#x2e;&#x63;&#x6f;&#109;">&#115;&#x6f;&#x6d;&#x65;&#x67;&#x75;&#121;&#64;&#x73;&#111;&#109;&#101;&#x62;&#x69;&#103;&#x63;&#111;&#x72;&#x70;&#x2e;&#x63;&#x6f;&#109;</a><br>Subject: New Employee Access</p>
+<p>From: <a href="mailto:&#x69;&#109;&#112;&#x6f;&#114;&#x74;&#x61;&#110;&#x74;&#112;&#101;&#x72;&#115;&#111;&#110;&#x40;&#115;&#x6f;&#x6d;&#x65;&#98;&#x69;&#103;&#99;&#111;&#x72;&#x70;&#46;&#x63;&#111;&#x6d;">&#x69;&#109;&#112;&#x6f;&#114;&#x74;&#x61;&#110;&#x74;&#112;&#101;&#x72;&#115;&#111;&#110;&#x40;&#115;&#x6f;&#x6d;&#x65;&#98;&#x69;&#103;&#99;&#111;&#x72;&#x70;&#46;&#x63;&#111;&#x6d;</a><br>Date: Feb 22, 2019 9:00 AM<br>To: <a href="mailto:&#x73;&#111;&#x6d;&#x65;&#x67;&#117;&#121;&#x40;&#x73;&#111;&#109;&#101;&#x62;&#x69;&#x67;&#x63;&#111;&#x72;&#x70;&#x2e;&#x63;&#111;&#x6d;">&#x73;&#111;&#x6d;&#x65;&#x67;&#117;&#121;&#x40;&#x73;&#111;&#109;&#101;&#x62;&#x69;&#x67;&#x63;&#111;&#x72;&#x70;&#x2e;&#x63;&#111;&#x6d;</a><br>Subject: New Employee Access</p>
 <p>Hello Some Guy,</p>
-<p>We need to begin sending requests for the new employee to get access to our security appliances. I believe they already know that you are authorized to make a new account request. Would you mind sending the new employee’s email address to <a href="mailto:&#116;&#97;&#x6d;&#x75;&#x63;&#x74;&#102;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;">&#116;&#97;&#x6d;&#x75;&#x63;&#x74;&#102;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;</a> so they can process the account request?</p>
+<p>We need to begin sending requests for the new employee to get access to our security appliances. I believe they already know that you are authorized to make a new account request. Would you mind sending the new employee’s email address to <a href="mailto:&#x74;&#x61;&#109;&#x75;&#x63;&#x74;&#x66;&#x40;&#103;&#109;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#x6d;">&#x74;&#x61;&#109;&#x75;&#x63;&#x74;&#x66;&#x40;&#103;&#109;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#x6d;</a> so they can process the account request?</p>
 <p>Thank you,<br>Important Person</p>
 <p>The new employee can be a little slow to respond.</p>
 <p>Difficulty: easy</p>
