@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"findneo.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="一直在寻找称心的笔记工具，前段时间接触到tiddly wiki，觉得很是不错。因为并非完美的开箱即用，使用过程中还是遇到一些问题，其中一些找到了好的解决办法，有一些实在解决不掉，无奈最终弃坑。 自动保存官方提供了很多的保存选项，却实在没有一个真正优雅，要装浏览器插件，装客户端，甚至还有装浏览器的…… nodejs版勉强能用，实时保存效果极好，但有两个缺点：  文件分散 安装插件的页面刷不出来，只能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何保存tiddlywiki">
+<meta property="og:url" content="https://findneo.github.io/210323-how-to-save-tiddly-wiki/index.html">
+<meta property="og:site_name" content="闲言语">
+<meta property="og:description" content="一直在寻找称心的笔记工具，前段时间接触到tiddly wiki，觉得很是不错。因为并非完美的开箱即用，使用过程中还是遇到一些问题，其中一些找到了好的解决办法，有一些实在解决不掉，无奈最终弃坑。 自动保存官方提供了很多的保存选项，却实在没有一个真正优雅，要装浏览器插件，装客户端，甚至还有装浏览器的…… nodejs版勉强能用，实时保存效果极好，但有两个缺点：  文件分散 安装插件的页面刷不出来，只能">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-23T13:23:17.000Z">
+<meta property="article:modified_time" content="2021-03-29T17:21:04.663Z">
+<meta property="article:author" content="findneo">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://findneo.github.io/210323-how-to-save-tiddly-wiki/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>如何保存tiddlywiki | 闲言语</title>
+  
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c9a19ce963f4d3d9bdc923fec3582400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="闲言语" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">闲言语</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98"><span class="nav-number">1.</span> <span class="nav-text">自动保存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA"><span class="nav-number">2.</span> <span class="nav-text">搜索增强</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E9%87%8D%E5%BA%A6%E7%94%A8%E6%88%B7%E7%AD%89"><span class="nav-number">3.</span> <span class="nav-text">其他重度用户等</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">缺点</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="findneo"
+      src="/images/findneo.png">
+  <p class="site-author-name" itemprop="name">findneo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/findneo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;findneo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/findneo_" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;findneo_" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://findneo.github.io/210323-how-to-save-tiddly-wiki/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/findneo.png">
+      <meta itemprop="name" content="findneo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闲言语">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何保存tiddlywiki
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-03-23 21:23:17" itemprop="dateCreated datePublished" datetime="2021-03-23T21:23:17+08:00">2021-03-23</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-03-30 01:21:04" itemprop="dateModified" datetime="2021-03-30T01:21:04+08:00">2021-03-30</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>一直在寻找称心的笔记工具，前段时间接触到tiddly wiki，觉得很是不错。因为并非完美的开箱即用，使用过程中还是遇到一些问题，其中一些找到了好的解决办法，有一些实在解决不掉，无奈最终弃坑。</p>
+<h5 id="自动保存"><a href="#自动保存" class="headerlink" title="自动保存"></a>自动保存</h5><p>官方提供了很多的保存选项，却实在没有一个真正优雅，要装浏览器插件，装客户端，甚至还有装浏览器的……</p>
+<p>nodejs版勉强能用，实时保存效果极好，但有两个缺点：</p>
+<ol>
+<li>文件分散</li>
+<li>安装插件的页面刷不出来，只能靠改配置文件或者去找别人的拖过来。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install -g tiddlywiki</span><br><span class="line">tiddlywiki --version</span><br><span class="line">// 5.1.23</span><br><span class="line">tiddlywiki mywiki --init server</span><br><span class="line">tiddlywiki mywiki --listen port=1337</span><br></pre></td></tr></table></figure>
+
+<p>最终找到一种比较满意的保存方式。</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://gist.github.com/jimfoltz">jimfoltz</a>/<strong><a target="_blank" rel="noopener" href="https://gist.github.com/jimfoltz/ee791c1bdd30ce137bc23cce826096da">tw5-server.rb</a></strong> 脚本略作修改，监听localhost，去除日志。</p>
+<ol>
+<li>将以下文件保存为<code>/path/to/wikiserv.rb</code>，配置<code>root</code>和<code>BACKUP_DIR</code>的值，并把wiki.html放到<code>root</code>对应的目录下。</li>
+<li>建个软链接 <code>ln -s /path/to.wikiserv.rb ~/wiki</code> </li>
+<li>在home目录执行 <code>ruby wiki&amp;</code> ，访问<code>http://localhost:1337/wiki.html</code> </li>
+<li>保存时会备份一份到<code>BACKUP_DIR</code> 目录下。</li>
+<li>用坚果云同步<code>root</code>对应的目录，Windows下可结合WSL使用。</li>
+<li>使用插件 <a target="_blank" rel="noopener" href="https://tid.li/tw5/plugins-2019.html#%24%3A%2Fplugins%2Ftelmiger%2FEditorCounter">$:/plugins/telmiger/EditorCounter</a> ，每输入一定数量的字符就自动保存一次。</li>
+</ol>
+<p><code>wikiserv.rb</code> ：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">&#x27;webrick&#x27;</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;fileutils&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ARGV.length == <span class="number">0</span></span><br><span class="line">   <span class="comment"># root = ARGV.first.gsub(&#x27;\\&#x27;, &#x27;/&#x27;)</span></span><br><span class="line">   root = <span class="string">&#x27;/mnt/d/我的坚果云/tiddly&#x27;</span>  						<span class="comment">#config</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">   root = <span class="string">&#x27;.&#x27;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">BACKUP_DIR = <span class="string">&#x27;/mnt/d/wiki/bak&#x27;</span>							<span class="comment">#config</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">WEBrick</span></span></span><br><span class="line">   <span class="class"><span class="keyword">module</span> <span class="title">HTTPServlet</span></span></span><br><span class="line"></span><br><span class="line">      <span class="class"><span class="keyword">class</span> <span class="title">FileHandler</span></span></span><br><span class="line">         <span class="keyword">alias</span> do_PUT do_GET</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">      <span class="class"><span class="keyword">class</span> <span class="title">DefaultFileHandler</span></span></span><br><span class="line">         <span class="function"><span class="keyword">def</span> <span class="title">do_PUT</span><span class="params">(req, res)</span></span></span><br><span class="line">            file = <span class="string">&quot;<span class="subst">#&#123;<span class="variable">@config</span>[<span class="symbol">:DocumentRoot</span>]&#125;</span><span class="subst">#&#123;req.path&#125;</span>&quot;</span></span><br><span class="line">            res.body = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            <span class="keyword">unless</span> Dir.exists? BACKUP_DIR</span><br><span class="line">               Dir.mkdir BACKUP_DIR</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            FileUtils.cp(file, <span class="string">&quot;<span class="subst">#&#123;BACKUP_DIR&#125;</span>/<span class="subst">#&#123;File.basename(file, <span class="string">&#x27;.html&#x27;</span>)&#125;</span>.<span class="subst">#&#123;Time.now.to_i.to_s&#125;</span>.html&quot;</span>)</span><br><span class="line">            File.open(file, <span class="string">&quot;w+&quot;</span>) &#123;<span class="params">|f|</span> f.puts(req.body)&#125;</span><br><span class="line">         <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">         <span class="function"><span class="keyword">def</span> <span class="title">do_OPTIONS</span><span class="params">(req, res)</span></span></span><br><span class="line">            res[<span class="string">&#x27;allow&#x27;</span>] = <span class="string">&quot;GET,HEAD,POST,OPTIONS,CONNECT,PUT,DAV,dav&quot;</span></span><br><span class="line">            res[<span class="string">&#x27;x-api-access-type&#x27;</span>] = <span class="string">&#x27;file&#x27;</span></span><br><span class="line">            res[<span class="string">&#x27;dav&#x27;</span>] = <span class="string">&#x27;tw5/put&#x27;</span></span><br><span class="line">         <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">   <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://ruby-doc.org/stdlib-2.5.1/libdoc/webrick/rdoc/WEBrick/HTTPServer.html</span></span><br><span class="line">server = WEBrick::HTTPServer.new(&#123;<span class="symbol">:BindAddress</span> =&gt; <span class="string">&quot;localhost&quot;</span>, <span class="symbol">:Port</span> =&gt; <span class="number">1337</span>, <span class="symbol">:DocumentRoot</span> =&gt; root, <span class="symbol">:Logger=&gt;</span> WEBrick::Log.new(<span class="string">&quot;/dev/null&quot;</span>),<span class="symbol">:AccessLog=&gt;</span> []&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">trap <span class="string">&quot;INT&quot;</span> <span class="keyword">do</span></span><br><span class="line">   puts <span class="string">&quot;Shutting down...&quot;</span></span><br><span class="line">   server.shutdown</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">server.start</span><br></pre></td></tr></table></figure>
+
+<h5 id="搜索增强"><a href="#搜索增强" class="headerlink" title="搜索增强"></a>搜索增强</h5><ol>
+<li><a target="_blank" rel="noopener" href="https://tid.li/tw5/plugins.html">$:/plugins/telmiger/simple-search</a> ，配合vimium chrome插件搜索还是比较方便的。</li>
+<li>搜索结果高亮<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bimlas/tw5-highlight-searched-text">$:/plugins/bimlas/highlight-searched-text @github</a></li>
+<li><a target="_blank" rel="noopener" href="https://bimlas.gitlab.io/tw5-highlight-searched-text/">demo</a> </li>
+<li>如果是和<code>$:/plugins/telmiger/simple-search</code>一起用需要在设置里面把<code>$:/temp/search</code>改为<code>$:/temp/advancedsearch</code>。</li>
+</ul>
+</li>
+</ol>
+<h5 id="其他重度用户等"><a href="#其他重度用户等" class="headerlink" title="其他重度用户等"></a>其他重度用户等</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;cpashow.tiddlyspot.com&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;rizi.me&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;onetwo.ren&#x2F;wiki&#x2F;#:Index</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;linonetwo&#x2F;Tiddlywiki-NodeJS-Github-Template</span><br><span class="line">https:&#x2F;&#x2F;onetwo.ren&#x2F;用tiddlywiki替代notion和evernote管理知识&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;onetwo.ren&#x2F;wiki&#x2F;#:其他在积极使用TiddlyWiki的朋友的wiki</span><br><span class="line">https:&#x2F;&#x2F;wiki.hintsnet.com&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;swarma-km.hintsnet.com&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;wiki.yfd.im&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;hintsnet.com&#x2F;digital-garden&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><ol>
+<li>搜索。没有vscode好用。</li>
+<li>插件质量良莠不齐。装了几个插件，一些地方就不按预期工作了，找不出原因。</li>
+<li>资料少。tiddly wiki这个关键字在Google上的搜索结果简直是一场灾难。</li>
+</ol>
+<p>于是弃坑。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="findneo 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/190427-ciscn2019-web-wp/" rel="prev" title="第十二届全国大学生信息安全竞赛创新实践能力赛 web writeup">
+                  <i class="fa fa-chevron-left"></i> 第十二届全国大学生信息安全竞赛创新实践能力赛 web writeup
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">findneo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
