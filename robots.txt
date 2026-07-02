@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://ret2neo.cn/sitemap.xml
